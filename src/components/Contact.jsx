@@ -12,8 +12,8 @@ export default function Contact() {
 
       {/* Email, phone and the buttons on one line */}
       <div className="contact__details">
-        <a href={`mailto:${contact.email}`} className="contact__value">{contact.email}</a>
-        <a href={contact.phoneLink} className="contact__value">{contact.phone}</a>
+        <p className="contact__value">{contact.email}</p>
+        <p className="contact__value">{contact.phone}</p>
         <div className="contact__pills">
           {/* Without a link yet the button shows but goes nowhere (see contact.instagram) */}
           <a href={contact.instagram ?? undefined} target="_blank" rel="noreferrer" className="pill">

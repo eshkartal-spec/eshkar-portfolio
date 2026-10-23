@@ -32,23 +32,15 @@
   border-top: 1px solid var(--rule);
 }
 
+/* Plain text, not links */
 .contact__value {
+  margin: 0;
   font-family: var(--font-display);
   font-size: clamp(20px, 2vw, 30px);
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.2;
-  text-decoration: none;
   word-break: break-word;
-  background: linear-gradient(var(--pink), var(--pink)) left bottom / 0 2px no-repeat;
-  transition:
-    background-size 0.45s var(--ease),
-    color 0.25s;
-}
-
-.contact__value:hover {
-  color: var(--pink);
-  background-size: 100% 2px;
 }
 
 .contact__pills {
