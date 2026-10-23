@@ -1,15 +1,32 @@
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 20;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  height: 64px;
+  height: var(--header-h);
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  transition:
+    background 0.35s var(--ease),
+    color 0.35s var(--ease);
+}
+
+/* Over the Home page photo */
+.header--over {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.header--over,
+.header--over .label--ink {
+  color: #fff;
 }
 
 .header a {

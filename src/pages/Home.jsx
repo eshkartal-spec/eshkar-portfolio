@@ -1,57 +1,45 @@
 import { site } from '../data/site'
 import { projects } from '../data/projects'
+import HeroReveal from '../components/HeroReveal'
 import ProjectCard from '../components/ProjectCard'
 import './Home.css'
 
 const num = (i) => String(i + 1).padStart(2, '0')
 
 export default function Home() {
-  const [featured, ...rest] = projects
+  const total = num(projects.length - 1)
 
   return (
-    <main>
-      <section className="hero wrap">
-        <div className="hero__labels">
-          <p className="label label--ink">{site.role}</p>
-          <p className="label">{num(projects.length - 1)} — selected projects</p>
-        </div>
-
-        <h1 className="display hero__name" aria-label={site.name}>
-          {site.name.split(' ').map((word, i) => (
-            <span key={word} className="hero__word" style={{ '--i': i }}>
-              <span>{word}</span>
-            </span>
-          ))}
-        </h1>
-
-        <div className="hero__body">
-          <div className="hero__text">
-            <p className="sub hero__tagline">{site.tagline}</p>
-            <p className="hero__intro">{site.intro}</p>
-            <div className="hero__actions">
-              <a href="#work" className="pill pill--solid">See the work ↓</a>
-              <a href="#contact" className="pill">Get in touch</a>
-            </div>
+    <main className="home">
+      <section className="hero">
+        <HeroReveal image={site.hero} />
+        <div className="hero__content wrap">
+          <div className="hero__row">
+            <p className="sub hero__tagline">
+              {site.role}
+              <br />
+              {site.tagline}
+            </p>
+            <a href="#work" className="label hero__scroll">Scroll ↓</a>
           </div>
-          <figure className="photo hero__photo">
-            <img src={site.about.photo.src} alt={site.about.photo.alt} />
-          </figure>
+          <h1 className="display hero__name" aria-label={site.name}>
+            {site.name.split(' ').map((word, i) => (
+              <span key={word} className="hero__word" style={{ '--i': i }}>
+                <span>{word}</span>
+              </span>
+            ))}
+          </h1>
         </div>
       </section>
 
-      <section id="work" className="work wrap">
+      <section id="work" className="work">
         <div className="section-head">
           <p className="label label--ink">Selected work</p>
-          <p className="label">{num(projects.length - 1)} projects</p>
+          <p className="label">{total} projects</p>
         </div>
-
-        <div className="work__featured">
-          <ProjectCard project={featured} number={num(0)} featured />
-        </div>
-
-        <div className="work__grid">
-          {rest.map((p, i) => (
-            <ProjectCard key={p.slug} project={p} number={num(i + 1)} />
+        <div className="work__list">
+          {projects.map((p, i) => (
+            <ProjectCard key={p.slug} project={p} number={num(i)} total={total} />
           ))}
         </div>
       </section>

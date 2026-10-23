@@ -73,7 +73,7 @@ export const projects = [
     year: null,
     duration: null,
     tools: null,
-    cover: img('my-chair', 'hero', 'My Chair'),
+    cover: img('my-chair', 'seat', 'My Chair'),
     hero: img('my-chair', 'seat', 'My Chair'),
     materials: [
       {

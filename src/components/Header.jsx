@@ -1,10 +1,34 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { site } from '../data/site'
 import './Header.css'
 
+// While the Home page's full-screen photo is behind it, the header is see-through with white text
+function useOverHero() {
+  const { pathname } = useLocation()
+  const onHome = pathname === '/'
+  const [over, setOver] = useState(onHome)
+  useEffect(() => {
+    if (!onHome) {
+      setOver(false)
+      return
+    }
+    const update = () => setOver(window.scrollY < window.innerHeight - 80)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [onHome])
+  return over
+}
+
 export default function Header() {
+  const over = useOverHero()
   return (
-    <header className="header wrap">
+    <header className={`header wrap${over ? ' header--over' : ''}`}>
       <Link to="/" className="header__name label label--ink">
         <span className="header__dot" aria-hidden="true" />
         {site.name}

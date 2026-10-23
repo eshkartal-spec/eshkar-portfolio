@@ -10,6 +10,7 @@
 
   --font: 'Archivo', system-ui, sans-serif;
   --gutter: clamp(16px, 3vw, 40px);
+  --header-h: 64px;
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
 }
 
@@ -59,6 +60,15 @@ a {
 
 .wrap {
   padding-inline: var(--gutter);
+}
+
+/* Pages start below the fixed header (Home's photo goes under it instead) */
+main {
+  padding-top: var(--header-h);
+}
+
+main.home {
+  padding-top: 0;
 }
 
 /* Big bold pink headlines */
