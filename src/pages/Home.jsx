@@ -20,7 +20,6 @@ export default function Home() {
               <br />
               {site.tagline}
             </p>
-            <a href="#work" className="label hero__scroll">Scroll ↓</a>
           </div>
           <h1 className="display hero__name" aria-label={site.name}>
             {site.name.split(' ').map((word, i) => (

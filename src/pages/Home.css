@@ -39,19 +39,6 @@
   line-height: 1.5;
 }
 
-.hero__scroll {
-  color: #fff;
-  text-decoration: none;
-  pointer-events: auto;
-  animation: bob 2s ease-in-out infinite;
-}
-
-@keyframes bob {
-  50% {
-    transform: translateY(5px);
-  }
-}
-
 /* Condensed so the letters stand tall while the name still spans the screen;
    the negative bottom margin sets the letters' base right on the photo's bottom edge */
 .hero__name {
@@ -59,19 +46,20 @@
   justify-content: space-between;
   column-gap: 0.14em;
   margin: clamp(8px, 1.2vw, 16px) -0.02em var(--name-drop) -0.025em;
-  font-size: 15.25vw;
+  font-size: 16vw;
+  font-weight: 600;
   font-stretch: 72%;
   letter-spacing: -0.02em;
   line-height: 0.8;
   white-space: nowrap;
-  --name-drop: -0.108em;
+  --name-drop: -0.068em;
 }
 
-/* Each word rises out of a mask on load */
+/* Each word rises out of a mask on load. The mask only cuts along the bottom,
+   so letters that reach past their box (like the R's leg) are never clipped. */
 .hero__word {
   display: inline-block;
-  overflow: hidden;
-  padding-bottom: 0.04em;
+  clip-path: inset(-0.5em -0.3em 0 -0.3em);
 }
 
 .hero__word > span {
@@ -156,11 +144,8 @@
 @media (max-width: 760px) {
   .hero__name {
     flex-direction: column;
-    font-size: 29vw;
+    font-size: 30.4vw;
     line-height: 0.82;
-  }
-  .hero__scroll {
-    display: none;
   }
   .about__title,
   .about__text {

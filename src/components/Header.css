@@ -24,10 +24,6 @@
   -webkit-backdrop-filter: none;
 }
 
-.header--over,
-.header--over .label--ink {
-  color: #fff;
-}
 
 .header a {
   text-decoration: none;

@@ -5,9 +5,9 @@ export const site = {
   tagline: 'Designing meaningful solutions for everyday life.',
   intro: 'I design physical products, from user need to functional prototype.',
   // Full-screen photo at the top of the Home page. To change it, replace
-  // originals/hero/hero.png and run `npm run images`.
+  // originals/hero/hero.jpg and run `npm run images`.
   // position: which part stays in view when the photo is cropped (0–1, left→right, top→bottom)
-  hero: { src: '/images/hero/hero.webp', alt: 'Eshkar Karish', position: [0.5, 0.25] },
+  hero: { src: '/images/hero/hero.webp', alt: 'Eshkar Karish', position: [0.5, 0.2] },
   about: {
     title: "Hi! I'm Eshkar.",
     paragraphs: [

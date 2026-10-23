@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { site } from '../data/site'
 import './Header.css'
 
-// While the Home page's full-screen photo is behind it, the header is see-through with white text
+// While the Home page's full-screen photo is behind it, the header is see-through
 function useOverHero() {
   const { pathname } = useLocation()
   // The photo is one screen tall, but never under 560px (see .hero)
