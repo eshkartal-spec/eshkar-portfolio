@@ -6,23 +6,18 @@ import './Header.css'
 // While the Home page's full-screen photo is behind it, the header is see-through with white text
 function useOverHero() {
   const { pathname } = useLocation()
-  const onHome = pathname === '/'
-  const [over, setOver] = useState(onHome)
+  const nearTop = () => window.scrollY < window.innerHeight - 80
+  const [atTop, setAtTop] = useState(nearTop)
   useEffect(() => {
-    if (!onHome) {
-      setOver(false)
-      return
-    }
-    const update = () => setOver(window.scrollY < window.innerHeight - 80)
-    update()
+    const update = () => setAtTop(nearTop())
     window.addEventListener('scroll', update, { passive: true })
     window.addEventListener('resize', update)
     return () => {
       window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
     }
-  }, [onHome])
-  return over
+  }, [])
+  return pathname === '/' && atTop
 }
 
 export default function Header() {
