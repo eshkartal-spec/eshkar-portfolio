@@ -1,5 +1,5 @@
 .contact {
-  margin-top: clamp(96px, 14vw, 200px);
+  margin-top: clamp(64px, 8vw, 120px);
   padding-top: clamp(48px, 7vw, 96px);
   padding-bottom: 24px;
   background: var(--ink);
@@ -20,18 +20,16 @@
   --title-width: 7.26;
 }
 
-/* Email, phone and links side by side: same top line, same label style, same value size */
+/* Email, phone and buttons on one line, centred on each other; stacked on phones */
 .contact__details {
-  display: grid;
-  grid-template-columns: 5fr 4fr 4fr;
-  gap: 32px clamp(24px, 4vw, 64px);
-  margin: clamp(40px, 6vw, 80px) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px clamp(24px, 4vw, 64px);
+  margin-top: clamp(32px, 4.5vw, 64px);
   padding-top: 24px;
   border-top: 1px solid var(--rule);
-}
-
-.contact__details dd {
-  margin: 14px 0 0;
 }
 
 .contact__value {
@@ -61,7 +59,11 @@
 
 @media (max-width: 760px) {
   .contact__details {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .contact__pills {
+    margin-top: 8px;
   }
 }
 
@@ -69,7 +71,7 @@
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  margin-top: clamp(64px, 9vw, 128px);
+  margin-top: clamp(32px, 4vw, 56px);
   padding-top: 16px;
   border-top: 1px solid var(--rule);
 }
