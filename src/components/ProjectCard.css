@@ -87,10 +87,11 @@
   left: var(--pad);
 }
 
-/* The text keeps clear of "View project", so the summary runs on one line when it fits */
+/* The title gets the tile's full width; only the summary, which shares its row
+   with "View project", keeps clear of it (and runs on one line when it fits) */
 .card__text {
   left: var(--pad);
-  right: calc(var(--pad) + 13em);
+  right: var(--pad);
   bottom: var(--pad);
 }
 
@@ -100,6 +101,7 @@
 
 .card__summary {
   margin-top: 16px;
+  padding-right: 13em;
   font-size: clamp(12px, 1vw, 14px);
 }
 
@@ -123,8 +125,8 @@
 /* Phones: too narrow to share the bottom row, so "View project" becomes a round
    arrow in the top-right corner of every tile */
 @media (max-width: 600px) {
-  .card__text {
-    right: var(--pad);
+  .card__summary {
+    padding-right: 0;
   }
   .card__title {
     font-size: 11vw;
