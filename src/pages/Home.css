@@ -55,7 +55,7 @@
   line-height: 0.8;
   white-space: nowrap;
   --name-drop: -0.068em;
-  --name-hang: 0.05em;
+  --name-hang: 0.025em;
 }
 
 /* Each word rises out of a mask on load. The mask only cuts along the bottom,
