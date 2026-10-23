@@ -19,7 +19,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(40, 40, 40, 0.28);
+  background: rgba(40, 40, 40, 0.42);
 }
 
 .card:hover .card__photo img {
