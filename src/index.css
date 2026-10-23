@@ -8,7 +8,9 @@
   --pink: #ff6fa8;
   --pink-soft: #ffd9e8;
 
-  --font: 'Archivo', system-ui, sans-serif;
+  /* Archivo for headlines, subtitles and labels; Quicksand for running text */
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-body: 'Quicksand', system-ui, sans-serif;
   --gutter: clamp(16px, 3vw, 40px);
   --header-h: 64px;
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
@@ -26,8 +28,9 @@ html {
 
 body {
   margin: 0;
-  font-family: var(--font);
+  font-family: var(--font-body);
   font-size: 17px;
+  font-weight: 500;
   line-height: 1.55;
   color: var(--ink);
   background: var(--bg);
@@ -60,6 +63,16 @@ figcaption {
 h2,
 h3 {
   text-wrap: balance;
+}
+
+h1,
+h2,
+h3,
+.display,
+.sub,
+.label,
+.pill {
+  font-family: var(--font-display);
 }
 
 ::selection {

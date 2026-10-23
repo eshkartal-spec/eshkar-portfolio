@@ -44,19 +44,29 @@ export default function Home() {
       <section id="about" className="about wrap">
         <div className="section-head">
           <p className="label label--ink">About</p>
-          <p className="label">{site.role}</p>
         </div>
 
         <div className="about__grid">
           <h2 className="display about__title reveal">{site.about.title}</h2>
           <div className="about__text reveal">
-            {site.about.paragraphs.map((t, i) => (
-              <p key={t} className={i === 0 ? 'about__lead' : undefined}>{t}</p>
-            ))}
-            <p className="label about__skills-label">Skills & tools</p>
-            <ul className="about__skills">
-              {site.skills.map((s) => <li key={s} className="pill">{s}</li>)}
-            </ul>
+            {site.about.paragraphs.map((t) => <p key={t}>{t}</p>)}
+
+            <details className="skills">
+              <summary className="skills__toggle">
+                <span className="label label--ink">Skills & tools</span>
+                <span className="skills__icon" aria-hidden="true" />
+              </summary>
+              <div className="skills__groups">
+                {site.skills.map(({ group, items }) => (
+                  <div key={group} className="skills__group">
+                    <p className="label">{group}</p>
+                    <ul className="skills__list">
+                      {items.map((s) => <li key={s} className="pill">{s}</li>)}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </details>
           </div>
         </div>
       </section>

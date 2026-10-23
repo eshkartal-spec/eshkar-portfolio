@@ -16,11 +16,23 @@ export const site = {
     ],
     photo: { src: '/images/about/portrait.webp', alt: 'Eshkar Karish' },
   },
+  // "Skills & tools" in the About section, grouped
   skills: [
-    'Industrial Design', 'Product Design', 'Product Development', 'User Research',
-    'Human-Centered Design', 'Concept Development', 'Sketching & Ideation', 'Prototyping',
-    'Model Making', 'CAD', 'SolidWorks', '3D Modeling', '3D Printing', 'KeyShot',
-    'Rendering', 'Adobe Creative Suite',
+    {
+      group: 'Design & research',
+      items: [
+        'Industrial Design', 'Product Design', 'Product Development', 'Human-Centered Design',
+        'User Research', 'Concept Development', 'Sketching & Ideation',
+      ],
+    },
+    {
+      group: 'Making',
+      items: ['Prototyping', 'Model Making', '3D Printing'],
+    },
+    {
+      group: 'Software',
+      items: ['CAD', 'SolidWorks', '3D Modeling', 'KeyShot', 'Rendering', 'Adobe Creative Suite'],
+    },
   ],
   contact: {
     pitch:
