@@ -1,10 +1,24 @@
-# Eshkar Karish portfolio — v1 (live version)
+# Eshkar Karish portfolio
 
-This branch is the portfolio exactly as it was live on eshkar-site.vercel.app,
-made in Claude's design tool, with the photos shrunk for the web.
+React + Vite + React Router, set up the same way as Sagi's portfolio.
 
-It is plain files with no build step: `index.html` loads `support.js`, which
-loads React from unpkg.com and draws the page. `vercel.json` tells Vercel to
-publish the files as they are.
+## Branches
 
-The new site is built on the `main` branch.
+- `main`: the new site (work in progress)
+- `v1-live`: the old site, exactly as it was live on eshkar-site.vercel.app
+
+Each branch has its own `vercel.json`, so Vercel knows how to publish whichever one is chosen.
+
+## Working on it
+
+```
+npm install
+npm run dev       # local preview
+npm run build     # the files Vercel publishes, in dist/
+```
+
+## Content
+
+- Text: `src/data/site.js` (about, contact, skills) and `src/data/projects.js` (projects)
+- Photos: full-size originals go in `originals/<project>/` (not uploaded to GitHub),
+  then `npm run images` makes web copies in `public/images/<project>/`
