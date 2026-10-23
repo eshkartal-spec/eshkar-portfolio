@@ -6,7 +6,8 @@ import './Header.css'
 // While the Home page's full-screen photo is behind it, the header is see-through with white text
 function useOverHero() {
   const { pathname } = useLocation()
-  const nearTop = () => window.scrollY < window.innerHeight - 80
+  // The photo is one screen tall, but never under 560px (see .hero)
+  const nearTop = () => window.scrollY < Math.max(window.innerHeight, 560) - 80
   const [atTop, setAtTop] = useState(nearTop)
   useEffect(() => {
     const update = () => setAtTop(nearTop())
