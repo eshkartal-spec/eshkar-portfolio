@@ -1,6 +1,8 @@
 import { site } from '../data/site'
 import './Contact.css'
 
+const year = new Date().getFullYear()
+
 // Closes every page
 export default function Contact() {
   const { contact } = site
@@ -24,7 +26,7 @@ export default function Contact() {
       </div>
 
       <div className="contact__foot">
-        <span className="label">{site.name} © {new Date().getFullYear()}</span>
+        <span className="label">{site.name} © {year}</span>
         <a href="#top" className="label" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
           Back to top ↑
         </a>
