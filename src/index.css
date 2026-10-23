@@ -48,6 +48,20 @@ a {
   color: inherit;
 }
 
+/* No orphan words, anywhere: paragraphs avoid a lone last word (useNoOrphans
+   makes sure of it), headings balance their lines */
+p,
+li,
+dd,
+figcaption {
+  text-wrap: pretty;
+}
+
+h2,
+h3 {
+  text-wrap: balance;
+}
+
 ::selection {
   background: var(--pink);
   color: var(--ink);

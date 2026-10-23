@@ -1,4 +1,5 @@
 .card {
+  --pad: clamp(16px, 2.5vw, 32px);
   position: relative;
   display: block;
   height: clamp(420px, 78svh, 820px);
@@ -7,6 +8,7 @@
   color: #fff;
 }
 
+/* Layers, bottom to top: photo, frost, shading, text */
 .card__photo {
   position: absolute;
   inset: 0;
@@ -16,11 +18,24 @@
   transform: scale(1.03);
 }
 
+/* Like the header's frosted bar, but lighter. --frost (0–1) is set while scrolling:
+   1 away from the middle of the screen, 0 at the middle, where the photo shows clearly. */
+.card__frost {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  opacity: var(--frost, 1);
+  transition: opacity 0.25s linear;
+}
+
 /* Shade top and bottom so the white and pink text stays readable on any photo */
 .card::before,
 .card::after {
   content: '';
   position: absolute;
+  z-index: 1;
   left: 0;
   right: 0;
   pointer-events: none;
@@ -29,7 +44,7 @@
 .card::before {
   top: 0;
   height: 34%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), transparent);
 }
 
 .card::after {
@@ -38,20 +53,11 @@
   background: linear-gradient(to top, rgba(0, 0, 0, 0.58), transparent);
 }
 
-.card__top,
-.card__bottom {
+.card__field,
+.card__text,
+.card__go {
   position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  gap: 16px 32px;
-  padding: clamp(16px, 2.5vw, 32px);
-}
-
-.card__top {
-  top: 0;
+  z-index: 2;
 }
 
 .card .label {
@@ -59,28 +65,31 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
 }
 
-.card__bottom {
-  bottom: 0;
-  flex-wrap: wrap;
-  align-items: flex-end;
+.card__field {
+  top: var(--pad);
+  left: var(--pad);
 }
 
+/* The text keeps clear of "View project", so the summary runs on one line when it fits */
 .card__text {
-  min-width: 0;
+  left: var(--pad);
+  right: calc(var(--pad) + 13em);
+  bottom: var(--pad);
 }
 
 .card__title {
   font-size: clamp(48px, 9vw, 160px);
-  text-wrap: balance;
 }
 
 .card__summary {
-  max-width: 38ch;
   margin-top: 16px;
   font-size: clamp(12px, 1vw, 14px);
 }
 
+/* Always the bottom-right corner, level with the summary */
 .card__go {
+  right: var(--pad);
+  bottom: var(--pad);
   padding-bottom: 3px;
   border-bottom: 1px solid currentColor;
   white-space: nowrap;
@@ -92,4 +101,31 @@
 .card:hover .card__go {
   transform: translateX(6px);
   color: var(--pink);
+}
+
+/* Phones: too narrow to share the bottom row, so "View project" becomes a round
+   arrow in the top-right corner of every tile */
+@media (max-width: 600px) {
+  .card__text {
+    right: var(--pad);
+  }
+  .card__title {
+    font-size: 11vw;
+  }
+  .card__go {
+    top: calc(var(--pad) - 9px);
+    bottom: auto;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+  .card__go-text {
+    display: none;
+  }
 }

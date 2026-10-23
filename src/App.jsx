@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import ProjectPage from './pages/ProjectPage'
 import NotFound from './pages/NotFound'
 import { useReveal } from './useReveal'
+import { useNoOrphans } from './noOrphans'
 
 // Opening a page starts at its top, or at the part its address names (like /#about)
 function useScrollOnNavigate() {
@@ -21,6 +22,7 @@ export default function App() {
   const { pathname } = useLocation()
   useScrollOnNavigate()
   useReveal(pathname)
+  useNoOrphans()
 
   return (
     <>

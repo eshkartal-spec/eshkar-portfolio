@@ -54,9 +54,7 @@ export default function ProjectPage() {
       <header className="proj__head wrap">
         <div className="proj__crumbs">
           <Link to="/#work" className="label label--ink proj__back">← All work</Link>
-          <p className="label">
-            {num(index)} / {num(projects.length - 1)} — {p.field}
-          </p>
+          <p className="label">{p.field}</p>
         </div>
 
         <h1 className="display proj__title" style={{ '--chars': p.title.length }}>
@@ -143,7 +141,7 @@ export default function ProjectPage() {
       <Link to={`/projects/${next.slug}`} className="next wrap">
         <div className="section-head">
           <p className="label label--ink">Next project</p>
-          <p className="label">{num(projects.indexOf(next))}</p>
+          <p className="label">{next.field}</p>
         </div>
         <div className="next__row">
           <h2 className="display next__title">{next.title} <span aria-hidden="true">→</span></h2>

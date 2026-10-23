@@ -2,12 +2,11 @@ import { site } from '../data/site'
 import { projects } from '../data/projects'
 import HeroReveal from '../components/HeroReveal'
 import ProjectCard from '../components/ProjectCard'
+import { useCenterFocus } from '../useCenterFocus'
 import './Home.css'
 
-const num = (i) => String(i + 1).padStart(2, '0')
-
 export default function Home() {
-  const total = num(projects.length - 1)
+  useCenterFocus('.card')
 
   return (
     <main className="home">
@@ -34,11 +33,10 @@ export default function Home() {
       <section id="work" className="work">
         <div className="section-head">
           <p className="label label--ink">Selected work</p>
-          <p className="label">{total} projects</p>
         </div>
         <div className="work__list">
-          {projects.map((p, i) => (
-            <ProjectCard key={p.slug} project={p} number={num(i)} total={total} />
+          {projects.map((p) => (
+            <ProjectCard key={p.slug} project={p} />
           ))}
         </div>
       </section>
