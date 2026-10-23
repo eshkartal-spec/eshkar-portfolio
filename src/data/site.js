@@ -40,8 +40,10 @@ export const site = {
   ],
   contact: {
     email: 'eshkartal@gmail.com',
-    phone: '058-594-0094',
+    phone: '+972-58-594-0094',
     phoneLink: 'tel:+972585940094',
+    // TODO before publishing: her Instagram profile link, e.g. 'https://www.instagram.com/…'
+    instagram: null,
   },
   // Still hosted on her old Wix site; worth moving into /public before Wix goes away
   resume:

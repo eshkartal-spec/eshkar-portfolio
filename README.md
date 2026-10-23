@@ -17,6 +17,12 @@ npm run dev       # local preview
 npm run build     # the files Vercel publishes, in dist/
 ```
 
+## Before publishing
+
+- [ ] Add her Instagram link: `contact.instagram` in `src/data/site.js`
+      (`npm run build` warns while it's missing)
+- [ ] Optional: move the resume PDF off the old Wix site into `public/`
+
 ## Content
 
 - Text: `src/data/site.js` (about, contact, skills) and `src/data/projects.js` (projects)

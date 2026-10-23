@@ -16,7 +16,10 @@ export default function Contact() {
       <div className="contact__links">
         <a href={`mailto:${contact.email}`} className="contact__email">{contact.email}</a>
         <div className="contact__pills">
-          <a href={`mailto:${contact.email}`} className="pill">Email</a>
+          {/* Without a link yet the button shows but goes nowhere (see contact.instagram) */}
+          <a href={contact.instagram ?? undefined} target="_blank" rel="noreferrer" className="pill">
+            Instagram ↗
+          </a>
           <a href={contact.phoneLink} className="pill">{contact.phone}</a>
           <a href={site.resume} target="_blank" rel="noreferrer" className="pill">Resume ↗</a>
         </div>
