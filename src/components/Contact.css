@@ -15,18 +15,17 @@
 }
 
 .contact__title {
-  margin-top: 16px;
   font-size: calc(100cqi / var(--title-width));
   white-space: nowrap;
   --title-width: 7.26;
 }
 
-/* Email on the left, buttons on the right */
+/* Email with the phone under it on the left, buttons on the right */
 .contact__links {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   gap: 24px 32px;
   margin-top: clamp(40px, 6vw, 80px);
   padding-top: 24px;
@@ -49,6 +48,25 @@
 .contact__email:hover {
   color: var(--pink);
   background-size: 100% 2px;
+}
+
+.contact__direct {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.contact__phone {
+  font-size: clamp(17px, 1.6vw, 22px);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  color: #cfcecb;
+  transition: color 0.25s;
+}
+
+.contact__phone:hover {
+  color: var(--pink);
 }
 
 .contact__pills {

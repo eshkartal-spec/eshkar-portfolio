@@ -3,8 +3,8 @@
   position: relative;
   height: 100svh;
   min-height: 560px;
-  /* Not clipped, so the name can hang past the photo (the photo clips itself) */
-  overflow-x: clip;
+  /* Clips the name where it dips below the photo's bottom edge */
+  overflow: clip;
   color: #fff;
 }
 
@@ -42,7 +42,7 @@
 
 /* Condensed so the letters stand tall while the name still spans the screen.
    --name-drop sets the letters' base on the photo's bottom edge; --name-hang
-   then lowers them so their feet cross onto the page below. */
+   then lowers them a touch, so the photo's edge cuts off their feet. */
 .hero__name {
   display: flex;
   justify-content: space-between;
@@ -55,7 +55,7 @@
   line-height: 0.8;
   white-space: nowrap;
   --name-drop: -0.068em;
-  --name-hang: 0.16em;
+  --name-hang: 0.05em;
 }
 
 /* Each word rises out of a mask on load. The mask only cuts along the bottom,
@@ -73,21 +73,22 @@
 
 /* ---------- Work: one tile per project, all the same ---------- */
 .work {
-  /* Extra room for the hero name hanging over the top of this section */
-  padding-top: clamp(104px, 12vw, 176px);
+  --tile-inset: clamp(16px, 6vw, 112px);
+  padding-top: clamp(40px, 5vw, 80px);
   scroll-margin-top: var(--header-h);
 }
 
+/* Lined up with the tiles' edges */
 .work .section-head {
-  margin-inline: var(--gutter);
+  margin-inline: var(--tile-inset);
 }
 
 .work__list {
   display: flex;
   flex-direction: column;
   gap: clamp(48px, 7vw, 120px);
-  margin-top: clamp(24px, 3vw, 48px);
-  padding-inline: clamp(16px, 6vw, 112px);
+  margin-top: clamp(20px, 2.5vw, 36px);
+  padding-inline: var(--tile-inset);
 }
 
 /* ---------- About ---------- */

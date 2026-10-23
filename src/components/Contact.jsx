@@ -8,19 +8,18 @@ export default function Contact() {
   const { contact } = site
   return (
     <footer id="contact" className="contact wrap">
-      <div className="contact__top">
-        <p className="label">Contact</p>
-        <h2 className="display contact__title">Get in touch</h2>
-      </div>
+      <h2 className="display contact__title">Get in touch</h2>
 
       <div className="contact__links">
-        <a href={`mailto:${contact.email}`} className="contact__email">{contact.email}</a>
+        <div className="contact__direct">
+          <a href={`mailto:${contact.email}`} className="contact__email">{contact.email}</a>
+          <a href={contact.phoneLink} className="contact__phone">{contact.phone}</a>
+        </div>
         <div className="contact__pills">
           {/* Without a link yet the button shows but goes nowhere (see contact.instagram) */}
           <a href={contact.instagram ?? undefined} target="_blank" rel="noreferrer" className="pill">
             Instagram ↗
           </a>
-          <a href={contact.phoneLink} className="pill">{contact.phone}</a>
           <a href={site.resume} target="_blank" rel="noreferrer" className="pill">Resume ↗</a>
         </div>
       </div>
