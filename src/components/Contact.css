@@ -8,26 +8,29 @@
   --rule: rgba(239, 238, 236, 0.16);
 }
 
-.contact__title {
-  margin-top: 16px;
-  font-size: clamp(56px, 13vw, 210px);
+/* One line at every screen width: the size follows the footer's width
+   (100cqi), divided by how many font-sizes wide the words are */
+.contact {
+  container-type: inline-size;
 }
 
-.contact__grid {
-  display: grid;
-  grid-template-columns: 5fr 7fr;
-  gap: 32px clamp(24px, 5vw, 80px);
+.contact__title {
+  margin-top: 16px;
+  font-size: calc(100cqi / var(--title-width));
+  white-space: nowrap;
+  --title-width: 7.26;
+}
+
+/* Email on the left, buttons on the right */
+.contact__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px 32px;
   margin-top: clamp(40px, 6vw, 80px);
   padding-top: 24px;
   border-top: 1px solid var(--rule);
-}
-
-.contact__pitch {
-  max-width: 38ch;
-  margin: 0;
-  font-size: clamp(17px, 1.4vw, 20px);
-  line-height: 1.45;
-  color: #cfcecb;
 }
 
 .contact__email {
@@ -52,7 +55,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 28px;
 }
 
 .contact__foot {
@@ -70,10 +72,4 @@
 
 .contact__foot a:hover {
   color: var(--pink);
-}
-
-@media (max-width: 760px) {
-  .contact__grid {
-    grid-template-columns: 1fr;
-  }
 }

@@ -39,8 +39,6 @@ export const site = {
     },
   ],
   contact: {
-    pitch:
-      'For industrial and product design studios, product companies, startups, founders and collaborators. I’m open to full-time roles, internships and projects.',
     email: 'eshkartal@gmail.com',
     phone: '058-594-0094',
     phoneLink: 'tel:+972585940094',
