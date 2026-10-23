@@ -78,9 +78,11 @@
   scroll-margin-top: var(--header-h);
 }
 
-/* Lined up with the tiles' edges */
+/* Lined up with the tiles' edges, without the usual line above */
 .work .section-head {
   margin-inline: var(--tile-inset);
+  padding-top: 0;
+  border-top: 0;
 }
 
 .work__list {
