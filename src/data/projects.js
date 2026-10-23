@@ -21,8 +21,12 @@ export const projects = [
     duration: '3 months',
     tools: 'SolidWorks, BikeCAD, KeyShot, 3D printing, hand modeling, physical prototyping',
     cover: img('step-up', 'strap', 'STEP UP bicycle'),
+    // Wide photo under the title on the project page (default: cover)
+    banner: img('step-up', 'street', 'STEP UP in the city'),
     hero: img('step-up', 'three-quarter', 'STEP UP bicycle, studio shot'),
     heroAlt: img('step-up', 'carry', 'Eshkar carrying the STEP UP bike'),
+    // Short line shown large, next to heroAlt
+    pull: 'In the city, a bicycle is often carried up stairs, not only ridden.',
     features: [
       {
         title: 'Ergonomic carrying handle',
@@ -49,7 +53,6 @@ export const projects = [
       img('step-up', 'wheel', 'Wheel detail'),
       img('step-up', 'logo-frame', 'STEP UP logo on the frame'),
       img('step-up', 'carry-shoulder', 'Carrying STEP UP on the shoulder with the strap and handle'),
-      img('step-up', 'street', 'STEP UP in the city'),
     ],
     process: [
       { label: 'Sketch', image: img('step-up', 'process-sketch', 'Early sketch: strap and handle placement') },
@@ -70,7 +73,7 @@ export const projects = [
     year: null,
     duration: null,
     tools: null,
-    cover: img('my-chair', 'seat', 'My Chair'),
+    cover: img('my-chair', 'hero', 'My Chair'),
     hero: img('my-chair', 'seat', 'My Chair'),
     materials: [
       {

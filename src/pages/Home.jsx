@@ -1,53 +1,79 @@
-import { Link } from 'react-router-dom'
 import { site } from '../data/site'
 import { projects } from '../data/projects'
+import ProjectCard from '../components/ProjectCard'
+import './Home.css'
 
-// Bare starting point: every piece of content, no design yet.
+const num = (i) => String(i + 1).padStart(2, '0')
+
 export default function Home() {
+  const [featured, ...rest] = projects
+
   return (
-    <main className="page">
-      <section>
-        <h1>{site.name}</h1>
-        <p>{site.tagline}</p>
-        <p>{site.intro}</p>
-      </section>
+    <main>
+      <section className="hero wrap">
+        <div className="hero__labels">
+          <p className="label label--ink">{site.role}</p>
+          <p className="label">{num(projects.length - 1)} — selected projects</p>
+        </div>
 
-      <section>
-        <h2>Work</h2>
-        <ul className="project-list">
-          {projects.map((p) => (
-            <li key={p.slug}>
-              <Link to={`/projects/${p.slug}`}>
-                <img src={p.cover.src} alt={p.cover.alt} loading="lazy" />
-                <strong>{p.title}</strong> · {p.field}
-                <br />
-                {p.summary}
-              </Link>
-            </li>
+        <h1 className="display hero__name" aria-label={site.name}>
+          {site.name.split(' ').map((word, i) => (
+            <span key={word} className="hero__word" style={{ '--i': i }}>
+              <span>{word}</span>
+            </span>
           ))}
-        </ul>
+        </h1>
+
+        <div className="hero__body">
+          <div className="hero__text">
+            <p className="sub hero__tagline">{site.tagline}</p>
+            <p className="hero__intro">{site.intro}</p>
+            <div className="hero__actions">
+              <a href="#work" className="pill pill--solid">See the work ↓</a>
+              <a href="#contact" className="pill">Get in touch</a>
+            </div>
+          </div>
+          <figure className="photo hero__photo">
+            <img src={site.about.photo.src} alt={site.about.photo.alt} />
+          </figure>
+        </div>
       </section>
 
-      <section id="about">
-        <h2>{site.about.title}</h2>
-        <img src={site.about.photo.src} alt={site.about.photo.alt} className="portrait" />
-        {site.about.paragraphs.map((t) => <p key={t}>{t}</p>)}
-        <h3>Process</h3>
-        <ol>{site.process.map((s) => <li key={s}>{s}</li>)}</ol>
-        <h3>Skills & tools</h3>
-        <p>{site.skills.join(' · ')}</p>
+      <section id="work" className="work wrap">
+        <div className="section-head">
+          <p className="label label--ink">Selected work</p>
+          <p className="label">{num(projects.length - 1)} projects</p>
+        </div>
+
+        <div className="work__featured">
+          <ProjectCard project={featured} number={num(0)} featured />
+        </div>
+
+        <div className="work__grid">
+          {rest.map((p, i) => (
+            <ProjectCard key={p.slug} project={p} number={num(i + 1)} />
+          ))}
+        </div>
       </section>
 
-      <section id="contact">
-        <h2>Get in touch</h2>
-        <p>{site.contact.pitch}</p>
-        <p>
-          <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
-          <br />
-          <a href={site.contact.phoneLink}>{site.contact.phone}</a>
-          <br />
-          <a href={site.resume} target="_blank" rel="noreferrer">View resume</a>
-        </p>
+      <section id="about" className="about wrap">
+        <div className="section-head">
+          <p className="label label--ink">About</p>
+          <p className="label">{site.role}</p>
+        </div>
+
+        <div className="about__grid">
+          <h2 className="display about__title reveal">{site.about.title}</h2>
+          <div className="about__text reveal">
+            {site.about.paragraphs.map((t, i) => (
+              <p key={t} className={i === 0 ? 'about__lead' : undefined}>{t}</p>
+            ))}
+            <p className="label about__skills-label">Skills & tools</p>
+            <ul className="about__skills">
+              {site.skills.map((s) => <li key={s} className="pill">{s}</li>)}
+            </ul>
+          </div>
+        </div>
       </section>
     </main>
   )

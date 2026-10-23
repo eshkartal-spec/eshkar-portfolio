@@ -1,16 +1,36 @@
-/* Placeholder styles: just enough to read the content. The design replaces all of this. */
+/* Design tokens and shared pieces. Page layouts live next to each page (Home.css, ProjectPage.css). */
+:root {
+  --bg: #efeeec;
+  --surface: #f8f7f5;
+  --ink: #111;
+  --muted: #6b6a68;
+  --rule: rgba(17, 17, 17, 0.14);
+  --pink: #ff6fa8;
+  --pink-soft: #ffd9e8;
+
+  --font: 'Archivo', system-ui, sans-serif;
+  --gutter: clamp(16px, 3vw, 40px);
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  line-height: 1.5;
-  color: #1a1a1a;
-  background: #fafafa;
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
 }
 
 img {
@@ -19,56 +39,163 @@ img {
   height: auto;
 }
 
-.header {
-  padding: 16px 24px;
-  border-bottom: 1px solid #ddd;
-}
-
-.page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.project-list {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 24px;
-}
-
-.project-list a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.project-list img {
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  width: 100%;
-  margin-bottom: 8px;
-}
-
-.portrait {
-  max-width: 320px;
-}
-
-.facts div {
-  display: flex;
-  gap: 12px;
-}
-
-.facts dt {
-  min-width: 90px;
-  font-weight: 600;
-}
-
-.facts dd {
+figure {
   margin: 0;
 }
 
-.todo {
-  background: #fff4d6;
-  padding: 12px 20px;
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--pink);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: 3px;
+}
+
+.wrap {
+  padding-inline: var(--gutter);
+}
+
+/* Big bold pink headlines */
+.display {
+  margin: 0;
+  font-weight: 800;
+  font-stretch: 100%;
+  text-transform: uppercase;
+  letter-spacing: -0.035em;
+  word-spacing: 0.1em;
+  line-height: 0.86;
+  color: var(--pink);
+}
+
+/* Subtitles: the expanded cut of Archivo, uppercase and airy */
+.sub {
+  margin: 0;
+  font-weight: 450;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+/* Small labels: section names, numbers, specs */
+.label {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.label--ink {
+  color: var(--ink);
+}
+
+/* Rounded links and tags */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.75em 1.25em;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 0.25s var(--ease),
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+a.pill:hover {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: var(--ink);
+}
+
+.pill--solid {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+/* A section's top line: name on the left, count or note on the right */
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+
+/* Photos sit on a soft tile while they load */
+.photo {
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease);
+}
+
+/* Fades content up as it scrolls into view (see useReveal) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s var(--ease),
+    transform 0.9s var(--ease);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Page-load entrances: titles rise out of a mask, the rest fades up */
+@keyframes rise-in {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .photo img {
+    transition: none;
+  }
 }

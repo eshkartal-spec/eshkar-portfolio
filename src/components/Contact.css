@@ -1,0 +1,78 @@
+.contact {
+  margin-top: clamp(96px, 14vw, 200px);
+  padding-top: clamp(48px, 7vw, 96px);
+  padding-bottom: 24px;
+  background: var(--ink);
+  color: var(--bg);
+  --muted: #8d8c8a;
+  --rule: rgba(239, 238, 236, 0.16);
+}
+
+.contact__title {
+  margin-top: 16px;
+  font-size: clamp(56px, 13vw, 210px);
+}
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 32px clamp(24px, 5vw, 80px);
+  margin-top: clamp(40px, 6vw, 80px);
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.contact__pitch {
+  max-width: 38ch;
+  margin: 0;
+  font-size: clamp(17px, 1.4vw, 20px);
+  line-height: 1.45;
+  color: #cfcecb;
+}
+
+.contact__email {
+  display: inline-block;
+  font-size: clamp(26px, 3.6vw, 52px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-decoration: none;
+  word-break: break-word;
+  background: linear-gradient(var(--pink), var(--pink)) left bottom / 0 2px no-repeat;
+  transition: background-size 0.45s var(--ease), color 0.25s;
+}
+
+.contact__email:hover {
+  color: var(--pink);
+  background-size: 100% 2px;
+}
+
+.contact__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.contact__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: clamp(64px, 9vw, 128px);
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.contact__foot a {
+  text-decoration: none;
+}
+
+.contact__foot a:hover {
+  color: var(--pink);
+}
+
+@media (max-width: 760px) {
+  .contact__grid {
+    grid-template-columns: 1fr;
+  }
+}

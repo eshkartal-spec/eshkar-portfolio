@@ -10,17 +10,8 @@ export const site = {
       'I’m a fourth-year Industrial Design student in Israel, focused on creating thoughtful, user-centered physical products.',
       'Combining research, ergonomics and hands-on prototyping, I design intuitive solutions that balance functionality, aesthetics and real-world usability.',
     ],
-    photo: { src: '/images/about/portrait-hero.webp', alt: 'Eshkar Karish' },
+    photo: { src: '/images/about/portrait.webp', alt: 'Eshkar Karish' },
   },
-  // "Process" section in v1
-  process: [
-    'User research',
-    'Concept development',
-    'Ergonomics',
-    'Prototyping & testing',
-    'CAD & 3D modeling',
-    'Rendering & storytelling',
-  ],
   skills: [
     'Industrial Design', 'Product Design', 'Product Development', 'User Research',
     'Human-Centered Design', 'Concept Development', 'Sketching & Ideation', 'Prototyping',
