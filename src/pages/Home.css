@@ -122,7 +122,8 @@
 
 /* ---------- Skills & tools: a panel that opens ---------- */
 .skills {
-  margin-top: 40px;
+  grid-column: 1 / -1;
+  margin-top: clamp(24px, 4vw, 56px);
   border-block: 1px solid var(--rule);
   /* Lets the open/close animate its height (browsers without it just snap) */
   interpolate-size: allow-keywords;
@@ -185,10 +186,12 @@
   height: auto;
 }
 
+/* The three groups side by side; the longest gets the most room */
 .skills__groups {
   display: grid;
-  gap: 24px;
-  padding-bottom: 28px;
+  grid-template-columns: 1.7fr 1fr 1.3fr;
+  gap: 24px clamp(24px, 4vw, 64px);
+  padding: 8px 0 32px;
 }
 
 .skills__group .label {
@@ -219,5 +222,8 @@
   .about__title,
   .about__text {
     grid-column: 1 / -1;
+  }
+  .skills__groups {
+    grid-template-columns: 1fr;
   }
 }

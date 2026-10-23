@@ -9,7 +9,11 @@ export const site = {
   // position: which part stays in view when the photo is cropped (0–1, left→right, top→bottom)
   hero: { src: '/images/hero/hero.webp', alt: 'Eshkar Karish', position: [0.5, 0.2] },
   about: {
-    title: "Hi! I'm Eshkar.",
+    // "Hi! I'm Eshkar." The name is its own piece: hovering it shows her photo.
+    // The space before the name doesn't break, so "I'm Eshkar." stays on one line.
+    titleBefore: 'Hi! I’m ',
+    titleName: 'Eshkar',
+    titleAfter: '.',
     paragraphs: [
       'I’m a fourth-year Industrial Design student in Israel, focused on creating thoughtful, user-centered physical products.',
       'Combining research, ergonomics and hands-on prototyping, I design intuitive solutions that balance functionality, aesthetics and real-world usability.',

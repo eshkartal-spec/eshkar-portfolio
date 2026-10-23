@@ -2,6 +2,7 @@ import { site } from '../data/site'
 import { projects } from '../data/projects'
 import HeroReveal from '../components/HeroReveal'
 import ProjectCard from '../components/ProjectCard'
+import NamePeek from '../components/NamePeek'
 import { useCenterFocus } from '../useCenterFocus'
 import './Home.css'
 
@@ -47,27 +48,32 @@ export default function Home() {
         </div>
 
         <div className="about__grid">
-          <h2 className="display about__title reveal">{site.about.title}</h2>
+          <h2 className="display about__title reveal">
+            {site.about.titleBefore}
+            <NamePeek word={site.about.titleName} image={site.about.photo} />
+            {site.about.titleAfter}
+          </h2>
           <div className="about__text reveal">
             {site.about.paragraphs.map((t) => <p key={t}>{t}</p>)}
-
-            <details className="skills">
-              <summary className="skills__toggle">
-                <span className="label label--ink">Skills & tools</span>
-                <span className="skills__icon" aria-hidden="true" />
-              </summary>
-              <div className="skills__groups">
-                {site.skills.map(({ group, items }) => (
-                  <div key={group} className="skills__group">
-                    <p className="label">{group}</p>
-                    <ul className="skills__list">
-                      {items.map((s) => <li key={s} className="pill">{s}</li>)}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </details>
           </div>
+
+          {/* Full width, under both columns */}
+          <details className="skills reveal">
+            <summary className="skills__toggle">
+              <span className="label label--ink">Skills & tools</span>
+              <span className="skills__icon" aria-hidden="true" />
+            </summary>
+            <div className="skills__groups">
+              {site.skills.map(({ group, items }) => (
+                <div key={group} className="skills__group">
+                  <p className="label">{group}</p>
+                  <ul className="skills__list">
+                    {items.map((s) => <li key={s} className="pill">{s}</li>)}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </details>
         </div>
       </section>
     </main>
