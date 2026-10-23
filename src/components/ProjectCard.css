@@ -8,10 +8,18 @@
   color: #fff;
 }
 
-/* Layers, bottom to top: photo, frost, shading, text */
+/* Layers, bottom to top: photo, grey tint, frost, shading, text */
 .card__photo {
   position: absolute;
   inset: 0;
+}
+
+/* A grey tint over every photo, so the pink and white text stands out */
+.card__photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 40, 40, 0.28);
 }
 
 .card:hover .card__photo img {
@@ -20,7 +28,7 @@
 
 /* Frosted glass over the photo. --frost (0–1) is set while scrolling: 1 away from
    the middle of the screen, 0 at the middle. The blur itself shrinks (rather than a
-   blurred layer fading out), so the glass clears instead of turning milky. */
+   blurred layer fading out), so the glass clears instead of turning milky. No grain. */
 @property --frost {
   syntax: '<number>';
   inherits: true;
@@ -37,17 +45,6 @@
   background-color: rgba(255, 255, 255, calc(var(--frost) * 0.14));
   backdrop-filter: blur(calc(var(--frost) * 22px)) brightness(calc(1 + var(--frost) * 0.06));
   -webkit-backdrop-filter: blur(calc(var(--frost) * 22px)) brightness(calc(1 + var(--frost) * 0.06));
-}
-
-/* The glass's fine grain */
-.card__frost::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 160px;
-  mix-blend-mode: soft-light;
-  opacity: calc(var(--frost) * 0.55);
 }
 
 /* Shade top and bottom so the white and pink text stays readable on any photo */
