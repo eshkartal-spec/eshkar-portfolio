@@ -3,11 +3,11 @@ import { Link, useLocation } from 'react-router-dom'
 import { site } from '../data/site'
 import './Header.css'
 
-// While the Home page's full-screen photo is behind it, the header is see-through
+// At the very top of the Home page the header is see-through over the photo's pale top.
+// It turns solid as soon as the page scrolls, so its black text never lands on a dark part.
 function useOverHero() {
   const { pathname } = useLocation()
-  // The photo is one screen tall, but never under 560px (see .hero)
-  const nearTop = () => window.scrollY < Math.max(window.innerHeight, 560) - 80
+  const nearTop = () => window.scrollY < 24
   const [atTop, setAtTop] = useState(nearTop)
   useEffect(() => {
     const update = () => setAtTop(nearTop())

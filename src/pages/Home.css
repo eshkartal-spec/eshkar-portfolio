@@ -3,7 +3,8 @@
   position: relative;
   height: 100svh;
   min-height: 560px;
-  overflow: hidden;
+  /* Not clipped, so the name can hang past the photo (the photo clips itself) */
+  overflow-x: clip;
   color: #fff;
 }
 
@@ -39,13 +40,14 @@
   line-height: 1.5;
 }
 
-/* Condensed so the letters stand tall while the name still spans the screen;
-   the negative bottom margin sets the letters' base right on the photo's bottom edge */
+/* Condensed so the letters stand tall while the name still spans the screen.
+   --name-drop sets the letters' base on the photo's bottom edge; --name-hang
+   then lowers them so their feet cross onto the page below. */
 .hero__name {
   display: flex;
   justify-content: space-between;
   column-gap: 0.14em;
-  margin: clamp(8px, 1.2vw, 16px) -0.02em var(--name-drop) -0.025em;
+  margin: clamp(8px, 1.2vw, 16px) -0.02em calc(var(--name-drop) - var(--name-hang)) -0.025em;
   font-size: 16vw;
   font-weight: 600;
   font-stretch: 72%;
@@ -53,6 +55,7 @@
   line-height: 0.8;
   white-space: nowrap;
   --name-drop: -0.068em;
+  --name-hang: 0.16em;
 }
 
 /* Each word rises out of a mask on load. The mask only cuts along the bottom,
@@ -70,7 +73,8 @@
 
 /* ---------- Work: one tile per project, all the same ---------- */
 .work {
-  padding-top: clamp(64px, 8vw, 128px);
+  /* Extra room for the hero name hanging over the top of this section */
+  padding-top: clamp(104px, 12vw, 176px);
   scroll-margin-top: var(--header-h);
 }
 
