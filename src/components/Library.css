@@ -3,7 +3,7 @@
   --pad: clamp(18px, 2.2vw, 32px);
   --grow: 8; /* how much wider the open spine gets than each of the others */
   --cine: cubic-bezier(0.77, 0, 0.18, 1); /* slow in, slow out: one long, even glide */
-  --glide: 1.15s;
+  --glide: 0.85s;
   /* The open card's width, fixed so its text doesn't reflow while the spine widens */
   --open-w: calc(100cqi * var(--grow) / (var(--grow) + 5));
   /* The name's size in the card: every title fits on one line */
@@ -51,7 +51,7 @@ html[data-intro] .spine {
   height: 100%;
   object-fit: cover;
   transform: scale(1.12);
-  transition: transform 1.8s var(--cine);
+  transition: transform 1.3s var(--cine);
 }
 
 /* Grey tint so the pink and white text stands out; lighter once a spine is open */
@@ -60,7 +60,7 @@ html[data-intro] .spine {
   position: absolute;
   inset: 0;
   background: rgba(40, 40, 40, 0.5);
-  transition: background-color 0.9s var(--cine);
+  transition: background-color 0.7s var(--cine);
 }
 
 .spine::before {
@@ -70,7 +70,7 @@ html[data-intro] .spine {
   inset: 0;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 55%);
   opacity: 0;
-  transition: opacity 0.9s var(--cine);
+  transition: opacity 0.7s var(--cine);
 }
 
 /* ---------- The travelling name ----------
@@ -86,12 +86,14 @@ html[data-intro] .spine {
   font-size: var(--name);
   line-height: 0.86;
   white-space: nowrap;
+  color: #fff; /* white down the spine, pink once open */
   transform-origin: 0 0;
   transform: translate(calc(var(--name) * 0.86 * var(--spine-scale) / 2), var(--pad)) rotate(90deg)
     scale(var(--spine-scale));
   transition:
     left var(--glide) var(--cine),
-    transform var(--glide) var(--cine);
+    transform var(--glide) var(--cine),
+    color var(--glide) var(--cine);
   pointer-events: none;
 }
 
@@ -168,6 +170,7 @@ html[data-intro] .spine {
 
 .spine.is-open .spine__name {
   left: var(--pad);
+  color: var(--pink);
   transform: translate(0, var(--land-y, 70vh)) rotate(0deg) scale(1);
 }
 
@@ -181,15 +184,15 @@ html[data-intro] .spine {
 }
 
 .spine.is-open .spine__field {
-  transition-delay: 0.55s;
+  transition-delay: 0.4s;
 }
 
 .spine.is-open .spine__summary {
-  transition-delay: 0.75s;
+  transition-delay: 0.55s;
 }
 
 .spine.is-open .spine__go {
-  transition-delay: 0.85s, 0.85s, 0s;
+  transition-delay: 0.65s, 0.65s, 0s;
 }
 
 .spine.is-open:hover .spine__go {
