@@ -18,7 +18,7 @@ function useOverHero() {
       window.removeEventListener('resize', update)
     }
   }, [])
-  return pathname === '/' && atTop
+  return site.showHero && pathname === '/' && atTop
 }
 
 export default function Header() {

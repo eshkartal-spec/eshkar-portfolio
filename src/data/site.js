@@ -4,6 +4,9 @@ export const site = {
   role: 'Industrial designer',
   tagline: 'Designing meaningful solutions for everyday life.',
   intro: 'I design physical products, from user need to functional prototype.',
+  // The full-screen photo section at the top of the Home page. Hidden for now: the
+  // page opens straight on the project library. Set to true to bring it back.
+  showHero: false,
   // Full-screen photo at the top of the Home page. To change it, replace
   // originals/hero/hero.jpg and run `npm run images`.
   // position: which part stays in view when the photo is cropped (0–1, left→right, top→bottom)

@@ -71,31 +71,9 @@
   animation-delay: calc(0.1s + var(--i) * 0.12s);
 }
 
-/* ---------- Work: one tile per project, all the same ---------- */
-.work {
-  --tile-inset: clamp(16px, 6vw, 112px);
-  padding-top: clamp(40px, 5vw, 80px);
-  scroll-margin-top: var(--header-h);
-}
-
-/* Lined up with the tiles' edges, without the usual line above */
-.work .section-head {
-  margin-inline: var(--tile-inset);
-  padding-top: 0;
-  border-top: 0;
-}
-
-.work__list {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(48px, 7vw, 120px);
-  margin-top: clamp(20px, 2.5vw, 36px);
-  padding-inline: var(--tile-inset);
-}
-
 /* ---------- About ---------- */
 .about {
-  margin-top: clamp(120px, 14vw, 220px);
+  margin-top: clamp(80px, 10vw, 160px);
   scroll-margin-top: var(--header-h);
 }
 

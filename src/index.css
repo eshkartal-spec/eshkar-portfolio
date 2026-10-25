@@ -89,12 +89,12 @@ h3,
   padding-inline: var(--gutter);
 }
 
-/* Pages start below the fixed header (Home's photo goes under it instead) */
+/* Pages start below the fixed header (Home's hero photo, when shown, goes under it instead) */
 main {
   padding-top: var(--header-h);
 }
 
-main.home {
+main.home--hero {
   padding-top: 0;
 }
 

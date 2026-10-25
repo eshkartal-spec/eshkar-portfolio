@@ -1,0 +1,201 @@
+/* ---------- The library: six spines filling the first screen ---------- */
+.library {
+  --gap: 6px;
+  --pad: clamp(16px, 2vw, 28px);
+  --grow: 8; /* how much wider the open spine gets than the others */
+  /* The open card's width, fixed so its text doesn't reflow while the spine widens */
+  --open-w: calc((100cqi - 5 * var(--gap)) * var(--grow) / (var(--grow) + 5));
+  container-type: inline-size;
+  display: flex;
+  gap: var(--gap);
+  height: calc(100svh - var(--header-h));
+  min-height: 520px;
+  padding: 0 var(--gutter) var(--gutter);
+  scroll-margin-top: var(--header-h);
+}
+
+.spine {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+  background: var(--surface);
+  transition: flex-grow 0.8s var(--ease);
+  animation: spine-in 0.9s var(--ease) both;
+  animation-delay: calc(0.1s + var(--i) * 0.07s);
+}
+
+@keyframes spine-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+/* While the intro is on screen, the spines wait to rise in */
+html[data-intro] .spine {
+  animation-play-state: paused;
+}
+
+.spine__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease);
+}
+
+/* Grey tint so the pink and white text stands out; lighter once a spine is open */
+.spine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 40, 40, 0.48);
+  transition: background 0.6s var(--ease);
+}
+
+/* The name down the spine, read top to bottom like a book's */
+.spine__name {
+  position: absolute;
+  z-index: 1;
+  top: var(--pad);
+  left: 50%;
+  translate: -50% 0;
+  writing-mode: vertical-rl;
+  font-size: clamp(28px, 3.2vw, 54px);
+  line-height: 1;
+  white-space: nowrap;
+  transition: opacity 0.35s var(--ease);
+}
+
+/* ---------- The open card ---------- */
+.spine__card {
+  position: absolute;
+  z-index: 1;
+  inset: 0 auto 0 0;
+  width: var(--open-w);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+
+.spine__field,
+.spine__go {
+  color: #fff;
+}
+
+.spine__text {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+}
+
+.spine__title {
+  font-size: clamp(44px, 5.5cqi, 110px);
+}
+
+.spine__summary {
+  margin-top: 16px;
+  max-width: 46ch;
+  font-size: clamp(12px, 1vw, 14px);
+}
+
+.spine__go {
+  align-self: flex-start;
+  margin-top: 22px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+/* Open state: shared by hover (desktop) and tap (phones) */
+.spine.is-open .spine__name {
+  opacity: 0;
+}
+
+.spine.is-open .spine__card {
+  opacity: 1;
+  transition-delay: 0.25s;
+}
+
+.spine.is-open::after {
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 55%),
+    rgba(40, 40, 40, 0.22);
+}
+
+/* ---------- Desktop: hovering opens a spine, the others narrow in place ---------- */
+@media (hover: hover) and (min-width: 761px) {
+  .spine:hover,
+  .spine:focus-visible {
+    flex-grow: var(--grow);
+  }
+
+  .spine:hover .spine__name,
+  .spine:focus-visible .spine__name {
+    opacity: 0;
+  }
+
+  .spine:hover .spine__card,
+  .spine:focus-visible .spine__card {
+    opacity: 1;
+    transition-delay: 0.25s;
+  }
+
+  .spine:hover::after,
+  .spine:focus-visible::after {
+    background:
+      linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 55%),
+      rgba(40, 40, 40, 0.22);
+  }
+
+  .spine:hover .spine__photo {
+    transform: scale(1.03);
+  }
+
+  .spine:hover .spine__go {
+    color: var(--pink);
+  }
+}
+
+/* ---------- Phones: horizontal strips, tap to open ---------- */
+@media (max-width: 760px) {
+  .library {
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+  }
+
+  .spine {
+    flex: none;
+    height: 76px;
+    transition: height 0.7s var(--ease);
+  }
+
+  .spine.is-open {
+    height: min(64svh, 560px);
+  }
+
+  .spine__name {
+    top: 50%;
+    left: var(--pad);
+    translate: 0 -50%;
+    writing-mode: horizontal-tb;
+    font-size: 30px;
+  }
+
+  .spine__card {
+    width: 100%;
+  }
+
+  .spine__title {
+    font-size: 11vw;
+  }
+}

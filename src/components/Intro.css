@@ -1,0 +1,76 @@
+.intro {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--pink);
+  transition:
+    opacity var(--dissolve) var(--ease),
+    visibility var(--dissolve);
+}
+
+.intro__logo {
+  width: clamp(180px, 30vw, 420px);
+  transition: transform var(--dissolve) var(--ease);
+}
+
+.intro__logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Every shape is traced in pink (each has pathLength="1", see Intro.jsx) */
+.intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
+  stroke: currentColor;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-trace var(--draw) var(--ease) var(--start) forwards;
+}
+
+@keyframes intro-trace {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Filled shapes: a fine outline first, then the fill */
+.intro__logo [data-fill='solid'] {
+  fill: currentColor;
+  fill-opacity: 0;
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+  transition: fill-opacity 0.5s var(--ease);
+}
+
+.intro__logo [data-fill='none'] {
+  fill: none;
+}
+
+.intro.is-fill [data-fill='solid'],
+.intro.is-out [data-fill='solid'] {
+  fill-opacity: 1;
+}
+
+.intro.is-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.intro.is-out .intro__logo {
+  transform: scale(0.94);
+}
+
+/* Reduced motion: the logo simply appears, then the screen fades */
+@media (prefers-reduced-motion: reduce) {
+  .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .intro__logo [data-fill='solid'] {
+    fill-opacity: 1;
+  }
+}

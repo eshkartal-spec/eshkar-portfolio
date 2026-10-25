@@ -1,7 +1,8 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import Contact from './components/Contact'
+import Intro from './components/Intro'
 import Home from './pages/Home'
 import ProjectPage from './pages/ProjectPage'
 import NotFound from './pages/NotFound'
@@ -18,7 +19,8 @@ function useScrollOnNavigate() {
   }, [pathname, hash])
 }
 
-export default function App() {
+export default function App({ playIntro }) {
+  const [showIntro, setShowIntro] = useState(playIntro)
   const { pathname } = useLocation()
   useScrollOnNavigate()
   useReveal(pathname)
@@ -33,6 +35,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Contact />
+      {showIntro && <Intro onDone={() => setShowIntro(false)} />}
     </>
   )
 }

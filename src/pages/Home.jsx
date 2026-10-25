@@ -1,46 +1,35 @@
 import { site } from '../data/site'
-import { projects } from '../data/projects'
 import HeroReveal from '../components/HeroReveal'
-import ProjectCard from '../components/ProjectCard'
+import Library from '../components/Library'
 import NamePeek from '../components/NamePeek'
-import { useCenterFocus } from '../useCenterFocus'
 import './Home.css'
 
 export default function Home() {
-  useCenterFocus('.card')
-
   return (
-    <main className="home">
-      <section className="hero">
-        <HeroReveal image={site.hero} />
-        <div className="hero__content wrap">
-          <div className="hero__row">
-            <p className="sub hero__tagline">
-              {site.role}
-              <br />
-              {site.tagline}
-            </p>
+    <main className={`home${site.showHero ? ' home--hero' : ''}`}>
+      {site.showHero && (
+        <section className="hero">
+          <HeroReveal image={site.hero} />
+          <div className="hero__content wrap">
+            <div className="hero__row">
+              <p className="sub hero__tagline">
+                {site.role}
+                <br />
+                {site.tagline}
+              </p>
+            </div>
+            <h1 className="display hero__name" aria-label={site.name}>
+              {site.name.split(' ').map((word, i) => (
+                <span key={word} className="hero__word" style={{ '--i': i }}>
+                  <span>{word}</span>
+                </span>
+              ))}
+            </h1>
           </div>
-          <h1 className="display hero__name" aria-label={site.name}>
-            {site.name.split(' ').map((word, i) => (
-              <span key={word} className="hero__word" style={{ '--i': i }}>
-                <span>{word}</span>
-              </span>
-            ))}
-          </h1>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section id="work" className="work">
-        <div className="section-head">
-          <p className="label label--ink">Selected work</p>
-        </div>
-        <div className="work__list">
-          {projects.map((p) => (
-            <ProjectCard key={p.slug} project={p} />
-          ))}
-        </div>
-      </section>
+      <Library />
 
       <section id="about" className="about wrap">
         <div className="section-head">
