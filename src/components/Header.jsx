@@ -3,14 +3,15 @@ import { Link, useLocation } from 'react-router-dom'
 import { site } from '../data/site'
 import './Header.css'
 
-// At the very top of the Home page the header is see-through over the photo's pale top.
-// It turns solid as soon as the page scrolls, so its black text never lands on a dark part.
-function useOverHero() {
+// How the header looks on the Home page's first screen:
+// - with the project library there, it stays out of sight until the page scrolls past it
+// - with the hero photo there, it's see-through over the photo's pale top until the page scrolls
+function useHeaderMode() {
   const { pathname } = useLocation()
-  const nearTop = () => window.scrollY < 24
-  const [atTop, setAtTop] = useState(nearTop)
+  const scrolled = () => window.scrollY
+  const [y, setY] = useState(scrolled)
   useEffect(() => {
-    const update = () => setAtTop(nearTop())
+    const update = () => setY(scrolled())
     window.addEventListener('scroll', update, { passive: true })
     window.addEventListener('resize', update)
     return () => {
@@ -18,13 +19,15 @@ function useOverHero() {
       window.removeEventListener('resize', update)
     }
   }, [])
-  return site.showHero && pathname === '/' && atTop
+  if (pathname !== '/') return ''
+  if (site.showHero) return y < 24 ? ' header--over' : ''
+  return y < window.innerHeight - 120 ? ' header--hidden' : ''
 }
 
 export default function Header() {
-  const over = useOverHero()
+  const mode = useHeaderMode()
   return (
-    <header className={`header wrap${over ? ' header--over' : ''}`}>
+    <header className={`header wrap${mode}`}>
       <Link to="/" className="header__name label label--ink">
         <span className="header__dot" aria-hidden="true" />
         {site.name}

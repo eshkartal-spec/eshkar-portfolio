@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
 // No orphan words, site-wide: the last two words of every paragraph, heading,
-// caption and list item are joined with a non-breaking space, so a line never
-// ends with a single word on its own. (CSS text-wrap: pretty does this too,
+// caption, list item and subtitle are joined with a non-breaking space, so a line
+// never ends with a single word on its own. (CSS text-wrap: pretty does this too,
 // but browsers only treat it as a hint.) Runs again whenever content changes.
-const SELECTOR = 'p, li, dd, figcaption, h1, h2, h3, .label-text'
+const SELECTOR = 'p, li, dd, figcaption, h1, h2, h3, .label-text, .sub'
 const NBSP = ' '
 
 function fix(el) {

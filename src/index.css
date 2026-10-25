@@ -56,7 +56,8 @@ a {
 p,
 li,
 dd,
-figcaption {
+figcaption,
+.sub {
   text-wrap: pretty;
 }
 
@@ -89,12 +90,13 @@ h3,
   padding-inline: var(--gutter);
 }
 
-/* Pages start below the fixed header (Home's hero photo, when shown, goes under it instead) */
+/* Pages start below the fixed header. Home's first screen (the project library,
+   or the hero photo) fills the whole screen from the very top instead. */
 main {
   padding-top: var(--header-h);
 }
 
-main.home--hero {
+main.home {
   padding-top: 0;
 }
 

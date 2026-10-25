@@ -12,7 +12,7 @@
 }
 
 .intro__logo {
-  width: clamp(180px, 30vw, 420px);
+  width: clamp(240px, 44vw, 620px);
   transition: transform var(--dissolve) var(--ease);
 }
 
@@ -23,12 +23,14 @@
   overflow: visible;
 }
 
-/* Every shape is traced in pink (each has pathLength="1", see Intro.jsx) */
+/* Every shape is traced in pink, one after another (each has pathLength="1"
+   and its place in line as --n, see Intro.jsx) */
 .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
   stroke: currentColor;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: intro-trace var(--draw) var(--ease) var(--start) forwards;
+  animation: intro-trace var(--trace) var(--ease) forwards;
+  animation-delay: calc(var(--start) + var(--n, 0) * var(--stagger));
 }
 
 @keyframes intro-trace {

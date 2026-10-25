@@ -1,17 +1,20 @@
-/* ---------- The library: six spines filling the first screen ---------- */
+/* ---------- The library: six spines filling the whole first screen ---------- */
 .library {
-  --gap: 6px;
-  --pad: clamp(16px, 2vw, 28px);
-  --grow: 8; /* how much wider the open spine gets than the others */
+  --pad: clamp(18px, 2.2vw, 32px);
+  --grow: 8; /* how much wider the open spine gets than each of the others */
+  --cine: cubic-bezier(0.77, 0, 0.18, 1); /* slow in, slow out: one long, even glide */
+  --glide: 1.15s;
   /* The open card's width, fixed so its text doesn't reflow while the spine widens */
-  --open-w: calc((100cqi - 5 * var(--gap)) * var(--grow) / (var(--grow) + 5));
+  --open-w: calc(100cqi * var(--grow) / (var(--grow) + 5));
+  /* The name's size in the card: every title fits on one line */
+  --name: calc((var(--open-w) - 2 * var(--pad)) / 10);
+  /* ...and down a spine, as a share of that */
+  --spine-scale: 0.56;
   container-type: inline-size;
   display: flex;
-  gap: var(--gap);
-  height: calc(100svh - var(--header-h));
-  min-height: 520px;
-  padding: 0 var(--gutter) var(--gutter);
-  scroll-margin-top: var(--header-h);
+  height: 100svh;
+  min-height: 560px;
+  scroll-margin-top: 0;
 }
 
 .spine {
@@ -21,16 +24,17 @@
   overflow: hidden;
   color: #fff;
   text-decoration: none;
-  background: var(--surface);
-  transition: flex-grow 0.8s var(--ease);
-  animation: spine-in 0.9s var(--ease) both;
-  animation-delay: calc(0.1s + var(--i) * 0.07s);
+  /* Light, like a studio backdrop, for photos with see-through backgrounds (the renders) */
+  background: #e6e5e3;
+  transition: flex-grow var(--glide) var(--cine);
+  animation: spine-in 1s var(--ease) both;
+  animation-delay: calc(0.1s + var(--i) * 0.08s);
 }
 
 @keyframes spine-in {
   from {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateY(48px);
   }
 }
 
@@ -39,13 +43,15 @@ html[data-intro] .spine {
   animation-play-state: paused;
 }
 
+/* A slow settle: the photo eases from a slight zoom to full frame as the spine opens */
 .spine__photo {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 1.2s var(--ease);
+  transform: scale(1.12);
+  transition: transform 1.8s var(--cine);
 }
 
 /* Grey tint so the pink and white text stands out; lighter once a spine is open */
@@ -53,37 +59,53 @@ html[data-intro] .spine {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(40, 40, 40, 0.48);
-  transition: background 0.6s var(--ease);
+  background: rgba(40, 40, 40, 0.5);
+  transition: background-color 0.9s var(--cine);
 }
 
-/* The name down the spine, read top to bottom like a book's */
-.spine__name {
+.spine::before {
+  content: '';
   position: absolute;
   z-index: 1;
-  top: var(--pad);
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.9s var(--cine);
+}
+
+/* ---------- The travelling name ----------
+   One element per spine. Down the spine it's turned a quarter turn and scaled down,
+   centred near the top; open, it's flat, full size, at its spot in the card (--land-y,
+   measured in Library.jsx). The change is a single transform, so it turns, grows and
+   glides in one motion. */
+.spine__name {
+  position: absolute;
+  z-index: 2;
+  top: 0;
   left: 50%;
-  translate: -50% 0;
-  writing-mode: vertical-rl;
-  font-size: clamp(28px, 3.2vw, 54px);
-  line-height: 1;
+  font-size: var(--name);
+  line-height: 0.86;
   white-space: nowrap;
-  transition: opacity 0.35s var(--ease);
+  transform-origin: 0 0;
+  transform: translate(calc(var(--name) * 0.86 * var(--spine-scale) / 2), var(--pad)) rotate(90deg)
+    scale(var(--spine-scale));
+  transition:
+    left var(--glide) var(--cine),
+    transform var(--glide) var(--cine);
+  pointer-events: none;
 }
 
 /* ---------- The open card ---------- */
 .spine__card {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   inset: 0 auto 0 0;
   width: var(--open-w);
   padding: var(--pad);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s var(--ease);
 }
 
 .spine__field,
@@ -94,15 +116,18 @@ html[data-intro] .spine {
 .spine__text {
   display: flex;
   flex-direction: column;
-  margin-top: auto;
 }
 
+/* On desktop this only marks where the travelling name lands */
 .spine__title {
-  font-size: clamp(44px, 5.5cqi, 110px);
+  font-size: var(--name);
+  line-height: 0.86;
+  white-space: nowrap;
+  visibility: hidden;
 }
 
 .spine__summary {
-  margin-top: 16px;
+  margin-top: 18px;
   max-width: 46ch;
   font-size: clamp(12px, 1vw, 14px);
 }
@@ -113,55 +138,68 @@ html[data-intro] .spine {
   padding-bottom: 3px;
   border-bottom: 1px solid currentColor;
   white-space: nowrap;
+  transition: color 0.3s;
 }
 
-/* Open state: shared by hover (desktop) and tap (phones) */
-.spine.is-open .spine__name {
+/* The card's details fade up one after another once the name has nearly landed,
+   and slip away quickly on close */
+.spine__field,
+.spine__summary,
+.spine__go {
   opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
 
-.spine.is-open .spine__card {
-  opacity: 1;
-  transition-delay: 0.25s;
+/* ---------- Open ---------- */
+.spine.is-open .spine__photo {
+  transform: scale(1);
 }
 
 .spine.is-open::after {
-  background:
-    linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 55%),
-    rgba(40, 40, 40, 0.22);
+  background-color: rgba(40, 40, 40, 0.2);
 }
 
-/* ---------- Desktop: hovering opens a spine, the others narrow in place ---------- */
-@media (hover: hover) and (min-width: 761px) {
-  .spine:hover,
-  .spine:focus-visible {
+.spine.is-open::before {
+  opacity: 1;
+}
+
+.spine.is-open .spine__name {
+  left: var(--pad);
+  transform: translate(0, var(--land-y, 70vh)) rotate(0deg) scale(1);
+}
+
+.spine.is-open :is(.spine__field, .spine__summary, .spine__go) {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.9s var(--ease),
+    color 0.3s;
+}
+
+.spine.is-open .spine__field {
+  transition-delay: 0.55s;
+}
+
+.spine.is-open .spine__summary {
+  transition-delay: 0.75s;
+}
+
+.spine.is-open .spine__go {
+  transition-delay: 0.85s, 0.85s, 0s;
+}
+
+.spine.is-open:hover .spine__go {
+  color: var(--pink);
+}
+
+/* ---------- Desktop: the open spine widens, the others narrow in place ---------- */
+@media (min-width: 761px) {
+  .spine.is-open {
     flex-grow: var(--grow);
-  }
-
-  .spine:hover .spine__name,
-  .spine:focus-visible .spine__name {
-    opacity: 0;
-  }
-
-  .spine:hover .spine__card,
-  .spine:focus-visible .spine__card {
-    opacity: 1;
-    transition-delay: 0.25s;
-  }
-
-  .spine:hover::after,
-  .spine:focus-visible::after {
-    background:
-      linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 55%),
-      rgba(40, 40, 40, 0.22);
-  }
-
-  .spine:hover .spine__photo {
-    transform: scale(1.03);
-  }
-
-  .spine:hover .spine__go {
-    color: var(--pink);
   }
 }
 
@@ -175,20 +213,27 @@ html[data-intro] .spine {
 
   .spine {
     flex: none;
-    height: 76px;
-    transition: height 0.7s var(--ease);
+    height: 84px;
+    transition: height var(--glide) var(--cine);
   }
 
   .spine.is-open {
-    height: min(64svh, 560px);
+    height: min(68svh, 580px);
   }
 
+  /* No turning on phones: the strip's name fades out and the card's own title takes over */
   .spine__name {
     top: 50%;
     left: var(--pad);
-    translate: 0 -50%;
-    writing-mode: horizontal-tb;
     font-size: 30px;
+    transform: translateY(-50%);
+    transition: opacity 0.35s var(--ease);
+  }
+
+  .spine.is-open .spine__name {
+    left: var(--pad);
+    opacity: 0;
+    transform: translateY(-50%);
   }
 
   .spine__card {
@@ -197,5 +242,22 @@ html[data-intro] .spine {
 
   .spine__title {
     font-size: 11vw;
+    white-space: normal;
+    visibility: visible;
+    opacity: 0;
+    transition: opacity 0.5s var(--ease);
+  }
+
+  .spine.is-open .spine__title {
+    opacity: 1;
+    transition-delay: 0.4s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spine,
+  .spine__name,
+  .spine__photo {
+    transition-duration: 0.01s;
   }
 }

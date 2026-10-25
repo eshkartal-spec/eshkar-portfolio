@@ -5,9 +5,8 @@ import './Intro.css'
 
 // ---- Timing (ms) ---------------------------------------------------------
 const START = 250 // short pause on the dark screen before the outline starts
-const DRAW = 1400 // the logo's outline is traced
-const FILL_AT = START + DRAW - 250 // the shapes fill in as the tracing finishes
-const LEAVE_AT = START + DRAW + 650 // screen starts dissolving
+const TRACE = 950 // each letter's outline is traced in this long
+const STAGGER = 110 // each letter starts this much after the one before
 const DISSOLVE = 800
 // -------------------------------------------------------------------------
 
@@ -36,13 +35,19 @@ export default function Intro({ onDone }) {
     } catch {
       /* private mode: it will simply play again next time */
     }
-    // Every shape is traced with the same speed, whatever its real length;
-    // shapes that had no fill in the logo stay as lines
-    for (const el of logoRef.current.querySelectorAll(SHAPES)) {
+    // Every shape is traced in the same time, whatever its real length, one after
+    // another in the file's order; shapes that had no fill in the logo stay as lines
+    const shapes = [...logoRef.current.querySelectorAll(SHAPES)]
+    shapes.forEach((el, i) => {
       el.setAttribute('pathLength', '1')
+      el.style.setProperty('--n', i)
       el.dataset.fill = getComputedStyle(el).fill === 'none' ? 'none' : 'solid'
-    }
-    const timers = [setTimeout(() => setPhase('fill'), FILL_AT), setTimeout(leave, LEAVE_AT)]
+    })
+    const traced = START + (shapes.length - 1) * STAGGER + TRACE
+    const timers = [
+      setTimeout(() => setPhase('fill'), traced - 250), // fill in as the last letter finishes
+      setTimeout(leave, traced + 650), // then the screen dissolves
+    ]
     window.addEventListener('pointerdown', leave)
     window.addEventListener('keydown', leave)
     return () => {
@@ -55,7 +60,12 @@ export default function Intro({ onDone }) {
   return (
     <div
       className={`intro is-${phase}`}
-      style={{ '--start': `${START}ms`, '--draw': `${DRAW}ms`, '--dissolve': `${DISSOLVE}ms` }}
+      style={{
+        '--start': `${START}ms`,
+        '--trace': `${TRACE}ms`,
+        '--stagger': `${STAGGER}ms`,
+        '--dissolve': `${DISSOLVE}ms`,
+      }}
       aria-hidden="true"
     >
       <div ref={logoRef} className="intro__logo" dangerouslySetInnerHTML={{ __html: logo }} />

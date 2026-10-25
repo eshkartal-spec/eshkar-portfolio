@@ -6,7 +6,7 @@ import './Home.css'
 
 export default function Home() {
   return (
-    <main className={`home${site.showHero ? ' home--hero' : ''}`}>
+    <main className="home">
       {site.showHero && (
         <section className="hero">
           <HeroReveal image={site.hero} />

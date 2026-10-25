@@ -14,7 +14,16 @@
   -webkit-backdrop-filter: blur(10px);
   transition:
     background 0.35s var(--ease),
-    color 0.35s var(--ease);
+    color 0.35s var(--ease),
+    transform 0.6s var(--ease),
+    opacity 0.6s var(--ease);
+}
+
+/* Out of sight over the Home page's project library */
+.header--hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Over the Home page photo */
