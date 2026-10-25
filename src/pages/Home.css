@@ -54,7 +54,6 @@
   letter-spacing: -0.02em;
   line-height: 0.8;
   white-space: nowrap;
-  color: #1fa35c; /* TEMPORARY: testing that a push reaches the live site */
   --name-drop: -0.068em;
   --name-hang: 0.025em;
 }
