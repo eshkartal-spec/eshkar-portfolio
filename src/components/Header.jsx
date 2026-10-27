@@ -29,7 +29,10 @@ export default function Header() {
   return (
     <header className={`header wrap${mode}`}>
       <Link to="/" className="header__name label label--ink">
-        <span className="header__dot" aria-hidden="true" />
+        {/* Her R mark (src/assets/R_logo.svg) */}
+        <svg className="header__mark" viewBox="0 0 353 484" aria-hidden="true">
+          <path d="M236.936 252.371L353 484H271.961L124.119 205.472L130.952 203.189C130.952 203.189 135.506 206.613 147.656 210.886C159.805 215.158 171.006 215.726 180.621 215.726C230.068 215.726 256.165 179.771 256.165 140.36C255.479 100.257 227.321 64.3028 166.885 64.3028H74.1712V484H0V0H183.368C278.829 0 331.023 62.2286 331.023 133.446C331.023 189.451 296.685 236.469 236.936 252.371Z" />
+        </svg>
         {site.name}
       </Link>
       <nav className="header__nav">

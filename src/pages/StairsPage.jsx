@@ -128,7 +128,7 @@ function Opening({ project }) {
 // of real stairs with the title on them; the first few scroll ticks walk into the photo,
 // which gives way to a 3D concrete flight. From there each tick climbs one step, with
 // text and photos painted on the risers (the steps' fronts), while someone carrying the
-// bike climbs alongside. The next project follows the top step.
+// bike stands beside the flight. The next project follows the top step.
 export default function StairsPage({ project, next }) {
   const steps = useMemo(() => buildSteps(project), [project])
   const trackRef = useRef(null)
@@ -154,7 +154,7 @@ export default function StairsPage({ project, next }) {
 
   // The camera: follows the scroll with easing, so each step glides, and settles on
   // the nearest step once the scrolling stops. --q is the walk into the opening photo
-  // (0–1), --p the position on the flight in steps, --stride the lift within a step.
+  // (0–1), --p the position on the flight in steps.
   useEffect(() => {
     const track = trackRef.current
     const view = viewRef.current
@@ -180,7 +180,6 @@ export default function StairsPage({ project, next }) {
       const q = clamp(pos / OPENING, 0, 1)
       const p = clamp((pos - OPENING) / STEP, 0, top)
       view.style.setProperty('--q', q.toFixed(4))
-      view.style.setProperty('--stride', Math.sin((p % 1) * Math.PI).toFixed(3))
       flight.style.setProperty('--p', p.toFixed(4))
       // The top bar stays out of the way over the opening photo
       if (q < 0.9) html.dataset.headerHidden = ''

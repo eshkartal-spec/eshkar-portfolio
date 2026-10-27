@@ -13,27 +13,26 @@ main.stairs {
   position: relative;
 }
 
+/* The flight is pinned to the left edge of the screen, like stairs running along a
+   wall: the camera's vanishing point sits on that edge too, so every step's left end
+   lines up on it, and the steps narrow toward it as they rise */
 .stairs__view {
-  /* Where the flight stands across the screen: left of center on desktop, leaving
-     room for the climber on the right */
-  --flight-x: 38%;
   position: sticky;
   top: 0;
   height: 100vh;
   overflow: hidden;
   background: var(--bg);
   perspective: 1500px;
-  perspective-origin: var(--flight-x) 28%;
+  perspective-origin: 0% 28%;
 }
 
-/* Climbing alongside the stairs: rises a little with every step */
+/* Standing beside the flight, still and large */
 .stairs__climber {
   position: absolute;
   z-index: 1;
-  right: 2vw;
-  bottom: -3vh;
-  height: 74vh;
-  transform: translateY(calc(var(--stride, 0) * -2.4vh));
+  right: 1vw;
+  bottom: 0;
+  height: 96vh;
   opacity: clamp(0, calc((var(--q, 0) - 0.84) * 7), 1);
   pointer-events: none;
 }
@@ -134,12 +133,11 @@ main.stairs {
 .stairs__flight {
   --H: 17vh;
   --D: 36vh;
-  --W: min(1100px, 64vw);
+  --W: 62vw;
   position: absolute;
-  left: var(--flight-x);
+  left: 0;
   top: 69vh;
   width: var(--W);
-  margin-left: calc(var(--W) / -2);
   transform-style: preserve-3d;
   transform: translate3d(0, calc(var(--p, 0) * var(--H)), calc(var(--p, 0) * var(--D)));
 }
@@ -189,17 +187,21 @@ main.stairs {
   z-index: 1;
 }
 
+/* All the paint starts on one line, the same distance in from the wall */
+.riser {
+  --inset: 5cqw;
+}
+
 .riser__statement {
-  width: 100%;
-  padding: 0 4cqw;
+  width: 78%;
+  padding-left: var(--inset);
   font-size: 13cqh;
-  text-align: center;
 }
 
 /* Features: words on the left part of the riser, the photo on the right */
 .riser__left {
   width: 44%;
-  padding-left: 3.4cqw;
+  padding-left: var(--inset);
 }
 
 .riser__feature-title {
@@ -216,7 +218,7 @@ main.stairs {
 }
 
 .riser__heading {
-  padding-left: 3cqw;
+  padding-left: var(--inset);
   font-size: min(60cqh, 7.8cqw);
   line-height: 0.8;
   white-space: nowrap;
@@ -229,29 +231,8 @@ main.stairs {
 
 .riser__captions .label {
   flex: 1;
-  padding-left: 3.4cqw;
+  padding-left: var(--inset);
   font-size: 9cqh;
-}
-
-.riser__next {
-  display: flex;
-  flex-direction: column;
-  gap: 6cqh;
-  padding-left: 3cqw;
-  text-decoration: none;
-}
-
-.riser__next .label {
-  font-size: 9cqh;
-}
-
-.riser__next-title {
-  font-size: min(50cqh, 13cqw);
-  line-height: 0.85;
-}
-
-.riser__next:hover .riser__next-title {
-  color: var(--ink);
 }
 
 /* ---------- Photos painted across several risers ----------
@@ -300,10 +281,6 @@ main.stairs {
 
 /* ---------- Phones: the flight takes the whole width; no room for the climber ---------- */
 @media (max-width: 760px) {
-  .stairs__view {
-    --flight-x: 50%;
-  }
-
   .stairs__climber {
     display: none;
   }
@@ -311,7 +288,7 @@ main.stairs {
   .stairs__flight {
     --H: 11vh;
     --D: 22vh;
-    --W: 94vw;
+    --W: 100vw;
     top: 76vh;
   }
 

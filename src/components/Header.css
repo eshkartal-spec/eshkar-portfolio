@@ -46,11 +46,12 @@ html[data-header-hidden] .header {
   gap: 10px;
 }
 
-.header__dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--pink);
+/* Her R mark, in pink, about the height of the capitals beside it */
+.header__mark {
+  display: block;
+  height: 13px;
+  width: auto;
+  fill: var(--pink);
 }
 
 .header__nav {
