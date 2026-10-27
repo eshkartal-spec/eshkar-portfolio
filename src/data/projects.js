@@ -23,10 +23,6 @@ export const projects = [
       },
       // Someone carrying the bike, seen from behind: climbs beside the stairs (desktop)
       climber: img('step-up-stairs', 'climber-back', 'Carrying the STEP UP bike up the stairs'),
-      // Seamless texture for the 3D stairs
-      texture: '/images/step-up-stairs/concrete.webp',
-      // The same stairs without the paint: the page's background, behind the climb
-      backdrop: '/images/step-up-stairs/banner-blank.webp',
     },
     title: 'STEP UP',
     fullTitle: 'STEP UP Bicycle',

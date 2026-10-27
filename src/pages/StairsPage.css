@@ -21,20 +21,10 @@ main.stairs {
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: var(--bg);
+  /* A shade deeper than the page, so the steps' white edges read */
+  background: #e1e0dd;
   perspective: 1500px;
   perspective-origin: 0% 28%;
-}
-
-/* Behind everything: the real stairs from the opening, without the paint, mirrored
-   to run the same way as the flight */
-.stairs__view::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: var(--backdrop) 60% 100% / cover no-repeat;
-  transform: scaleX(-1);
 }
 
 /* Layers, back to front: the flight, the shade, the climber, the opening photo, the
@@ -111,22 +101,6 @@ main.stairs {
   transform: scale(calc(1 + var(--q, 0) * 0.45));
 }
 
-/* "Paint": the color soaks into the concrete texture (the letters show its pits
-   and grain), like paint rolled onto a rough step */
-.painted {
-  --paint: #fff;
-  color: transparent;
-  background-image: linear-gradient(var(--paint), var(--paint)), var(--texture);
-  background-size: auto, 40vh;
-  background-blend-mode: multiply;
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-.display.painted {
-  --paint: var(--pink);
-}
-
 /* ---------- The 3D flight ---------- */
 /* The flight: steps are --H tall and --D deep, --W wide */
 .stairs__flight {
@@ -151,6 +125,10 @@ main.stairs {
   transform: translate3d(0, calc(var(--i) * var(--H) * -1), calc(var(--i) * var(--D) * -1));
 }
 
+/* The stairs are suggested rather than drawn: each step is a faint change of tone,
+   the fronts a little darker (most of all just under the edge), the tops a little
+   lighter, and a fine white line along each step's edge that fades out to the right */
+
 /* The step's front, where everything is painted */
 .riser {
   position: absolute;
@@ -161,22 +139,29 @@ main.stairs {
   display: flex;
   align-items: center;
   overflow: hidden;
-  background:
-    linear-gradient(rgba(60, 60, 60, 0.2), rgba(60, 60, 60, 0.2)),
-    var(--texture) center / 50vh repeat;
+  background: linear-gradient(rgba(17, 17, 17, 0.09), rgba(17, 17, 17, 0.03));
   container-type: size;
 }
 
-/* The step's top: lighter, as if lit from above */
+/* The step's edge */
+.riser::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, #fff 20%, rgba(255, 255, 255, 0) 95%);
+  /* A hairline of shadow under it, so the white reads against the light step */
+  box-shadow: 0 1px 0 rgba(17, 17, 17, 0.06);
+}
+
+/* The step's top, as if lit from above */
 .tread {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: var(--D);
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.15)),
-    var(--texture) center / 50vh repeat;
+  background: linear-gradient(rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0));
   transform-origin: top;
   transform: rotateX(-90deg);
 }

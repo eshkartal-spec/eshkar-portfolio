@@ -71,7 +71,7 @@ function Riser({ step }) {
       {step.kind === 'statement' &&<span className="sub riser__statement">{step.text}</span>}
       {step.kind === 'feature-title' && <span className="riser__left riser__feature-title">{step.text}</span>}
       {step.kind === 'feature-text' && <span className="riser__left riser__feature-text">{step.text}</span>}
-      {step.kind === 'heading' && <span className="display painted riser__heading">{step.text}</span>}
+      {step.kind === 'heading' && <span className="display riser__heading">{step.text}</span>}
       {step.kind === 'captions' && (
         <span className="riser__captions">
           {step.items.map((c) => <span key={c} className="label">{c}</span>)}
@@ -199,7 +199,7 @@ export default function StairsPage({ project, next }) {
     }
   }, [steps])
 
-  const { climber, texture, backdrop } = project.stairs
+  const { climber } = project.stairs
   return (
     <main className="stairs" aria-label={project.fullTitle ?? project.title}>
       {/* The scroll track: the walk in, one tick of scrolling per step, the arrival */}
@@ -208,11 +208,7 @@ export default function StairsPage({ project, next }) {
         className="stairs__track"
         style={{ height: `calc(${OPENING + (steps.length - 1) * STEP + ARRIVE}px + 100vh)` }}
       >
-        <div
-          ref={viewRef}
-          className="stairs__view"
-          style={{ '--texture': `url("${texture}")`, '--backdrop': `url("${backdrop}")` }}
-        >
+        <div ref={viewRef} className="stairs__view">
           <Opening project={project} />
           <div ref={flightRef} className="stairs__flight">
             {steps.map((step, i) => (
