@@ -19,9 +19,11 @@
     opacity 0.6s var(--ease);
 }
 
-/* Out of sight over the Home page's project library, and over full-screen openings
-   that ask for it (html[data-header-hidden], e.g. the Step Up stairs photo) */
+/* Out of sight over the Home page's project library, over full-screen openings that
+   ask for it (html[data-header-hidden], e.g. the Step Up stairs photo), and after a
+   second without scrolling (header--asleep, see Header.jsx) */
 .header--hidden,
+.header--asleep,
 html[data-header-hidden] .header {
   transform: translateY(-100%);
   opacity: 0;
@@ -40,18 +42,25 @@ html[data-header-hidden] .header {
   text-decoration: none;
 }
 
-.header__name {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+/* Her wordmark, black, turning pink on hover */
+.header__logo {
+  display: block;
+  color: var(--ink);
+  transition: color 0.3s var(--ease);
 }
 
-/* Her R mark, in pink, about the height of the capitals beside it */
-.header__mark {
+.header__logo:hover {
+  color: var(--pink);
+}
+
+.header__logo svg {
   display: block;
-  height: 13px;
+  height: 15px;
   width: auto;
-  fill: var(--pink);
+}
+
+.header__logo svg * {
+  fill: currentColor;
 }
 
 .header__nav {
@@ -100,7 +109,7 @@ html[data-header-hidden] .header {
     font-size: 10.5px;
     letter-spacing: 0.06em;
   }
-  .header__name {
-    gap: 7px;
+  .header__logo svg {
+    height: 13px;
   }
 }

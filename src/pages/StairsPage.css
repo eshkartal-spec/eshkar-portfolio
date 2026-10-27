@@ -26,15 +26,31 @@ main.stairs {
   perspective-origin: 0% 28%;
 }
 
-/* Standing beside the flight, still and large */
+/* Standing beside the flight, facing it (the photo is mirrored). Over the whole climb
+   the view slowly draws back from him: he starts a little closer (--climb, 0–1) */
 .stairs__climber {
   position: absolute;
   z-index: 1;
   right: 1vw;
   bottom: 0;
   height: 96vh;
+  transform-origin: 50% 100%;
+  transform: scaleX(-1) scale(calc(1.14 - var(--climb, 0) * 0.14));
   opacity: clamp(0, calc((var(--q, 0) - 0.84) * 7), 1);
   pointer-events: none;
+}
+
+/* Past the top step, the next project comes down into view from above (it's hidden
+   until it starts to arrive; see StairsPage.jsx) */
+.stairs__next {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  transform: translateY(calc((1 - var(--arrive, 0)) * -100%));
+}
+
+.stairs__next .next-project {
+  height: 100%;
 }
 
 /* ---------- The opening: real stairs, with paint on them ---------- */
@@ -279,12 +295,20 @@ main.stairs {
   flex: 1;
 }
 
-/* ---------- Phones: the flight takes the whole width; no room for the climber ---------- */
-@media (max-width: 760px) {
+/* ---------- Tall (portrait) screens: the climber stands behind the stairs ----------
+   The steps narrow toward the left wall as they rise, so he shows in the space above
+   and to the right of them */
+@media (orientation: portrait) {
   .stairs__climber {
-    display: none;
+    z-index: -1;
+    right: -8vw;
+    bottom: 20vh;
+    height: 72vh;
   }
+}
 
+/* ---------- Phones: the flight takes the whole width ---------- */
+@media (max-width: 760px) {
   .stairs__flight {
     --H: 11vh;
     --D: 22vh;

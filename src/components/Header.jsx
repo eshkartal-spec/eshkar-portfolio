@@ -1,7 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import logo from '../assets/logo.svg?raw'
 import { site } from '../data/site'
 import './Header.css'
+
+const IDLE = 1000 // ms without scrolling before the header slips away
+const ZONE = 90 // px from the top of the screen where the pointer brings it back
 
 // How the header looks on the Home page's first screen:
 // - with the project library there, it stays out of sight until the page scrolls past it
@@ -24,17 +28,67 @@ function useHeaderMode() {
   return y < window.innerHeight - 120 ? ' header--hidden' : ''
 }
 
+// Everywhere: the header slips away after a second without scrolling, and comes back
+// while scrolling, while the pointer is near the top of the screen, or while it has
+// keyboard focus
+function useAwake(headerRef) {
+  const [awake, setAwake] = useState(true)
+  useEffect(() => {
+    let timer = 0
+    let held = false // pointer in the top zone, or focus inside the header
+    const sleepSoon = () => {
+      clearTimeout(timer)
+      timer = setTimeout(() => !held && setAwake(false), IDLE)
+    }
+    const wake = () => {
+      setAwake(true)
+      sleepSoon()
+    }
+    const onMove = (e) => {
+      const inZone = e.clientY < ZONE
+      if (inZone === held) return
+      held = inZone
+      if (held) setAwake(true)
+      else sleepSoon()
+    }
+    const header = headerRef.current
+    const onFocusIn = () => {
+      held = true
+      setAwake(true)
+    }
+    const onFocusOut = () => {
+      held = false
+      sleepSoon()
+    }
+    sleepSoon()
+    window.addEventListener('scroll', wake, { passive: true })
+    window.addEventListener('pointermove', onMove, { passive: true })
+    header.addEventListener('focusin', onFocusIn)
+    header.addEventListener('focusout', onFocusOut)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('scroll', wake)
+      window.removeEventListener('pointermove', onMove)
+      header.removeEventListener('focusin', onFocusIn)
+      header.removeEventListener('focusout', onFocusOut)
+    }
+  }, [headerRef])
+  return awake
+}
+
 export default function Header() {
+  const ref = useRef(null)
   const mode = useHeaderMode()
+  const awake = useAwake(ref)
   return (
-    <header className={`header wrap${mode}`}>
-      <Link to="/" className="header__name label label--ink">
-        {/* Her R mark (src/assets/R_logo.svg) */}
-        <svg className="header__mark" viewBox="0 0 353 484" aria-hidden="true">
-          <path d="M236.936 252.371L353 484H271.961L124.119 205.472L130.952 203.189C130.952 203.189 135.506 206.613 147.656 210.886C159.805 215.158 171.006 215.726 180.621 215.726C230.068 215.726 256.165 179.771 256.165 140.36C255.479 100.257 227.321 64.3028 166.885 64.3028H74.1712V484H0V0H183.368C278.829 0 331.023 62.2286 331.023 133.446C331.023 189.451 296.685 236.469 236.936 252.371Z" />
-        </svg>
-        {site.name}
-      </Link>
+    <header ref={ref} className={`header wrap${mode}${awake ? '' : ' header--asleep'}`}>
+      {/* Her wordmark, the same as in the intro (src/assets/logo.svg) */}
+      <Link
+        to="/"
+        className="header__logo"
+        aria-label={site.name}
+        dangerouslySetInnerHTML={{ __html: logo }}
+      />
       <nav className="header__nav">
         <Link to="/#work" className="label label--ink">Work</Link>
         <Link to="/#about" className="label label--ink">About</Link>
