@@ -4,10 +4,10 @@ import { INTRO_SEEN_KEY } from '../intro'
 import './Intro.css'
 
 // ---- Timing (ms) ---------------------------------------------------------
-const FIRST_AT = 200 // the K pulls into focus alone
-const REST_AT = 1050 // the other letters pull into focus where they stand
-const PINK_AT = 2300 // a soft pink sweep crosses the word, left to right
-const LEAVE_AT = 3300 // the word softens away and the white lifts like a curtain
+// The K is there from the first frame
+const REST_AT = 700 // the other letters come softly into focus where they stand
+const PINK_AT = 1900 // a soft pink sweep crosses the word, left to right
+const LEAVE_AT = 3000 // the word fades away and the white lifts like a curtain
 const OUT = 1200 // how long the exit takes
 // -------------------------------------------------------------------------
 
@@ -32,10 +32,10 @@ function layers() {
 }
 const LOGO = layers()
 
-// A white screen, filmed: the whole word drifts slowly closer the entire time; the K
-// comes into focus first, then the rest of the word, in black. A pink sweep passes
-// across it, then the word softens away and the white lifts off the site like a
-// curtain. Click or press any key to skip.
+// A white screen, filmed: the whole word drifts slowly closer the entire time. The K
+// is already there; the rest of the word comes softly into focus around it, in black.
+// A pink sweep passes across it, then the word fades away and the white lifts off the
+// site like a curtain. Click or press any key to skip.
 export default function Intro({ onDone }) {
   const [phase, setPhase] = useState('wait')
   const leaving = useRef(false)
@@ -56,7 +56,6 @@ export default function Intro({ onDone }) {
       /* private mode: it will simply play again next time */
     }
     const timers = [
-      setTimeout(() => setPhase('first'), FIRST_AT),
       setTimeout(() => setPhase('rest'), REST_AT),
       setTimeout(() => setPhase('pink'), PINK_AT),
       setTimeout(leave, LEAVE_AT),
@@ -74,8 +73,11 @@ export default function Intro({ onDone }) {
     <div className={`intro is-${phase}`} aria-hidden="true">
       <div className="intro__curtain" />
       <div className="intro__stage">
-        <div className="intro__layer intro__layer--first" dangerouslySetInnerHTML={{ __html: LOGO.first }} />
-        <div className="intro__layer intro__layer--rest" dangerouslySetInnerHTML={{ __html: LOGO.rest }} />
+        {/* The black word; the sweep wipes it away exactly as the pink wipes in */}
+        <div className="intro__black">
+          <div className="intro__layer intro__layer--first" dangerouslySetInnerHTML={{ __html: LOGO.first }} />
+          <div className="intro__layer intro__layer--rest" dangerouslySetInnerHTML={{ __html: LOGO.rest }} />
+        </div>
         <div className="intro__layer intro__layer--pink" dangerouslySetInnerHTML={{ __html: LOGO.pink }} />
       </div>
     </div>
