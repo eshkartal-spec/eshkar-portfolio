@@ -5,38 +5,27 @@ import './StairsPage.css'
 // ---- Pace (in pixels of scrolling: one mouse-wheel tick is about 100) ----
 const OPENING = 400 // walking into the opening photo
 const STEP = 100 // climbing one step: one tick, one step
-const ARRIVE = 400 // past the top step: the next project comes down into view from above
+const ARRIVE = 400 // past the top step: the next project fades in over the stairs
 const SETTLE = 140 // ms after the scrolling stops, the camera settles on the nearest step
 const FOLLOW = 0.12 // how quickly the camera catches up (0–1): each step glides
 // --------------------------------------------------------------------------
 const AHEAD = 9 // steps visible ahead before they fade into the distance
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi)
 
-// A photo painted across several risers, like an ad printed up a flight of stairs.
-// Each riser shows its own band of the photo.
-const photo = (image, count, side = 'full') =>
-  Array.from({ length: count }, (_, j) => ({ slice: { image, j, count, side } }))
-
-// The climb, bottom to top: one entry per step. Each riser can carry text on its
-// left part and/or a band of a photo. (The title and details are on the opening
-// photo's steps, before the climb.)
+// The climb, bottom to top: one entry per step. The risers carry words, painted on the
+// part of the flight clear of the climber; only "Behind the product" has photos, painted
+// across several risers like an ad printed up a flight of stairs. (The title and details
+// are on the opening photo's steps, before the climb.)
 function buildSteps(p) {
-  const steps = [
-    {},
-    // The problem
-    ...photo(p.heroAlt, 4),
-    { kind: 'statement', text: p.pull },
-    {},
-  ]
+  // The problem
+  const steps = [{}, { kind: 'statement', text: p.pull }, {}]
 
-  // One landing per feature: its name, then its description, on the left; its photo
-  // painted up the right of the same risers
+  // One landing per feature: its name, then its description
   p.features.forEach((f) => {
-    const [a, b, c] = photo(f.image, 3, 'right')
-    steps.push({ ...a, kind: 'feature-title', text: f.title }, { ...b, kind: 'feature-text', text: f.text }, c, {})
+    steps.push({ kind: 'feature-title', text: f.title }, { kind: 'feature-text', text: f.text }, {})
   })
 
-  // Behind the product
+  // Behind the product: its photos side by side across four risers
   steps.push({ kind: 'heading', text: 'Behind the product' })
   for (let j = 0; j < 4; j++) steps.push({ row: p.process.map((s) => ({ image: s.image, j, count: 4 })) })
   steps.push({ kind: 'captions', items: p.process.map((s) => s.label) })
@@ -46,9 +35,9 @@ function buildSteps(p) {
 
 // One band of a photo spread over `count` risers (index j from the bottom-most riser
 // of the group, so the photo reads the right way up as you climb)
-function Slice({ image, j, count, side = 'full' }) {
+function Slice({ image, j, count }) {
   return (
-    <span className={`riser__slice riser__slice--${side}`} style={{ '--n': count, '--j': count - 1 - j }}>
+    <span className="riser__slice" style={{ '--n': count, '--j': count - 1 - j }}>
       <span className="riser__photo" style={{ backgroundImage: `url("${image.src}")` }} data-src={image.src} />
     </span>
   )
@@ -57,7 +46,6 @@ function Slice({ image, j, count, side = 'full' }) {
 function Riser({ step }) {
   return (
     <div className={`riser${step.kind ? ` riser--${step.kind}` : ''}`}>
-      {step.slice && <Slice {...step.slice} />}
       {step.row && (
         <span className="riser__row">
           {step.row.map((s) => <Slice key={s.image.src} {...s} />)}
@@ -129,8 +117,8 @@ function Opening({ project }) {
 // of real stairs with the title on them; the first few scroll ticks walk into the photo,
 // which gives way to a 3D concrete flight. From there each tick climbs one step, with
 // text and photos painted on the risers (the steps' fronts), while someone carrying the
-// bike stands beside the flight. Past the top step the next project comes down into
-// view from above, so the page keeps moving the way the climb did.
+// bike stands on the flight in front of them. Past the top step the next project fades
+// in over the stairs.
 export default function StairsPage({ project, next }) {
   const steps = useMemo(() => buildSteps(project), [project])
   const trackRef = useRef(null)
@@ -158,7 +146,7 @@ export default function StairsPage({ project, next }) {
   // The camera: follows the scroll with easing, so each step glides, and settles on
   // the nearest step once the scrolling stops. --q is the walk into the opening photo
   // (0–1), --p the position on the flight in steps, --climb how far up the flight
-  // (0–1) and --arrive how far the next project has come down (0–1).
+  // (0–1) and --arrive how far the next project has faded in (0–1).
   useEffect(() => {
     const track = trackRef.current
     const view = viewRef.current
@@ -177,7 +165,7 @@ export default function StairsPage({ project, next }) {
     const scrolled = () => Math.max(0, -track.getBoundingClientRect().top)
     const nearestStep = (y) => {
       if (y <= OPENING) return y
-      // Past the top step the next project finishes coming down, or goes back up,
+      // Past the top step the next project finishes fading in, or fades back out,
       // depending on which way the page was last scrolled
       if (y > topY) return goingUp ? topY : topY + ARRIVE
       return OPENING + Math.round((y - OPENING) / STEP) * STEP
@@ -245,6 +233,7 @@ export default function StairsPage({ project, next }) {
               </div>
             ))}
           </div>
+          <div className="stairs__shade" />
           <img className="stairs__climber" src={climber.src} alt={climber.alt} />
           <div ref={nextRef} className="stairs__next" style={{ visibility: 'hidden' }}>
             <NextProject project={next} />
