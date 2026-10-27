@@ -199,7 +199,7 @@ export default function StairsPage({ project, next }) {
     }
   }, [steps])
 
-  const { climber, texture } = project.stairs
+  const { climber, texture, backdrop } = project.stairs
   return (
     <main className="stairs" aria-label={project.fullTitle ?? project.title}>
       {/* The scroll track: the walk in, one tick of scrolling per step, the arrival */}
@@ -208,7 +208,11 @@ export default function StairsPage({ project, next }) {
         className="stairs__track"
         style={{ height: `calc(${OPENING + (steps.length - 1) * STEP + ARRIVE}px + 100vh)` }}
       >
-        <div ref={viewRef} className="stairs__view" style={{ '--texture': `url("${texture}")` }}>
+        <div
+          ref={viewRef}
+          className="stairs__view"
+          style={{ '--texture': `url("${texture}")`, '--backdrop': `url("${backdrop}")` }}
+        >
           <Opening project={project} />
           <div ref={flightRef} className="stairs__flight">
             {steps.map((step, i) => (

@@ -21,7 +21,8 @@ main.stairs {
   top: 0;
   height: 100vh;
   overflow: hidden;
-  background: var(--bg);
+  /* Behind everything: the real stairs from the opening, without the paint */
+  background: var(--backdrop) 60% 100% / cover no-repeat, var(--bg);
   perspective: 1500px;
   perspective-origin: 0% 28%;
 }
