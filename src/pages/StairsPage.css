@@ -22,9 +22,25 @@ main.stairs {
   height: 100vh;
   overflow: hidden;
   /* A shade deeper than the page, so the steps' white edges read */
-  background: #e1e0dd;
+  --stage: 225, 224, 221;
+  background: rgb(var(--stage));
   perspective: 1500px;
   perspective-origin: 0% 28%;
+}
+
+/* Behind everything: the real stairs from the opening, without the paint, mirrored
+   to run the same way as the flight, and muted (greyed, softened and washed with the
+   stage's tone) so the flight in front stays the focus */
+.stairs__view::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -12px;
+  background:
+    linear-gradient(rgba(var(--stage), 0.6), rgba(var(--stage), 0.6)),
+    var(--backdrop) 60% 100% / cover no-repeat;
+  filter: grayscale(0.7) blur(3px);
+  transform: scaleX(-1);
 }
 
 /* Layers, back to front: the flight, the shade, the climber, the opening photo, the
@@ -139,7 +155,7 @@ main.stairs {
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: linear-gradient(rgba(17, 17, 17, 0.09), rgba(17, 17, 17, 0.03));
+  background: linear-gradient(rgba(207, 206, 203, 0.94), rgba(217, 216, 213, 0.9));
   container-type: size;
 }
 
@@ -161,7 +177,7 @@ main.stairs {
   top: 0;
   width: 100%;
   height: var(--D);
-  background: linear-gradient(rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0));
+  background: linear-gradient(rgba(234, 233, 230, 0.94), rgba(226, 225, 222, 0.88));
   transform-origin: top;
   transform: rotateX(-90deg);
 }

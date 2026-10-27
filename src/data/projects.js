@@ -23,6 +23,8 @@ export const projects = [
       },
       // Someone carrying the bike, seen from behind: climbs beside the stairs (desktop)
       climber: img('step-up-stairs', 'climber-back', 'Carrying the STEP UP bike up the stairs'),
+      // The same stairs without the paint: the page's background, muted, behind the climb
+      backdrop: '/images/step-up-stairs/banner-blank.webp',
     },
     title: 'STEP UP',
     fullTitle: 'STEP UP Bicycle',
