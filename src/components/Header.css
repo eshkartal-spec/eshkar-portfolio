@@ -9,9 +9,10 @@
   align-items: center;
   gap: 16px;
   height: var(--header-h);
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* A light veil: what's behind shows through, softly blurred */
+  background: color-mix(in srgb, var(--bg) 30%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition:
     background 0.35s var(--ease),
     color 0.35s var(--ease),
