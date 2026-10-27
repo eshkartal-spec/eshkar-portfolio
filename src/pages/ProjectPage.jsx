@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { getProject, projects } from '../data/projects'
 import NotFound from './NotFound'
+import StairsPage from './StairsPage'
 import './ProjectPage.css'
 
 const num = (i) => String(i + 1).padStart(2, '0')
@@ -44,6 +45,7 @@ export default function ProjectPage() {
 
   const index = projects.indexOf(p)
   const next = projects[(index + 1) % projects.length]
+  if (p.layout === 'stairs') return <StairsPage project={p} next={next} />
   const title = p.fullTitle ?? p.title
   const specs = [['Type', p.type], ['Year', p.year], ['Duration', p.duration], ['Tools', p.tools]].filter(
     ([, v]) => v,

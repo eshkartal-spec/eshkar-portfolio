@@ -10,6 +10,8 @@ const img = (project, name, alt) => ({ src: `/images/${project}/${name}.webp`, a
 export const projects = [
   {
     slug: 'step-up',
+    // The page is a staircase you climb by scrolling (src/pages/StairsPage.jsx)
+    layout: 'stairs',
     title: 'STEP UP',
     fullTitle: 'STEP UP Bicycle',
     field: 'Product design',

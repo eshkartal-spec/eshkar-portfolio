@@ -1,0 +1,234 @@
+/* ---------- The staircase page (see StairsPage.jsx) ----------
+   A tall scroll track; inside it a screen-sized view stays put while a 3D flight of
+   stairs moves through it. --p is the camera's position in steps (set while scrolling). */
+
+.stairs__track {
+  position: relative;
+  height: calc(var(--steps) * 20vh + 100vh);
+}
+
+.stairs__view {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  perspective: 1500px;
+  perspective-origin: 50% 18%;
+}
+
+/* The flight: steps are --H tall and --D deep, --W wide */
+.stairs__flight {
+  --H: 21vh;
+  --D: 30vh;
+  --W: min(1500px, 96vw);
+  position: absolute;
+  left: 50%;
+  top: 69vh;
+  width: var(--W);
+  margin-left: calc(var(--W) / -2);
+  transform-style: preserve-3d;
+  transform: translate3d(0, calc(var(--p, 0) * var(--H)), calc(var(--p, 0) * var(--D)));
+}
+
+.step {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  transform-style: preserve-3d;
+  transform: translate3d(0, calc(var(--i) * var(--H) * -1), calc(var(--i) * var(--D) * -1));
+}
+
+/* The step's front, where everything is painted */
+.riser {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--H);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #e3e1dd;
+  container-type: size;
+}
+
+/* The step's top: lighter, as if lit from above */
+.tread {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--D);
+  background: linear-gradient(#f6f5f3, #eceae6);
+  transform-origin: top;
+  transform: rotateX(-90deg);
+}
+
+/* ---------- Paint on the risers ---------- */
+.riser > :not(.riser__slice, .riser__row) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Big words are sized by the riser's height, but never wider than the riser */
+.riser__title {
+  padding-left: 3cqw;
+  font-size: min(86cqh, 21cqw);
+  line-height: 0.8;
+  white-space: nowrap;
+}
+
+.riser__summary {
+  padding-left: 3.4cqw;
+  font-size: 15cqh;
+}
+
+.riser__specs {
+  display: flex;
+  gap: 6cqw;
+  padding-left: 3.4cqw;
+}
+
+.riser__spec {
+  display: flex;
+  flex-direction: column;
+  gap: 4cqh;
+}
+
+.riser__spec .label {
+  font-size: 8cqh;
+}
+
+.riser__spec-value {
+  font-size: 13cqh;
+  line-height: 1.2;
+}
+
+.riser__statement {
+  width: 100%;
+  padding: 0 4cqw;
+  font-size: 13cqh;
+  text-align: center;
+}
+
+/* Features: words on the left part of the riser, the photo on the right */
+.riser__left {
+  width: 44%;
+  padding-left: 3.4cqw;
+}
+
+.riser__feature-title {
+  font-family: var(--font-display);
+  font-size: 22cqh;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.riser__feature-text {
+  font-size: 11cqh;
+  line-height: 1.3;
+}
+
+.riser__heading {
+  padding-left: 3cqw;
+  font-size: min(60cqh, 7.8cqw);
+  line-height: 0.8;
+  white-space: nowrap;
+}
+
+.riser__captions {
+  display: flex;
+  width: 100%;
+}
+
+.riser__captions .label {
+  flex: 1;
+  padding-left: 3.4cqw;
+  font-size: 9cqh;
+}
+
+.riser__next {
+  display: flex;
+  flex-direction: column;
+  gap: 6cqh;
+  padding-left: 3cqw;
+  text-decoration: none;
+}
+
+.riser__next .label {
+  font-size: 9cqh;
+}
+
+.riser__next-title {
+  font-size: min(50cqh, 13cqw);
+  line-height: 0.85;
+}
+
+.riser__next:hover .riser__next-title {
+  color: var(--ink);
+}
+
+/* ---------- Photos painted across several risers ----------
+   Each riser shows one band (--j, counted from the top) of a photo spread over --n
+   risers. The photo is sized to cover the whole group (like object-fit: cover), using
+   its shape --ar (measured in StairsPage.jsx). */
+.riser__slice {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  container-type: size;
+  overflow: hidden;
+}
+
+.riser__slice--full {
+  left: 0;
+  right: 0;
+}
+
+.riser__slice--right {
+  left: 46%;
+  right: 0;
+}
+
+.riser__photo {
+  --bw: max(100cqw, calc(var(--ar, 1.5) * var(--n) * 100cqh));
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-size: var(--bw) auto;
+  background-position: center calc(-1 * ((var(--bw) / var(--ar, 1.5) - var(--n) * 100cqh) / 2 + var(--j) * 100cqh));
+}
+
+/* Several photos side by side across the same risers */
+.riser__row {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 1.4cqw;
+}
+
+.riser__row .riser__slice {
+  position: relative;
+  flex: 1;
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 760px) {
+  .stairs__flight {
+    --H: 12vh;
+    --D: 15vh;
+    --W: 94vw;
+    top: 76vh;
+  }
+
+  .riser__left {
+    width: 48%;
+  }
+
+  .riser__slice--right {
+    left: 50%;
+  }
+}
