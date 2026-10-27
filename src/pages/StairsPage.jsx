@@ -3,7 +3,7 @@ import NextProject from '../components/NextProject'
 import './StairsPage.css'
 
 // ---- Pace (in pixels of scrolling: one mouse-wheel tick is about 100) ----
-const OPENING = 200 // walking into the opening photo: two ticks
+const OPENING = 100 // walking into the opening photo: one tick
 const STEP = 100 // climbing one step: one tick, one step
 const ARRIVE = 400 // past the top step: the next project fades in over the stairs
 const SETTLE = 140 // ms after the scrolling stops, the camera settles on the nearest step
