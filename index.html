@@ -6,6 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Eshkar Karish, industrial designer. A portfolio of physical products, from user need to functional prototype." />
     <title>Eshkar Karish, Industrial Designer</title>
+    <!-- If the intro is about to play (once per visit, or with ?intro), the page is
+         white from the very first moment, so it doesn't flash off-white first.
+         Same check as shouldPlayIntro() in src/intro.js. -->
+    <script>
+      try {
+        if (location.search.includes('intro') || !sessionStorage.getItem('intro-seen'))
+          document.documentElement.dataset.intro = ''
+      } catch (e) {
+        document.documentElement.dataset.intro = ''
+      }
+    </script>
+    <style>
+      html[data-intro],
+      html[data-intro] body {
+        background: #fff;
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Archivo (with its width axis) for headlines, subtitles and labels; Quicksand for running text -->

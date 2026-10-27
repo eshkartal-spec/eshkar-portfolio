@@ -4,30 +4,49 @@ import { INTRO_SEEN_KEY } from '../intro'
 import './Intro.css'
 
 // ---- Timing (ms) ---------------------------------------------------------
-const FIRST_AT = 250 // the K fades in alone
-const REST_AT = 1250 // then the other letters fade in, in place
-const PINK_AT = 2600 // the black word turns pink
-const LEAVE_AT = 3350 // and the screen dissolves into the site
-const DISSOLVE = 900
+const FIRST_AT = 200 // the K pulls into focus alone
+const REST_AT = 1050 // the other letters pull into focus where they stand
+const PINK_AT = 2300 // a soft pink sweep crosses the word, left to right
+const LEAVE_AT = 3300 // the word softens away and the white lifts like a curtain
+const OUT = 1200 // how long the exit takes
 // -------------------------------------------------------------------------
 
 const SHAPES = 'path, line, polyline, polygon, rect, circle, ellipse'
 
-// A white screen where the logo (src/assets/logo.svg) appears in black: first the
-// letter marked data-first (the K), then the others in their places. The word then
-// turns pink and the screen dissolves into the site. Click or press any key to skip.
+// The logo split into three stacked copies: the leading letter (marked data-first,
+// the K), the other letters, and the whole word in pink for the sweep
+function layers() {
+  const svg = new DOMParser().parseFromString(logo, 'image/svg+xml').documentElement
+  const shapes = [...svg.querySelectorAll(SHAPES)]
+  const first = Math.max(0, shapes.findIndex((el) => el.hasAttribute('data-first')))
+  const only = (keep) => {
+    const copy = svg.cloneNode(true)
+    ;[...copy.querySelectorAll(SHAPES)].forEach((el, i) => !keep(i) && el.remove())
+    return new XMLSerializer().serializeToString(copy)
+  }
+  return {
+    first: only((i) => i === first),
+    rest: only((i) => i !== first),
+    pink: only(() => true),
+  }
+}
+const LOGO = layers()
+
+// A white screen, filmed: the whole word drifts slowly closer the entire time; the K
+// comes into focus first, then the rest of the word, in black. A pink sweep passes
+// across it, then the word softens away and the white lifts off the site like a
+// curtain. Click or press any key to skip.
 export default function Intro({ onDone }) {
   const [phase, setPhase] = useState('wait')
-  const logoRef = useRef(null)
   const leaving = useRef(false)
 
   const leave = useCallback(() => {
     if (leaving.current) return
     leaving.current = true
     setPhase('out')
-    // Lets the page underneath start its entrance while the screen dissolves
+    // Lets the page underneath start its entrance as the curtain lifts
     delete document.documentElement.dataset.intro
-    setTimeout(onDone, DISSOLVE)
+    setTimeout(onDone, OUT)
   }, [onDone])
 
   useEffect(() => {
@@ -36,10 +55,6 @@ export default function Intro({ onDone }) {
     } catch {
       /* private mode: it will simply play again next time */
     }
-    // The letter marked data-first (or the first shape) leads; the others follow together
-    const shapes = [...logoRef.current.querySelectorAll(SHAPES)]
-    const first = Math.max(0, shapes.findIndex((el) => el.hasAttribute('data-first')))
-    shapes.forEach((el, i) => el.classList.add(i === first ? 'is-first' : 'is-rest'))
     const timers = [
       setTimeout(() => setPhase('first'), FIRST_AT),
       setTimeout(() => setPhase('rest'), REST_AT),
@@ -56,8 +71,13 @@ export default function Intro({ onDone }) {
   }, [leave])
 
   return (
-    <div className={`intro is-${phase}`} style={{ '--dissolve': `${DISSOLVE}ms` }} aria-hidden="true">
-      <div ref={logoRef} className="intro__logo" dangerouslySetInnerHTML={{ __html: logo }} />
+    <div className={`intro is-${phase}`} aria-hidden="true">
+      <div className="intro__curtain" />
+      <div className="intro__stage">
+        <div className="intro__layer intro__layer--first" dangerouslySetInnerHTML={{ __html: LOGO.first }} />
+        <div className="intro__layer intro__layer--rest" dangerouslySetInnerHTML={{ __html: LOGO.rest }} />
+        <div className="intro__layer intro__layer--pink" dangerouslySetInnerHTML={{ __html: LOGO.pink }} />
+      </div>
     </div>
   )
 }

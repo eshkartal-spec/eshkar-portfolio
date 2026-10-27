@@ -1,72 +1,138 @@
+/* The intro, shot like a film title (timing in Intro.jsx) */
 .intro {
   --silk: cubic-bezier(0.22, 1, 0.36, 1); /* long, soft landing */
+  --lift: cubic-bezier(0.76, 0, 0.24, 1); /* slow start, slow stop */
   position: fixed;
   z-index: 100;
   inset: 0;
   display: grid;
   place-items: center;
+  pointer-events: auto;
+}
+
+.intro.is-out {
+  pointer-events: none;
+}
+
+/* The white screen; on exit it lifts off the site like a curtain */
+.intro__curtain {
+  position: absolute;
+  inset: 0;
   background: #fff;
-  transition:
-    opacity var(--dissolve) var(--ease),
-    visibility var(--dissolve);
+  transition: transform 0.95s var(--lift) 0.2s;
 }
 
-.intro__logo {
+.intro.is-out .intro__curtain {
+  transform: translateY(-100%);
+}
+
+/* The camera: the whole word drifts slowly closer the entire time */
+.intro__stage {
+  position: relative;
+  display: grid;
   width: clamp(240px, 44vw, 620px);
-  transition: transform var(--dissolve) var(--ease);
+  transform: scale(1.07);
+  transition:
+    transform 4s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.55s ease,
+    filter 0.55s ease;
 }
 
-.intro__logo svg {
+.intro:not(.is-wait) .intro__stage {
+  transform: scale(1);
+}
+
+/* On exit the word softens away before the curtain lifts */
+.intro.is-out .intro__stage {
+  opacity: 0;
+  filter: blur(10px);
+}
+
+.intro__layer {
+  grid-area: 1 / 1;
+}
+
+.intro__layer svg {
   display: block;
   width: 100%;
   height: auto;
   overflow: visible;
 }
 
-/* Every letter starts hidden, in black */
-.intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
+.intro__layer svg * {
   fill: var(--ink);
+}
+
+/* The K, then the rest: each pulls into focus where it stands */
+.intro__layer--first,
+.intro__layer--rest {
   opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
+  filter: blur(16px);
   transition:
-    opacity 1.4s var(--silk),
-    transform 1.6s var(--silk),
-    fill 0.5s ease-in-out;
+    opacity 1.3s var(--silk),
+    filter 1.5s var(--silk),
+    transform 1.8s var(--silk);
 }
 
-/* The first letter (the K) grows in very slightly as it fades in;
-   the others simply fade in where they stand */
-.intro__logo .is-first {
-  transform: scale(0.94);
+.intro__layer--first {
+  transform: scale(1.05);
 }
 
-.intro:is(.is-first, .is-rest, .is-pink, .is-out) .is-first,
-.intro:is(.is-rest, .is-pink, .is-out) .is-rest {
+.intro:is(.is-first, .is-rest, .is-pink) .intro__layer--first,
+.intro:is(.is-rest, .is-pink) .intro__layer--rest {
   opacity: 1;
+  filter: blur(0);
   transform: none;
 }
 
-/* Finally the whole word turns pink */
-.intro:is(.is-pink, .is-out) .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
+/* The pink sweep: the pink word is shown through a soft-edged band of mask that
+   slides across it, left to right */
+.intro__layer--pink svg * {
   fill: var(--pink);
 }
 
-.intro.is-out {
-  opacity: 0;
-  visibility: hidden;
+.intro__layer--pink {
+  -webkit-mask-image: linear-gradient(90deg, #000 33.3%, transparent 66.6%);
+  mask-image: linear-gradient(90deg, #000 33.3%, transparent 66.6%);
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  transition:
+    -webkit-mask-position 0.85s cubic-bezier(0.65, 0, 0.35, 1),
+    mask-position 0.85s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.intro.is-out .intro__logo {
-  transform: scale(0.97);
+.intro.is-pink .intro__layer--pink,
+.intro.is-out .intro__layer--pink {
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+}
+
+/* Once the sweep has passed, the black underneath steps aside so no dark edge shows */
+.intro.is-pink .intro__layer--first,
+.intro.is-pink .intro__layer--rest {
+  opacity: 0;
+  transition: opacity 0.3s ease 0.85s;
 }
 
 /* Reduced motion: the pink word simply shows, then the screen fades */
 @media (prefers-reduced-motion: reduce) {
-  .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
-    opacity: 1;
-    transform: none;
-    fill: var(--pink);
-    transition: none;
+  .intro__stage,
+  .intro__layer,
+  .intro__curtain {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .intro__layer--pink {
+    -webkit-mask: none;
+    mask: none;
+  }
+  .intro.is-out {
+    opacity: 0;
+    transition: opacity 0.6s ease;
   }
 }
