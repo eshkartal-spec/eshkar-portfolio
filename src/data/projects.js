@@ -12,6 +12,27 @@ export const projects = [
     slug: 'step-up',
     // The page is a staircase you climb by scrolling (src/pages/StairsPage.jsx)
     layout: 'stairs',
+    stairs: {
+      // Full-screen opening photo. `risers` are the fronts of its bottom steps, in the
+      // photo's own pixels (x, y = top-left; w, h = size): the title and details are
+      // painted on them, bottom step first.
+      photo: {
+        src: '/images/step-up-stairs/stairs-photo.webp',
+        alt: 'Concrete stairs climbing between trees',
+        width: 736,
+        height: 1104,
+        risers: [
+          { x: 112, y: 999, w: 560, h: 101 },
+          { x: 108, y: 906, w: 470, h: 84 },
+          { x: 106, y: 836, w: 440, h: 62 },
+          { x: 106, y: 772, w: 420, h: 56 },
+        ],
+      },
+      // Someone carrying the bike, seen from behind: climbs away up the opening photo
+      climber: img('step-up-stairs', 'climber-back', 'Carrying the STEP UP bike up the stairs'),
+      // Seamless texture for the 3D stairs
+      texture: '/images/step-up-stairs/concrete.webp',
+    },
     title: 'STEP UP',
     fullTitle: 'STEP UP Bicycle',
     field: 'Product design',

@@ -19,8 +19,10 @@
     opacity 0.6s var(--ease);
 }
 
-/* Out of sight over the Home page's project library */
-.header--hidden {
+/* Out of sight over the Home page's project library, and over full-screen openings
+   that ask for it (html[data-header-hidden], e.g. the Step Up stairs photo) */
+.header--hidden,
+html[data-header-hidden] .header {
   transform: translateY(-100%);
   opacity: 0;
   pointer-events: none;

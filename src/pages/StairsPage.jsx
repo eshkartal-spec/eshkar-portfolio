@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import './StairsPage.css'
 
+const OPENING = 1.1 // screen heights of scrolling through the opening photo
 const SCROLL_PER_STEP = 0.2 // screen heights of scrolling to climb one step
 const FOLLOW = 0.1 // how quickly the camera catches up with the scroll (0–1)
 const AHEAD = 9 // steps visible ahead before they fade into the distance
+const clamp01 = (v) => Math.min(Math.max(v, 0), 1)
 
 // A photo painted across several risers, like an ad printed up a flight of stairs.
 // Each riser shows its own band of the photo.
@@ -12,13 +14,10 @@ const photo = (image, count, side = 'full') =>
   Array.from({ length: count }, (_, j) => ({ slice: { image, j, count, side } }))
 
 // The climb, bottom to top: one entry per step. Each riser can carry text on its
-// left part and/or a band of a photo.
+// left part and/or a band of a photo. (The title and details are painted on the
+// opening photo's steps, before the climb.)
 function buildSteps(p, next) {
   const steps = [
-    { kind: 'title', text: p.title },
-    { kind: 'summary', text: p.summary },
-    { kind: 'specs', items: [['Type', p.type], ['Year', p.year], ['Duration', p.duration]] },
-    { kind: 'specs', items: [['Tools', p.tools]] },
     {},
     // The problem
     ...photo(p.heroAlt, 4),
@@ -77,22 +76,10 @@ function Riser({ step }) {
           {step.row.map((s) => <Slice key={s.image.src} {...s} />)}
         </span>
       )}
-      {step.kind === 'title' && <span className="display riser__title">{step.text}</span>}
-      {step.kind === 'summary' && <span className="sub riser__summary">{step.text}</span>}
-      {step.kind === 'specs' && (
-        <span className="riser__specs">
-          {step.items.filter(([, v]) => v).map(([k, v]) => (
-            <span key={k} className="riser__spec">
-              <span className="label">{k}</span>
-              <span className="riser__spec-value">{v}</span>
-            </span>
-          ))}
-        </span>
-      )}
       {step.kind === 'statement' && <span className="sub riser__statement">{step.text}</span>}
       {step.kind === 'feature-title' && <span className="riser__left riser__feature-title">{step.text}</span>}
       {step.kind === 'feature-text' && <span className="riser__left riser__feature-text">{step.text}</span>}
-      {step.kind === 'heading' && <span className="display riser__heading">{step.text}</span>}
+      {step.kind === 'heading' && <span className="display painted riser__heading">{step.text}</span>}
       {step.kind === 'captions' && (
         <span className="riser__captions">
           {step.items.map((c) => <span key={c} className="label">{c}</span>)}
@@ -108,12 +95,57 @@ function Riser({ step }) {
   )
 }
 
-// Step Up's page: a staircase you climb by scrolling. The camera stands at the foot of
-// the flight and rises one step per stretch of scroll; text and photos are painted on
-// the risers (the steps' fronts). Plain stairs for now: a prototype to feel the climb.
+// The opening: a full-screen photo of real stairs, with the title and details painted
+// on its bottom steps and someone carrying the bike climbing away up the flight.
+// The photo is sized like object-fit: cover and kept anchored to its bottom steps, so
+// the paint (placed in the photo's own pixels) stays on its steps at any screen size.
+function Opening({ project }) {
+  const { photo: ph, climber } = project.stairs
+  const at = (r) => ({
+    left: `${(r.x / ph.width) * 100}%`,
+    top: `${(r.y / ph.height) * 100}%`,
+    width: `${(r.w / ph.width) * 100}%`,
+    height: `${(r.h / ph.height) * 100}%`,
+  })
+  const [title, summary, specs, tools] = ph.risers
+  return (
+    <div className="opening" style={{ '--pw': ph.width, '--ph': ph.height }}>
+      <div className="opening__frame">
+        <img className="opening__photo" src={ph.src} alt={ph.alt} />
+        <img className="opening__climber" src={climber.src} alt={climber.alt} />
+        <h1 className="paint" style={at(title)}>
+          <span className="display painted paint__title">{project.title}</span>
+        </h1>
+        <p className="paint" style={at(summary)}>
+          <span className="sub painted paint__summary">{project.summary}</span>
+        </p>
+        <div className="paint paint--specs" style={at(specs)}>
+          {[['Type', project.type], ['Year', project.year], ['Duration', project.duration]].map(([k, v]) => (
+            <span key={k} className="paint__spec">
+              <span className="label painted">{k}</span>
+              <span className="painted paint__value">{v}</span>
+            </span>
+          ))}
+        </div>
+        <div className="paint paint--specs" style={at(tools)}>
+          <span className="paint__spec">
+            <span className="label painted">Tools</span>
+            <span className="painted paint__value">{project.tools}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Step Up's page: a staircase you climb by scrolling. It opens on a full-screen photo
+// of real stairs with the title painted on them; scrolling walks into the photo, which
+// gives way to a 3D concrete flight. The camera then rises one step per stretch of
+// scroll, with text and photos painted on the risers (the steps' fronts).
 export default function StairsPage({ project, next }) {
   const steps = useMemo(() => buildSteps(project, next), [project, next])
   const trackRef = useRef(null)
+  const viewRef = useRef(null)
   const flightRef = useRef(null)
 
   // Each photo's shape, so its bands can be cropped like object-fit: cover
@@ -133,25 +165,35 @@ export default function StairsPage({ project, next }) {
     }
   }, [steps])
 
-  // The camera: follows the scroll with a little easing, so the climb glides
+  // The camera: follows the scroll with a little easing, so the walk and climb glide.
+  // The first stretch of scroll walks into the opening photo (--q, 0–1); after that,
+  // each stretch climbs one step (--p).
   useEffect(() => {
     const track = trackRef.current
+    const view = viewRef.current
     const flight = flightRef.current
     const stepEls = [...flight.children]
+    const html = document.documentElement
     let target = 0
     let pos = 0
     let raf = 0
     const read = () => {
-      const top = track.getBoundingClientRect().top
-      target = Math.max(0, -top / (window.innerHeight * SCROLL_PER_STEP))
+      target = Math.max(0, -track.getBoundingClientRect().top / window.innerHeight)
     }
     const frame = () => {
       pos += (target - pos) * FOLLOW
-      if (Math.abs(target - pos) < 0.001) pos = target
-      flight.style.setProperty('--p', pos.toFixed(4))
+      if (Math.abs(target - pos) < 0.0005) pos = target
+      const q = clamp01(pos / OPENING)
+      // (never past the top step, so it stays in view until the page moves on)
+      const p = Math.min(Math.max(0, (pos - OPENING) / SCROLL_PER_STEP), stepEls.length - 1)
+      view.style.setProperty('--q', q.toFixed(4))
+      flight.style.setProperty('--p', p.toFixed(4))
+      // The top bar stays out of the way over the opening photo
+      if (q < 0.9) html.dataset.headerHidden = ''
+      else delete html.dataset.headerHidden
       // Steps below the camera drop away; far ones fade into the distance
       stepEls.forEach((el, i) => {
-        const d = i - pos
+        const d = i - p
         const o = d < -0.6 ? 0 : d < 0 ? 1 + d / 0.6 : d > AHEAD ? 0 : d > AHEAD - 3 ? (AHEAD - d) / 3 : 1
         el.style.opacity = o.toFixed(3)
         el.style.visibility = o === 0 ? 'hidden' : 'visible'
@@ -166,14 +208,24 @@ export default function StairsPage({ project, next }) {
       cancelAnimationFrame(raf)
       window.removeEventListener('scroll', read)
       window.removeEventListener('resize', read)
+      delete html.dataset.headerHidden
     }
   }, [steps])
 
   return (
     <main className="stairs" aria-label={project.fullTitle ?? project.title}>
-      {/* The scroll track: one stretch of scrolling per step */}
-      <div ref={trackRef} className="stairs__track" style={{ '--steps': steps.length }}>
-        <div className="stairs__view">
+      {/* The scroll track: the walk into the photo, then one stretch of scrolling per step */}
+      <div
+        ref={trackRef}
+        className="stairs__track"
+        style={{ '--steps': steps.length, '--opening': OPENING, '--per-step': SCROLL_PER_STEP }}
+      >
+        <div
+          ref={viewRef}
+          className="stairs__view"
+          style={{ '--texture': `url("${project.stairs.texture}")` }}
+        >
+          <Opening project={project} />
           <div ref={flightRef} className="stairs__flight">
             {steps.map((step, i) => (
               <div key={i} className="step" style={{ '--i': i }}>

@@ -1,10 +1,18 @@
 /* ---------- The staircase page (see StairsPage.jsx) ----------
-   A tall scroll track; inside it a screen-sized view stays put while a 3D flight of
-   stairs moves through it. --p is the camera's position in steps (set while scrolling). */
+   A tall scroll track; inside it a screen-sized view stays put while the opening photo
+   and then a 3D flight of stairs move through it. --q is the walk into the opening
+   photo (0–1) and --p the camera's position on the flight in steps, both set while
+   scrolling. */
+
+/* The opening photo fills the screen from the very top */
+main.stairs {
+  padding-top: 0;
+}
 
 .stairs__track {
   position: relative;
-  height: calc(var(--steps) * 20vh + 100vh);
+  /* The walk in, plus one stretch per step up to the top one, plus the screen itself */
+  height: calc((var(--opening) + (var(--steps) - 1) * var(--per-step) + 1) * 100vh);
 }
 
 .stairs__view {
@@ -14,13 +22,117 @@
   overflow: hidden;
   background: var(--bg);
   perspective: 1500px;
-  perspective-origin: 50% 18%;
+  perspective-origin: 50% 28%;
 }
 
+/* ---------- The opening: real stairs, with paint on them ---------- */
+.opening {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  /* Stays solid for most of the walk in, then dissolves... */
+  opacity: clamp(0, calc((0.84 - var(--q, 0)) * 7), 1);
+}
+
+/* ...and only then does the 3D flight appear, so the two never overlap */
+.stairs__flight {
+  opacity: clamp(0, calc((var(--q, 0) - 0.84) * 7), 1);
+}
+
+/* The photo, sized to cover the screen and anchored on its bottom steps (left-ish,
+   where the paint is, on narrow screens) */
+.opening__frame {
+  --w: max(100vw, calc(100svh * var(--pw) / var(--ph)));
+  position: absolute;
+  bottom: 0;
+  left: calc((100vw - var(--w)) * 0.15);
+  width: var(--w);
+  aspect-ratio: var(--pw) / var(--ph);
+  /* Walking in: the camera moves toward the steps */
+  transform-origin: 45% 72%;
+  transform: scale(calc(1 + var(--q, 0) * 0.45));
+}
+
+.opening__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Climbing away up the flight, into the light */
+.opening__climber {
+  position: absolute;
+  left: 62%;
+  top: 34%;
+  height: 24%;
+  translate: -50% 0;
+  transform-origin: 50% 100%;
+  transform: translateY(calc(var(--q, 0) * -45%)) scale(calc(1 - var(--q, 0) * 0.4));
+  opacity: clamp(0, calc((0.8 - var(--q, 0)) * 4), 1);
+}
+
+/* A painted area on one of the photo's steps; its text is sized by the step's height */
+.paint {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  container-type: size;
+  font-weight: inherit;
+}
+
+.paint__title {
+  font-size: 96cqh;
+  line-height: 0.78;
+  white-space: nowrap;
+}
+
+.paint__summary {
+  font-size: 23cqh;
+  line-height: 1.25;
+}
+
+.paint--specs {
+  gap: 7cqw;
+}
+
+.paint__spec {
+  display: flex;
+  flex-direction: column;
+  gap: 5cqh;
+}
+
+.paint__spec .label {
+  font-size: 17cqh;
+}
+
+.paint__value {
+  font-size: 24cqh;
+  line-height: 1.2;
+}
+
+/* "Paint": the color soaks into the concrete texture (the letters show its pits
+   and grain), like paint rolled onto a rough step */
+.painted {
+  --paint: #fff;
+  color: transparent;
+  background-image: linear-gradient(var(--paint), var(--paint)), var(--texture);
+  background-size: auto, 40vh;
+  background-blend-mode: multiply;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.display.painted {
+  --paint: var(--pink);
+}
+
+/* ---------- The 3D flight ---------- */
 /* The flight: steps are --H tall and --D deep, --W wide */
 .stairs__flight {
-  --H: 21vh;
-  --D: 30vh;
+  --H: 17vh;
+  --D: 36vh;
   --W: min(1500px, 96vw);
   position: absolute;
   left: 50%;
@@ -50,7 +162,9 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: #e3e1dd;
+  background:
+    linear-gradient(rgba(60, 60, 60, 0.2), rgba(60, 60, 60, 0.2)),
+    var(--texture) center / 50vh repeat;
   container-type: size;
 }
 
@@ -61,7 +175,9 @@
   top: 0;
   width: 100%;
   height: var(--D);
-  background: linear-gradient(#f6f5f3, #eceae6);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.15)),
+    var(--texture) center / 50vh repeat;
   transform-origin: top;
   transform: rotateX(-90deg);
 }
@@ -70,40 +186,6 @@
 .riser > :not(.riser__slice, .riser__row) {
   position: relative;
   z-index: 1;
-}
-
-/* Big words are sized by the riser's height, but never wider than the riser */
-.riser__title {
-  padding-left: 3cqw;
-  font-size: min(86cqh, 21cqw);
-  line-height: 0.8;
-  white-space: nowrap;
-}
-
-.riser__summary {
-  padding-left: 3.4cqw;
-  font-size: 15cqh;
-}
-
-.riser__specs {
-  display: flex;
-  gap: 6cqw;
-  padding-left: 3.4cqw;
-}
-
-.riser__spec {
-  display: flex;
-  flex-direction: column;
-  gap: 4cqh;
-}
-
-.riser__spec .label {
-  font-size: 8cqh;
-}
-
-.riser__spec-value {
-  font-size: 13cqh;
-  line-height: 1.2;
 }
 
 .riser__statement {
