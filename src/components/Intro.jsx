@@ -6,8 +6,8 @@ import './Intro.css'
 // ---- Timing (ms) ---------------------------------------------------------
 // The K is there from the first frame
 const REST_AT = 700 // the other letters come softly into focus where they stand
-const PINK_AT = 1900 // a soft pink sweep crosses the word, left to right
-const LEAVE_AT = 3000 // the word fades away and the white lifts like a curtain
+const PINK_AT = 1350 // a soft pink sweep crosses the word, left to right, as it settles
+const LEAVE_AT = 2750 // the word fades away and the white lifts like a curtain
 const OUT = 1200 // how long the exit takes
 // -------------------------------------------------------------------------
 
