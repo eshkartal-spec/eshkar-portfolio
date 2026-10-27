@@ -21,10 +21,20 @@ main.stairs {
   top: 0;
   height: 100vh;
   overflow: hidden;
-  /* Behind everything: the real stairs from the opening, without the paint */
-  background: var(--backdrop) 60% 100% / cover no-repeat, var(--bg);
+  background: var(--bg);
   perspective: 1500px;
   perspective-origin: 0% 28%;
+}
+
+/* Behind everything: the real stairs from the opening, without the paint, mirrored
+   to run the same way as the flight */
+.stairs__view::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: var(--backdrop) 60% 100% / cover no-repeat;
+  transform: scaleX(-1);
 }
 
 /* Layers, back to front: the flight, the shade, the climber, the opening photo, the
