@@ -311,7 +311,6 @@ export default function StairsPage({ project, next }) {
             <PhotoPanel
               to={`/projects/${project.slug}/images`}
               photo={project.more.cover}
-              label={project.title}
               title="More images"
               subtitle="The bike, details & process"
               go="View images →"
