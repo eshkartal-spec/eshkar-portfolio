@@ -121,17 +121,18 @@ main.stairs {
 .opening__shade {
   position: absolute;
   inset: 0 0 auto;
-  height: 55%;
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0));
+  height: 60%;
+  background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0));
   pointer-events: none;
 }
 
-/* "Scroll to climb", over a line that keeps drawing downward; it fades away as soon
-   as the walk in starts */
+/* "Scroll to climb", in white in the dark at the top, over a line that keeps drawing
+   downward; it fades away as soon as the walk in starts */
 .opening__prompt {
   position: absolute;
   left: 50%;
-  bottom: 3vh;
+  top: 7vh;
+  color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;

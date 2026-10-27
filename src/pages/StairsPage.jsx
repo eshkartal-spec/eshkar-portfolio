@@ -84,7 +84,7 @@ function Riser({ step }) {
 // The opening: a full-screen photo of real stairs with the title and summary painted
 // on its bottom steps (wide on landscape screens, tall on portrait ones). The words are
 // in the photo, so they're also here, hidden, for screen readers and search engines.
-// A dark gradient falls from the top, and a prompt at the bottom invites the climb.
+// A dark gradient falls from the top, with a prompt in it that invites the climb.
 function Opening({ project }) {
   const { wide, tall } = project.stairs.opening
   return (
@@ -96,7 +96,7 @@ function Opening({ project }) {
       <div className="opening__shade" />
       <h1 className="visually-hidden">{project.title}</h1>
       <p className="visually-hidden">{project.summary}</p>
-      <p className="label label--ink opening__prompt">
+      <p className="label opening__prompt">
         Scroll to climb
         <span className="opening__line" />
       </p>
