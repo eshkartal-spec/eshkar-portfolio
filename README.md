@@ -25,6 +25,25 @@ npm run build     # the files Vercel publishes, in dist/
 
 ## Content
 
-- Text: `src/data/site.js` (about, contact, skills) and `src/data/projects.js` (projects)
-- Photos: full-size originals go in `originals/<project>/` (not uploaded to GitHub),
-  then `npm run images` makes web copies in `public/images/<project>/`
+Text lives in `src/data/site.js` (about, contact, skills) and `src/data/projects.js` (projects).
+
+### Where photos go
+
+```
+originals/              <- PUT PHOTOS HERE: full size, any file name. Stays on this
+  step-up/                 computer (not uploaded to GitHub).
+  my-chair/
+  shrafraf/
+  odds-or-evens/
+  playstation/
+  bazelet/
+  about/                <- photos of Eshkar herself
+  hero/                 <- the (hidden) full-screen photo section
+
+public/images/          <- web-sized copies, made from originals/ by `npm run images`.
+                           Don't edit or add here by hand.
+src/assets/             <- logos (SVG): logo.svg is the one the intro uses
+```
+
+To add photos: drop them into the project's folder in `originals/`, then run
+`npm run images` (or ask Claude, who will also name and place them).
