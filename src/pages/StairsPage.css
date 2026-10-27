@@ -155,7 +155,7 @@ main.stairs {
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: linear-gradient(rgba(207, 206, 203, 0.94), rgba(217, 216, 213, 0.9));
+  background: linear-gradient(rgba(207, 206, 203, 0.62), rgba(217, 216, 213, 0.5));
   container-type: size;
 }
 
@@ -177,7 +177,7 @@ main.stairs {
   top: 0;
   width: 100%;
   height: var(--D);
-  background: linear-gradient(rgba(234, 233, 230, 0.94), rgba(226, 225, 222, 0.88));
+  background: linear-gradient(rgba(234, 233, 230, 0.66), rgba(226, 225, 222, 0.5));
   transform-origin: top;
   transform: rotateX(-90deg);
 }
