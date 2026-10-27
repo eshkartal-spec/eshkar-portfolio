@@ -462,25 +462,32 @@ html[data-touch-climb] {
   gap: 1.4cqw;
 }
 
-/* ---------- Tall (portrait) screens: the climber stands further up the flight (smaller,
-   partly off the right edge), so the nearest steps, the ones being read, stay clear
-   below him and the paint can take nearly their whole width; the shade follows
-   him ---------- */
+/* ---------- Tall (portrait) screens: the climber stands at the bottom of the screen,
+   partly off the right edge, his legs running off the bottom like someone just ahead
+   of you on the stairs; the steps being read sit above him, so the paint can take
+   nearly their whole width; the shade follows him ---------- */
 @media (orientation: portrait) {
   /* The tall photo's paint is centered */
   .opening__photo {
     transform-origin: 50% 85%;
   }
 
+  .stairs__view {
+    perspective-origin: 0% 10%;
+  }
+
+  .stairs__flight {
+    top: 30dvh;
+  }
+
   .stairs__climber {
-    right: -12vw;
-    /* His wheel clears the second step, where each feature's name is lit */
-    bottom: 36dvh;
-    height: 50dvh;
+    right: -10vw;
+    bottom: 0;
+    height: 56dvh;
   }
 
   .stairs__shade {
-    background: radial-gradient(ellipse 40% 32% at 78% 46%, rgba(0, 0, 0, 0.24), transparent 70%);
+    background: radial-gradient(ellipse 45% 35% at 75% 85%, rgba(0, 0, 0, 0.24), transparent 70%);
   }
 
   .riser {
@@ -494,6 +501,5 @@ html[data-touch-climb] {
     --H: 11dvh;
     --D: 22dvh;
     --W: 100vw;
-    top: 76dvh;
   }
 }
