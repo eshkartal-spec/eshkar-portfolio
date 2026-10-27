@@ -86,64 +86,17 @@ main.stairs {
   opacity: clamp(0, calc((var(--q, 0) - 0.84) * 7), 1);
 }
 
-/* The photo, sized to cover the screen and anchored on its bottom steps (left-ish,
-   where the paint is, on narrow screens) */
-.opening__frame {
-  --w: max(100vw, calc(100svh * var(--pw) / var(--ph)));
-  position: absolute;
-  bottom: 0;
-  left: calc((100vw - var(--w)) * 0.15);
-  width: var(--w);
-  aspect-ratio: var(--pw) / var(--ph);
-  /* Walking in: the camera moves toward the steps */
-  transform-origin: 45% 72%;
-  transform: scale(calc(1 + var(--q, 0) * 0.45));
-}
-
+/* The photo covers the screen, anchored on its bottom steps where the paint is */
 .opening__photo {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-}
-
-/* A painted area on one of the photo's steps; its text is sized by the step's height */
-.paint {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  margin: 0;
-  container-type: size;
-  font-weight: inherit;
-}
-
-.paint__title {
-  font-size: 96cqh;
-  line-height: 0.78;
-  white-space: nowrap;
-}
-
-.paint__summary {
-  font-size: 23cqh;
-  line-height: 1.25;
-}
-
-.paint--specs {
-  gap: 7cqw;
-}
-
-.paint__spec {
-  display: flex;
-  flex-direction: column;
-  gap: 5cqh;
-}
-
-.paint__spec .label {
-  font-size: 17cqh;
-}
-
-.paint__value {
-  font-size: 24cqh;
-  line-height: 1.2;
+  object-fit: cover;
+  object-position: 50% 100%;
+  /* Walking in: the camera moves toward the painted steps */
+  transform-origin: 40% 80%;
+  transform: scale(calc(1 + var(--q, 0) * 0.45));
 }
 
 /* "Paint": the color soaks into the concrete texture (the letters show its pits
@@ -229,6 +182,32 @@ main.stairs {
   --clear: 62%;
 }
 
+/* The details: label above value, side by side */
+.riser__specs {
+  display: flex;
+  gap: 6cqw;
+  width: var(--clear);
+  padding-left: var(--inset);
+}
+
+.riser__spec {
+  display: flex;
+  flex-direction: column;
+  gap: 4cqh;
+}
+
+.riser__spec .label {
+  font-size: 11cqh;
+  color: var(--ink);
+  opacity: 0.6;
+}
+
+.riser__value {
+  font-size: 17cqh;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
 .riser__statement {
   width: var(--clear);
   padding-left: var(--inset);
@@ -303,7 +282,8 @@ main.stairs {
 
 /* ---------- Tall (portrait) screens: the climber stands further up the flight (smaller,
    partly off the right edge), so the nearest steps, the ones being read, stay clear
-   below him; the shade follows him ---------- */
+   below him and the paint can take nearly their whole width; the shade follows
+   him ---------- */
 @media (orientation: portrait) {
   .stairs__climber {
     right: -12vw;
@@ -316,7 +296,7 @@ main.stairs {
   }
 
   .riser {
-    --clear: 56%;
+    --clear: 92%;
   }
 }
 

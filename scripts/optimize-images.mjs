@@ -14,7 +14,8 @@ const OUT = 'public/images'
 const MAX_WIDTH = 2400
 const QUALITY = 80
 
-const clean = (name) => name.trim().toLowerCase().replace(/\s+/g, '-')
+// Lowercase, with anything but letters and digits turned into single dashes
+const clean = (name) => name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
 if (!fs.existsSync(SRC)) {
   console.log('No originals folder, nothing to do.')

@@ -14,11 +14,18 @@ const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi)
 
 // The climb, bottom to top: one entry per step. The risers carry words, painted on the
 // part of the flight clear of the climber; only "Behind the product" has photos, painted
-// across several risers like an ad printed up a flight of stairs. (The title and details
+// across several risers like an ad printed up a flight of stairs. (The title and summary
 // are on the opening photo's steps, before the climb.)
 function buildSteps(p) {
-  // The problem
-  const steps = [{}, { kind: 'statement', text: p.pull }, {}]
+  const steps = [
+    // The details, on the first steps
+    { kind: 'specs', items: [['Type', p.type], ['Year', p.year], ['Duration', p.duration]] },
+    { kind: 'specs', items: [['Tools', p.tools]] },
+    {},
+    // The problem
+    { kind: 'statement', text: p.pull },
+    {},
+  ]
 
   // One landing per feature: its name, then its description
   p.features.forEach((f) => {
@@ -51,7 +58,17 @@ function Riser({ step }) {
           {step.row.map((s) => <Slice key={s.image.src} {...s} />)}
         </span>
       )}
-      {step.kind === 'statement' && <span className="sub riser__statement">{step.text}</span>}
+      {step.kind === 'specs' && (
+        <span className="riser__specs">
+          {step.items.map(([k, v]) => (
+            <span key={k} className="riser__spec">
+              <span className="label">{k}</span>
+              <span className="riser__value">{v}</span>
+            </span>
+          ))}
+        </span>
+      )}
+      {step.kind === 'statement' &&<span className="sub riser__statement">{step.text}</span>}
       {step.kind === 'feature-title' && <span className="riser__left riser__feature-title">{step.text}</span>}
       {step.kind === 'feature-text' && <span className="riser__left riser__feature-text">{step.text}</span>}
       {step.kind === 'heading' && <span className="display painted riser__heading">{step.text}</span>}
@@ -64,51 +81,19 @@ function Riser({ step }) {
   )
 }
 
-// The opening: a full-screen photo of real stairs with the title and details on its
-// bottom steps. If the photo has them printed already (`painted: true`), it's shown as
-// is; otherwise the site paints them on. The photo is sized like object-fit: cover and
-// kept anchored to its bottom steps, so the paint (placed in the photo's own pixels)
-// stays on its steps at any screen size.
+// The opening: a full-screen photo of real stairs with the title and summary painted
+// on its bottom steps (wide on landscape screens, tall on portrait ones). The words are
+// in the photo, so they're also here, hidden, for screen readers and search engines.
 function Opening({ project }) {
-  const ph = project.stairs.photo
-  const at = (r) => ({
-    left: `${(r.x / ph.width) * 100}%`,
-    top: `${(r.y / ph.height) * 100}%`,
-    width: `${(r.w / ph.width) * 100}%`,
-    height: `${(r.h / ph.height) * 100}%`,
-  })
-  const [title, summary, specs, tools] = ph.risers ?? []
+  const { wide, tall } = project.stairs.opening
   return (
-    <div className="opening" style={{ '--pw': ph.width, '--ph': ph.height }}>
-      <div className="opening__frame">
-        <img className="opening__photo" src={ph.src} alt={ph.alt} />
-        {ph.painted ? (
-          <h1 className="visually-hidden">{project.title}</h1>
-        ) : (
-          <>
-            <h1 className="paint" style={at(title)}>
-              <span className="display painted paint__title">{project.title}</span>
-            </h1>
-            <p className="paint" style={at(summary)}>
-              <span className="sub painted paint__summary">{project.summary}</span>
-            </p>
-            <div className="paint paint--specs" style={at(specs)}>
-              {[['Type', project.type], ['Year', project.year], ['Duration', project.duration]].map(([k, v]) => (
-                <span key={k} className="paint__spec">
-                  <span className="label painted">{k}</span>
-                  <span className="painted paint__value">{v}</span>
-                </span>
-              ))}
-            </div>
-            <div className="paint paint--specs" style={at(tools)}>
-              <span className="paint__spec">
-                <span className="label painted">Tools</span>
-                <span className="painted paint__value">{project.tools}</span>
-              </span>
-            </div>
-          </>
-        )}
-      </div>
+    <div className="opening">
+      <picture>
+        <source media="(orientation: portrait)" srcSet={tall.src} />
+        <img className="opening__photo" src={wide.src} alt={wide.alt} />
+      </picture>
+      <h1 className="visually-hidden">{project.title}</h1>
+      <p className="visually-hidden">{project.summary}</p>
     </div>
   )
 }

@@ -13,22 +13,13 @@ export const projects = [
     // The page is a staircase you climb by scrolling (src/pages/StairsPage.jsx)
     layout: 'stairs',
     stairs: {
-      // Full-screen opening photo. If its steps already have the title and details
-      // printed on them, set `painted: true` and leave out `risers`. Otherwise the site
-      // paints them on: `risers` are the fronts of its bottom steps, in the photo's own
-      // pixels (x, y = top-left; w, h = size), bottom step first.
-      photo: {
-        src: '/images/step-up-stairs/stairs-photo.webp',
-        alt: 'Concrete stairs climbing between trees',
-        painted: false,
-        width: 736,
-        height: 1104,
-        risers: [
-          { x: 112, y: 999, w: 560, h: 101 },
-          { x: 108, y: 906, w: 470, h: 84 },
-          { x: 106, y: 836, w: 440, h: 62 },
-          { x: 106, y: 772, w: 420, h: 56 },
-        ],
+      // Full-screen opening: stairs with the title and summary already painted on their
+      // bottom steps, a wide photo for landscape screens and a tall one for portrait
+      // (phones). Each fills the screen and stays anchored on its bottom steps, so keep
+      // the paint clear of the sides.
+      opening: {
+        wide: img('step-up-stairs', 'step-up-banner', 'Concrete stairs climbing between trees, with STEP UP painted on the bottom step'),
+        tall: img('step-up-stairs', 'step-up-banner-vert', 'Concrete stairs climbing toward the sky, with STEP UP painted on the bottom step'),
       },
       // Someone carrying the bike, seen from behind: climbs beside the stairs (desktop)
       climber: img('step-up-stairs', 'climber-back', 'Carrying the STEP UP bike up the stairs'),
