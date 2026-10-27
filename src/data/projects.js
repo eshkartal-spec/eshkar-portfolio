@@ -18,8 +18,8 @@ export const projects = [
       // (phones). Each fills the screen and stays anchored on its bottom steps, so keep
       // the paint clear of the sides.
       opening: {
-        wide: img('step-up-stairs', 'banner-new', 'Concrete stairs close up, with STEP UP painted on the bottom step'),
-        tall: img('step-up-stairs', 'step-up-banner-vert', 'Concrete stairs climbing toward the sky, with STEP UP painted on the bottom step'),
+        wide: img('step-up-stairs', 'step-up-banner-3840px-copy', 'Concrete stairs close up, with STEP UP painted on the bottom step'),
+        tall: img('step-up-stairs', 'step-up-mobile-1290x2796', 'Concrete stairs climbing toward the sky, with STEP UP painted on the bottom step'),
       },
       // Someone carrying the bike, seen from behind: climbs beside the stairs (desktop)
       climber: img('step-up-stairs', 'climber-back', 'Carrying the STEP UP bike up the stairs'),
@@ -42,27 +42,33 @@ export const projects = [
     hero: img('step-up', 'three-quarter', 'STEP UP bicycle, studio shot'),
     heroAlt: img('step-up', 'carry', 'Eshkar carrying the STEP UP bike'),
     // Short line shown large, next to heroAlt
-    pull: 'In the city, a bicycle is often carried up stairs, not only ridden.',
+    pull: 'In the city, you often carry a bike up stairs, not only ride it.',
+    // frame: the center of the feature on the climber photo of the stairs page, in % of
+    // the photo as saved
     features: [
       {
         title: 'Ergonomic carrying handle',
         text: 'Positioned close to the bicycle’s center of mass for more balanced and comfortable lifting.',
         image: img('step-up', 'handle-close', 'The carrying handle set into the frame'),
+        frame: { x: 57.5, y: 57.5 },
       },
       {
         title: 'Adjustable shoulder strap',
         text: 'Extends and retracts as needed, allowing the bicycle to be carried over the opposite shoulder.',
         image: img('step-up', 'strap-close', 'Pulling out the shoulder strap'),
+        frame: { x: 35.5, y: 25 },
       },
       {
         title: 'Quick-release pedal',
         text: 'Can be repositioned during carrying to prevent interference with the rider’s leg.',
         image: img('step-up', 'pedal-close', 'The quick-release pedal mounted by the seat post'),
+        frame: { x: 39, y: 46.5 },
       },
       {
         title: 'Folding handlebar',
-        text: 'Reduces the bicycle’s width and enables smooth movement through narrow staircases without catching on railings or disturbing other users.',
+        text: 'Reduces the bicycle’s width and enables smooth movement through narrow staircases.',
         image: img('step-up', 'bar-close', 'The folding handlebar'),
+        frame: { x: 65, y: 33.5 },
       },
     ],
     gallery: [

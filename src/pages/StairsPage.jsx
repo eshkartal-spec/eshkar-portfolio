@@ -8,6 +8,7 @@ const STEP = 100 // climbing one step: one tick, one step
 const ARRIVE = 400 // past the top step: the next project fades in over the stairs
 const SETTLE = 140 // ms after the scrolling stops, the camera settles on the nearest step
 const FOLLOW = 0.12 // how quickly the camera catches up (0–1): each step glides
+const JUMP_FOLLOW = 0.22 // the same, after clicking a feature's name: a quicker climb to it
 // --------------------------------------------------------------------------
 const AHEAD = 9 // steps visible ahead before they fade into the distance
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi)
@@ -27,9 +28,9 @@ function buildSteps(p) {
     {},
   ]
 
-  // One landing per feature: its name, then its description
+  // One landing per feature: its description, with its name on the step above it
   p.features.forEach((f) => {
-    steps.push({ kind: 'feature-title', text: f.title }, { kind: 'feature-text', text: f.text }, {})
+    steps.push({ kind: 'feature-text', text: f.text }, { kind: 'feature-title', text: f.title }, {})
   })
 
   // Behind the product: its photos side by side across four risers
@@ -50,7 +51,7 @@ function Slice({ image, j, count }) {
   )
 }
 
-function Riser({ step }) {
+function Riser({ step, onJump }) {
   return (
     <div className={`riser${step.kind ? ` riser--${step.kind}` : ''}`}>
       {step.row && (
@@ -69,7 +70,11 @@ function Riser({ step }) {
         </span>
       )}
       {step.kind === 'statement' &&<span className="sub riser__statement">{step.text}</span>}
-      {step.kind === 'feature-title' && <span className="riser__left riser__feature-title">{step.text}</span>}
+      {step.kind === 'feature-title' && (
+        <span className="riser__left">
+          <button type="button" className="riser__feature-title" onClick={onJump}>{step.text}</button>
+        </span>
+      )}
       {step.kind === 'feature-text' && <span className="riser__left riser__feature-text">{step.text}</span>}
       {step.kind === 'heading' && <span className="display riser__heading">{step.text}</span>}
       {step.kind === 'captions' && (
@@ -116,6 +121,8 @@ export default function StairsPage({ project, next }) {
   const viewRef = useRef(null)
   const flightRef = useRef(null)
   const nextRef = useRef(null)
+  const climberRef = useRef(null)
+  const jumpRef = useRef(() => {})
 
   // Each photo's shape, so its bands can be cropped like object-fit: cover
   useEffect(() => {
@@ -144,6 +151,12 @@ export default function StairsPage({ project, next }) {
     const flight = flightRef.current
     const nextEl = nextRef.current
     const stepEls = [...flight.children]
+    const frameEls = [...climberRef.current.querySelectorAll('.stairs__frame')]
+    // Each feature's name lights its frame on the climber from when it reaches the
+    // second step from the bottom until it drops away
+    const titleSteps = steps.flatMap((s, i) => (s.kind === 'feature-title' ? [i] : []))
+    let lit = -1
+    let jumping = -1 // the feature clicked: its frame alone is lit until the camera arrives
     const html = document.documentElement
     const top = stepEls.length - 1
     const topY = OPENING + top * STEP // scroll position at the top step
@@ -170,8 +183,11 @@ export default function StairsPage({ project, next }) {
       settle = setTimeout(() => (target = nearestStep(scrolled())), SETTLE)
     }
     const frame = () => {
-      pos += (target - pos) * FOLLOW
-      if (Math.abs(target - pos) < 0.05) pos = target
+      pos += (target - pos) * (jumping < 0 ? FOLLOW : JUMP_FOLLOW)
+      if (Math.abs(target - pos) < 0.05) {
+        pos = target
+        jumping = -1
+      }
       const q = clamp(pos / OPENING, 0, 1)
       const p = clamp((pos - OPENING) / STEP, 0, top)
       view.style.setProperty('--q', q.toFixed(4))
@@ -187,10 +203,22 @@ export default function StairsPage({ project, next }) {
       stepEls.forEach((el, i) => {
         const d = i - p
         const o = d < -0.6 ? 0 : d < 0 ? 1 + d / 0.6 : d > AHEAD ? 0 : d > AHEAD - 3 ? (AHEAD - d) / 3 : 1
-        el.style.opacity = o.toFixed(3)
+        el.style.setProperty('--o', o.toFixed(3))
         el.style.visibility = o === 0 ? 'hidden' : 'visible'
       })
+      const on = jumping >= 0 ? jumping : titleSteps.findIndex((t) => p >= t - 1.5 && p < t + 0.5)
+      if (on !== lit) {
+        frameEls.forEach((el, n) => el.classList.toggle('is-on', n === on))
+        lit = on
+      }
       raf = requestAnimationFrame(frame)
+    }
+    // Clicking a feature's name climbs quickly to the step where it's lit
+    jumpRef.current = (i) => {
+      const y = OPENING + (i - 1) * STEP
+      window.scrollTo({ top: window.scrollY + track.getBoundingClientRect().top + y, behavior: 'instant' })
+      target = y
+      jumping = titleSteps.indexOf(i)
     }
     read()
     window.addEventListener('scroll', read, { passive: true })
@@ -219,13 +247,22 @@ export default function StairsPage({ project, next }) {
           <div ref={flightRef} className="stairs__flight">
             {steps.map((step, i) => (
               <div key={i} className="step" style={{ '--i': i }}>
-                <Riser step={step} />
+                <Riser step={step} onJump={() => jumpRef.current(i)} />
                 <div className="tread" />
               </div>
             ))}
           </div>
           <div className="stairs__shade" />
-          <img className="stairs__climber" src={climber.src} alt={climber.alt} />
+          <div ref={climberRef} className="stairs__climber">
+            <img src={climber.src} alt={climber.alt} />
+            {project.features.map(({ title, frame }) => (
+              <span
+                key={title}
+                className="stairs__frame"
+                style={{ left: `${frame.x}%`, top: `${frame.y}%` }}
+              />
+            ))}
+          </div>
           <div ref={nextRef} className="stairs__next" style={{ visibility: 'hidden' }}>
             <NextProject project={next} />
           </div>

@@ -12,6 +12,8 @@ import sharp from 'sharp'
 const SRC = 'originals'
 const OUT = 'public/images'
 const MAX_WIDTH = 2400
+// Banners fill the whole screen, so they keep enough width for a retina laptop
+const BANNER_WIDTH = 2880
 const QUALITY = 80
 
 // Lowercase, with anything but letters and digits turned into single dashes
@@ -40,7 +42,7 @@ for (const folder of fs.readdirSync(SRC)) {
     }
     await sharp(src)
       .rotate()
-      .resize({ width: MAX_WIDTH, withoutEnlargement: true })
+      .resize({ width: /banner/i.test(file) ? BANNER_WIDTH : MAX_WIDTH, withoutEnlargement: true })
       .webp({ quality: QUALITY })
       .toFile(out)
     made++

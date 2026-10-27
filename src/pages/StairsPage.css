@@ -58,10 +58,37 @@ main.stairs {
   right: 4vw;
   bottom: 0;
   height: 96vh;
+  /* The photo's shape, so the feature frames sit on it */
+  aspect-ratio: 1023 / 1537;
   transform-origin: 50% 100%;
   transform: scaleX(-1) scale(calc(1.14 - var(--climb, 0) * 0.14));
   opacity: clamp(0, calc((var(--q, 0) - 0.84) * 7), 1);
   pointer-events: none;
+}
+
+.stairs__climber img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* A pink square around a feature on the bike, centered on it and the same size for
+   every feature, lit while its name is on the stairs (see StairsPage.jsx); it settles
+   in from slightly larger */
+.stairs__frame {
+  position: absolute;
+  width: 15%;
+  aspect-ratio: 1;
+  border: 2px solid var(--pink);
+  box-shadow: 0 0 0 4px rgba(255, 111, 168, 0.18);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1.15);
+  transition: opacity 0.3s var(--ease), transform 0.45s var(--ease);
+}
+
+.stairs__frame.is-on {
+  opacity: 1;
+  transform: translate(-50%, -50%);
 }
 
 /* A soft darkening on the stairs around and below him, so he stands in front of them
@@ -94,16 +121,21 @@ main.stairs {
   z-index: 4;
   inset: 0;
   overflow: hidden;
-  /* Stays solid for most of the walk in, then dissolves... */
-  opacity: clamp(0, calc((0.84 - var(--q, 0)) * 7), 1);
+  pointer-events: none;
+  /* Walking in, the photo fades out... */
+  opacity: clamp(0, calc(1 - var(--q, 0) * 1.4), 1);
 }
 
-/* ...and only then does the 3D flight appear, so the two never overlap */
-.stairs__flight {
-  opacity: clamp(0, calc((var(--q, 0) - 0.84) * 7), 1);
+/* ...as the 3D flight fades in. The fading is done on the steps' faces (each also
+   fading by its distance, --o, set in StairsPage.jsx): a see-through 3D group would be
+   flattened by the browser, losing its depth while it fades */
+.riser,
+.tread {
+  opacity: calc(var(--o, 1) * clamp(0, calc((var(--q, 0) - 0.5) * 2), 1));
 }
 
-/* The photo covers the screen, anchored on its bottom steps where the paint is */
+/* The photo covers the screen, anchored on its bottom steps where the paint is. While
+   it waits for the first scroll it breathes: a slow push in toward the paint and back */
 .opening__photo {
   position: absolute;
   inset: 0;
@@ -111,10 +143,53 @@ main.stairs {
   height: 100%;
   object-fit: cover;
   object-position: 50% 100%;
-  /* Walking in: the camera moves toward the painted steps (on the left of the wide
-     photo, so the paint's left end stays in view) */
-  transform-origin: 15% 80%;
-  transform: scale(calc(1 + var(--q, 0) * 0.45));
+  transform-origin: 30% 85%;
+  animation: opening-breathe 9s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+@keyframes opening-breathe {
+  to {
+    transform: scale(1.08);
+  }
+}
+
+/* Sunlight through leaves: two sets of warm patches drifting across the steps in
+   opposite directions at different speeds, as if a breeze moved the trees above */
+.opening::before,
+.opening::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: -20%;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.opening::before {
+  background:
+    radial-gradient(ellipse 24% 15% at 22% 72%, rgba(255, 228, 180, 0.85), transparent 70%),
+    radial-gradient(ellipse 18% 11% at 58% 86%, rgba(255, 228, 180, 0.75), transparent 70%),
+    radial-gradient(ellipse 22% 13% at 84% 64%, rgba(255, 228, 180, 0.7), transparent 70%);
+  animation: opening-light 7s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+.opening::after {
+  background:
+    radial-gradient(ellipse 16% 10% at 40% 56%, rgba(255, 228, 180, 0.7), transparent 70%),
+    radial-gradient(ellipse 20% 12% at 70% 78%, rgba(255, 228, 180, 0.65), transparent 70%),
+    radial-gradient(ellipse 14% 9% at 12% 88%, rgba(255, 228, 180, 0.6), transparent 70%);
+  animation: opening-light 11s cubic-bezier(0.45, 0, 0.55, 1) -5s infinite alternate-reverse;
+}
+
+@keyframes opening-light {
+  from {
+    transform: translate(-8%, 3%);
+    opacity: 0.35;
+  }
+  to {
+    transform: translate(8%, -4%);
+    opacity: 1;
+  }
 }
 
 /* A dark gradient falling from the top of the photo */
@@ -206,14 +281,28 @@ main.stairs {
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: linear-gradient(rgba(207, 206, 203, 0.62), rgba(217, 216, 213, 0.5));
   container-type: size;
 }
 
-/* The step's edge */
+/* The steps' faces fade out toward the right, like the edges. On the fronts the face is
+   its own layer, so only the surface fades, not what's painted on it */
+.riser::before,
+.tread {
+  mask-image: linear-gradient(90deg, #000 45%, transparent 100%);
+}
+
 .riser::before {
   content: '';
   position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(207, 206, 203, 0.62), rgba(217, 216, 213, 0.5));
+}
+
+/* The step's edge */
+.riser::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
   inset: 0 0 auto;
   height: 2px;
   background: linear-gradient(90deg, #fff 20%, rgba(255, 255, 255, 0) 95%);
@@ -277,6 +366,7 @@ main.stairs {
   padding-left: var(--inset);
   font-size: 19cqh;
   line-height: 1.2;
+  color: var(--pink);
 }
 
 .riser__left {
@@ -284,17 +374,34 @@ main.stairs {
   padding-left: var(--inset);
 }
 
+/* A feature's name: click it to climb straight to it */
 .riser__feature-title {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  /* The expanded cut of Archivo, like the subtitles and labels */
   font-family: var(--font-display);
-  font-size: 34cqh;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
+  font-size: 30cqh;
+  font-weight: 600;
+  font-stretch: 125%;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  text-align: left;
+  text-wrap: balance;
+  cursor: pointer;
+  transition: color 0.2s var(--ease);
 }
 
+.riser__feature-title:hover {
+  color: var(--pink);
+}
+
+/* As large as the details on the first steps, in even lines */
 .riser__feature-text {
-  font-size: 15cqh;
-  line-height: 1.3;
+  font-size: 19cqh;
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
 .riser__heading {
@@ -351,17 +458,18 @@ main.stairs {
 @media (orientation: portrait) {
   /* The tall photo's paint is centered */
   .opening__photo {
-    transform-origin: 50% 80%;
+    transform-origin: 50% 85%;
   }
 
   .stairs__climber {
     right: -12vw;
-    bottom: 30vh;
+    /* His wheel clears the second step, where each feature's name is lit */
+    bottom: 36vh;
     height: 50vh;
   }
 
   .stairs__shade {
-    background: radial-gradient(ellipse 40% 32% at 78% 52%, rgba(0, 0, 0, 0.24), transparent 70%);
+    background: radial-gradient(ellipse 40% 32% at 78% 46%, rgba(0, 0, 0, 0.24), transparent 70%);
   }
 
   .riser {
