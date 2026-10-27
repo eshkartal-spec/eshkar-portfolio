@@ -208,11 +208,6 @@
   background: #fff4d6;
 }
 
-/* The Next project panel (NextProject.css) keeps its distance from the page above */
-.proj > .next-project {
-  margin-top: clamp(96px, 12vw, 180px);
-}
-
 /* ---------- Small screens ---------- */
 @media (max-width: 760px) {
   .proj__summary,

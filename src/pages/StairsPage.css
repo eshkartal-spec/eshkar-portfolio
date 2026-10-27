@@ -70,7 +70,8 @@ html[data-touch-climb] {
   aspect-ratio: 1023 / 1537;
   transform-origin: 50% 100%;
   transform: scaleX(-1) scale(calc(1.14 - var(--climb, 0) * 0.14));
-  opacity: clamp(0, calc((var(--q, 0) - 0.84) * 7), 1);
+  /* In with the flight; out from the last feature's step on, ahead of the panel (--leave) */
+  opacity: calc(clamp(0, calc((var(--q, 0) - 0.84) * 7), 1) * (1 - var(--leave, 0)));
   pointer-events: none;
 }
 
@@ -106,20 +107,21 @@ html[data-touch-climb] {
   z-index: 1;
   inset: 0;
   background: radial-gradient(ellipse 30% 55% at 76% 78%, rgba(0, 0, 0, 0.26), transparent 70%);
-  opacity: clamp(0, calc((var(--q, 0) - 0.84) * 7), 1);
+  opacity: calc(clamp(0, calc((var(--q, 0) - 0.84) * 7), 1) * (1 - var(--leave, 0)));
   pointer-events: none;
 }
 
-/* Past the top step, the next project fades in over the stairs (it's hidden until it
-   starts to arrive; see StairsPage.jsx) */
-.stairs__next {
+/* Past the top step, the "More images" panel fades in over the stairs and the climber
+   (it's hidden until it starts to arrive; see StairsPage.jsx). Once it's in, the page
+   scrolls on to the next project */
+.stairs__more {
   position: absolute;
   z-index: 5;
   inset: 0;
   opacity: var(--arrive, 0);
 }
 
-.stairs__next .next-project {
+.stairs__more .photo-panel {
   height: 100%;
 }
 
@@ -331,7 +333,7 @@ html[data-touch-climb] {
 }
 
 /* ---------- Paint on the risers ---------- */
-.riser > :not(.riser__slice, .riser__row) {
+.riser > * {
   position: relative;
   z-index: 1;
 }
@@ -401,6 +403,11 @@ html[data-touch-climb] {
   transition: color 0.2s var(--ease);
 }
 
+/* Pink while its frame is lit on the climber (see StairsPage.jsx) */
+.riser__feature-title.is-on {
+  color: var(--pink);
+}
+
 /* Only with a mouse: on touch screens the last tapped name would stay pink */
 @media (hover: hover) {
   .riser__feature-title:hover {
@@ -413,53 +420,6 @@ html[data-touch-climb] {
   font-size: 19cqh;
   line-height: 1.25;
   text-wrap: balance;
-}
-
-.riser__heading {
-  padding-left: var(--inset);
-  font-size: min(60cqh, 6.2cqw);
-  line-height: 0.8;
-  white-space: nowrap;
-}
-
-.riser__captions {
-  display: flex;
-  width: var(--clear);
-}
-
-.riser__captions .label {
-  flex: 1;
-  padding-left: var(--inset);
-  font-size: 9cqh;
-}
-
-/* ---------- Photos painted across several risers ----------
-   Each riser shows one band (--j, counted from the top) of a photo spread over --n
-   risers. The photo is sized to cover the whole group (like object-fit: cover), using
-   its shape --ar (measured in StairsPage.jsx). */
-.riser__slice {
-  position: relative;
-  flex: 1;
-  container-type: size;
-  overflow: hidden;
-}
-
-.riser__photo {
-  --bw: max(100cqw, calc(var(--ar, 1.5) * var(--n) * 100cqh));
-  position: absolute;
-  inset: 0;
-  background-repeat: no-repeat;
-  background-size: var(--bw) auto;
-  background-position: center calc(-1 * ((var(--bw) / var(--ar, 1.5) - var(--n) * 100cqh) / 2 + var(--j) * 100cqh));
-}
-
-/* Several photos side by side across the same risers, clear of the climber */
-.riser__row {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: var(--clear);
-  display: flex;
-  gap: 1.4cqw;
 }
 
 /* ---------- Tall (portrait) screens: the climber stands at the bottom of the screen,

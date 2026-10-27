@@ -81,7 +81,42 @@ export const projects = [
       { label: 'CAD', image: img('step-up', 'process-cad', 'BikeCAD sketch of the frame junction') },
       { label: 'Frame building', image: img('step-up', 'process-frame-jig', 'Aluminium frame tubes held in a laser-cut MDF jig') },
     ],
-    // Photos in originals/step-up that v1 didn't use: fork, frame, handle, side
+    // "More images": the panel the climb ends on, and the page it opens
+    // (/projects/step-up/images), which ends with the process above. Left out as near
+    // repeats: frame (of logo-frame) and strap (of strap-close).
+    more: {
+      cover: img('step-up', 'see-more', 'STEP UP in a dark studio'),
+      sections: [
+        {
+          title: 'The bike',
+          items: [
+            img('step-up', 'three-quarter', 'STEP UP, three-quarter view'),
+            img('step-up', 'side', 'STEP UP, side view'),
+          ],
+        },
+        {
+          title: 'In use',
+          items: [
+            img('step-up', 'street', 'STEP UP parked by city stairs'),
+            img('step-up', 'carry', 'Carrying STEP UP up the stairs'),
+            img('step-up', 'carry-shoulder', 'Carrying STEP UP on the shoulder with the strap and handle'),
+          ],
+        },
+        {
+          title: 'Details',
+          items: [
+            img('step-up', 'handle-close', 'The carrying handle set into the frame'),
+            img('step-up', 'strap-close', 'Pulling out the shoulder strap'),
+            img('step-up', 'bar-close', 'The folding handlebar'),
+            img('step-up', 'pedal-close', 'The quick-release pedal mounted by the seat post'),
+            img('step-up', 'logo-frame', 'STEP UP logo on the frame'),
+            img('step-up', 'handle', 'The handle and the logo'),
+            img('step-up', 'fork', 'The fork and front wheel'),
+            img('step-up', 'wheel', 'Wheel detail'),
+          ],
+        },
+      ],
+    },
   },
   {
     slug: 'my-chair',

@@ -1,102 +1,33 @@
-/* Styled after an opened spine in the Home page's library (Library.css) */
+/* "Next project" in pink, the project's name under it (see NextProject.jsx) */
 .next-project {
-  --pad: clamp(18px, 2.2vw, 32px);
-  position: relative;
-  display: block;
-  height: 100svh;
-  min-height: 520px;
-  overflow: hidden;
-  color: #fff;
-  text-decoration: none;
-  background: #e6e5e3;
-}
-
-.next-project__photo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.06);
-  transition: transform 1.3s cubic-bezier(0.77, 0, 0.18, 1);
-}
-
-.next-project:hover .next-project__photo {
-  transform: scale(1);
-}
-
-/* Grey tint, darker toward the bottom where the title sits */
-.next-project::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 55%),
-    rgba(40, 40, 40, 0.28);
-}
-
-.next-project__top,
-.next-project__bottom {
-  position: absolute;
-  z-index: 1;
-  left: var(--pad);
-  right: var(--pad);
-  display: flex;
-  justify-content: space-between;
-  gap: 16px 32px;
-}
-
-.next-project__top {
-  top: var(--pad);
-}
-
-.next-project .label {
-  color: #fff;
-}
-
-.next-project__bottom {
-  bottom: var(--pad);
-  align-items: flex-end;
-}
-
-.next-project__text {
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  gap: clamp(14px, 1.6vw, 26px);
+  padding-block: clamp(64px, 9vw, 144px);
+  color: var(--ink);
+  text-decoration: none;
 }
 
 .next-project__title {
-  font-size: clamp(56px, 9vw, 168px);
+  font-size: clamp(52px, 9vw, 168px);
 }
 
-.next-project__summary {
-  max-width: 46ch;
-  margin-top: 18px;
-  font-size: clamp(12px, 1vw, 14px);
+.next-project__name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  font-size: clamp(18px, 2vw, 30px);
+  transition: color 0.3s;
 }
 
-.next-project__go {
-  flex: none;
-  padding-bottom: 3px;
-  border-bottom: 1px solid currentColor;
-  white-space: nowrap;
-  transition:
-    color 0.3s,
-    transform 0.35s var(--ease);
+.next-project__arrow {
+  transition: transform 0.35s var(--ease);
 }
 
-.next-project:hover .next-project__go {
+.next-project:hover .next-project__name {
   color: var(--pink);
-  transform: translateX(6px);
 }
 
-@media (max-width: 600px) {
-  .next-project__bottom {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .next-project__title {
-    font-size: 13vw;
-  }
+.next-project:hover .next-project__arrow {
+  transform: translateX(8px);
 }

@@ -1,0 +1,25 @@
+/* The last line of every page (see Footer.jsx). Its colors follow wherever it sits: on
+   the page, or inside the Home page's dark contact section */
+.foot-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.foot-line__top {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: color 0.2s var(--ease);
+}
+
+.foot-line__top:hover {
+  color: var(--pink);
+}
+
+.footer {
+  padding-bottom: 24px;
+}

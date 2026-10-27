@@ -1,0 +1,99 @@
+/* Styled after an opened spine in the Home page's library (Library.css) */
+.photo-panel {
+  --pad: clamp(18px, 2.2vw, 32px);
+  position: relative;
+  display: block;
+  height: 100svh;
+  min-height: 520px;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+  background: #1c1c1c;
+}
+
+.photo-panel__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.06);
+  transition: transform 1.3s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+.photo-panel:hover .photo-panel__photo {
+  transform: scale(1);
+}
+
+/* Grey tint, darker toward the bottom where the title sits */
+.photo-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 55%),
+    rgba(40, 40, 40, 0.28);
+}
+
+.photo-panel .label {
+  color: #fff;
+}
+
+.photo-panel__label {
+  position: absolute;
+  z-index: 1;
+  top: var(--pad);
+  left: var(--pad);
+}
+
+/* The title sits well clear of the panel's bottom edge */
+.photo-panel__bottom {
+  position: absolute;
+  z-index: 1;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: clamp(48px, 7vw, 104px);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px 32px;
+}
+
+.photo-panel__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* White and about the size of a closed spine's name in the Home page's library */
+.photo-panel__title {
+  font-size: clamp(30px, 3vw, 48px);
+  color: #fff;
+}
+
+.photo-panel__subtitle {
+  margin-top: clamp(8px, 0.9vw, 14px);
+  font-size: clamp(13px, 1.3vw, 20px);
+}
+
+.photo-panel__go {
+  flex: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  white-space: nowrap;
+  transition:
+    color 0.3s,
+    transform 0.35s var(--ease);
+}
+
+.photo-panel:hover .photo-panel__go {
+  color: var(--pink);
+  transform: translateX(6px);
+}
+
+@media (max-width: 600px) {
+  .photo-panel__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

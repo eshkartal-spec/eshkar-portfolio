@@ -60,18 +60,5 @@
 }
 
 .contact__foot {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
   margin-top: clamp(32px, 4vw, 56px);
-  padding-top: 16px;
-  border-top: 1px solid var(--rule);
-}
-
-.contact__foot a {
-  text-decoration: none;
-}
-
-.contact__foot a:hover {
-  color: var(--pink);
 }

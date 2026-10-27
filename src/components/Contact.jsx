@@ -1,7 +1,6 @@
 import { site } from '../data/site'
+import { FootLine } from './Footer'
 import './Contact.css'
-
-const year = new Date().getFullYear()
 
 // Closes every page
 export default function Contact() {
@@ -24,10 +23,7 @@ export default function Contact() {
       </div>
 
       <div className="contact__foot">
-        <span className="label">{site.name} © {year}</span>
-        <a href="#top" className="label" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
-          Back to top ↑
-        </a>
+        <FootLine />
       </div>
     </footer>
   )
