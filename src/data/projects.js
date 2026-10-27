@@ -18,7 +18,7 @@ export const projects = [
       // (phones). Each fills the screen and stays anchored on its bottom steps, so keep
       // the paint clear of the sides.
       opening: {
-        wide: img('step-up-stairs', 'step-up-banner', 'Concrete stairs climbing between trees, with STEP UP painted on the bottom step'),
+        wide: img('step-up-stairs', 'banner-new', 'Concrete stairs close up, with STEP UP painted on the bottom step'),
         tall: img('step-up-stairs', 'step-up-banner-vert', 'Concrete stairs climbing toward the sky, with STEP UP painted on the bottom step'),
       },
       // Someone carrying the bike, seen from behind: climbs beside the stairs (desktop)

@@ -105,8 +105,9 @@ main.stairs {
   height: 100%;
   object-fit: cover;
   object-position: 50% 100%;
-  /* Walking in: the camera moves toward the painted steps */
-  transform-origin: 40% 80%;
+  /* Walking in: the camera moves toward the painted steps (on the left of the wide
+     photo, so the paint's left end stays in view) */
+  transform-origin: 15% 80%;
   transform: scale(calc(1 + var(--q, 0) * 0.45));
 }
 
@@ -296,6 +297,11 @@ main.stairs {
    below him and the paint can take nearly their whole width; the shade follows
    him ---------- */
 @media (orientation: portrait) {
+  /* The tall photo's paint is centered */
+  .opening__photo {
+    transform-origin: 50% 80%;
+  }
+
   .stairs__climber {
     right: -12vw;
     bottom: 30vh;
