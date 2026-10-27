@@ -23,40 +23,33 @@
   overflow: visible;
 }
 
-/* Every letter starts hidden, in pink */
+/* Every letter starts hidden, in black */
 .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
-  fill: var(--pink);
+  fill: var(--ink);
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
   transition:
     opacity 1.4s var(--silk),
     transform 1.6s var(--silk),
-    fill 1.1s ease-in-out;
+    fill 0.5s ease-in-out;
 }
 
-/* The first letter (the K) grows in very slightly as it fades in */
+/* The first letter (the K) grows in very slightly as it fades in;
+   the others simply fade in where they stand */
 .intro__logo .is-first {
   transform: scale(0.94);
 }
 
-/* The others start tucked in toward it, and drift out to their places;
-   letters further from the K start a moment later */
-.intro__logo .is-rest {
-  transform: translateX(calc(var(--side) * -46px));
-  transition-delay: calc((var(--away) - 1) * 90ms);
-}
-
-.intro:is(.is-first, .is-rest, .is-ink, .is-out) .is-first,
-.intro:is(.is-rest, .is-ink, .is-out) .is-rest {
+.intro:is(.is-first, .is-rest, .is-pink, .is-out) .is-first,
+.intro:is(.is-rest, .is-pink, .is-out) .is-rest {
   opacity: 1;
   transform: none;
 }
 
-/* Finally the whole word deepens from pink to black */
-.intro:is(.is-ink, .is-out) .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
-  fill: var(--ink);
-  transition-delay: 0s;
+/* Finally the whole word turns pink */
+.intro:is(.is-pink, .is-out) .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
+  fill: var(--pink);
 }
 
 .intro.is-out {
@@ -68,12 +61,12 @@
   transform: scale(0.97);
 }
 
-/* Reduced motion: the black word simply shows, then the screen fades */
+/* Reduced motion: the pink word simply shows, then the screen fades */
 @media (prefers-reduced-motion: reduce) {
   .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
     opacity: 1;
     transform: none;
-    fill: var(--ink);
+    fill: var(--pink);
     transition: none;
   }
 }

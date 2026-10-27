@@ -5,18 +5,17 @@ import './Intro.css'
 
 // ---- Timing (ms) ---------------------------------------------------------
 const FIRST_AT = 250 // the K fades in alone
-const REST_AT = 1250 // then the other letters unfold out from it
-const INK_AT = 2700 // the pink word deepens to black
-const LEAVE_AT = 3700 // and the screen dissolves into the site
+const REST_AT = 1250 // then the other letters fade in, in place
+const PINK_AT = 2600 // the black word turns pink
+const LEAVE_AT = 3350 // and the screen dissolves into the site
 const DISSOLVE = 900
 // -------------------------------------------------------------------------
 
 const SHAPES = 'path, line, polyline, polygon, rect, circle, ellipse'
 
-// A white screen where the logo (src/assets/logo.svg) appears in pink: first the
-// letter marked data-first (the K), then the others, each drifting out from it into
-// place. The word then turns black and the screen dissolves into the site.
-// Click or press any key to skip.
+// A white screen where the logo (src/assets/logo.svg) appears in black: first the
+// letter marked data-first (the K), then the others in their places. The word then
+// turns pink and the screen dissolves into the site. Click or press any key to skip.
 export default function Intro({ onDone }) {
   const [phase, setPhase] = useState('wait')
   const logoRef = useRef(null)
@@ -37,19 +36,14 @@ export default function Intro({ onDone }) {
     } catch {
       /* private mode: it will simply play again next time */
     }
-    // Each letter knows which side of the first letter it sits on (--side: -1 left,
-    // 1 right) and how far away it is (--away), so the others unfold outward from it
+    // The letter marked data-first (or the first shape) leads; the others follow together
     const shapes = [...logoRef.current.querySelectorAll(SHAPES)]
     const first = Math.max(0, shapes.findIndex((el) => el.hasAttribute('data-first')))
-    shapes.forEach((el, i) => {
-      el.classList.add(i === first ? 'is-first' : 'is-rest')
-      el.style.setProperty('--side', Math.sign(i - first))
-      el.style.setProperty('--away', Math.abs(i - first))
-    })
+    shapes.forEach((el, i) => el.classList.add(i === first ? 'is-first' : 'is-rest'))
     const timers = [
       setTimeout(() => setPhase('first'), FIRST_AT),
       setTimeout(() => setPhase('rest'), REST_AT),
-      setTimeout(() => setPhase('ink'), INK_AT),
+      setTimeout(() => setPhase('pink'), PINK_AT),
       setTimeout(leave, LEAVE_AT),
     ]
     window.addEventListener('pointerdown', leave)
