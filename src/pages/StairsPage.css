@@ -117,6 +117,56 @@ main.stairs {
   transform: scale(calc(1 + var(--q, 0) * 0.45));
 }
 
+/* A dark gradient falling from the top of the photo */
+.opening__shade {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 55%;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0));
+  pointer-events: none;
+}
+
+/* "Scroll to climb", over a line that keeps drawing downward; it fades away as soon
+   as the walk in starts */
+.opening__prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 3vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  opacity: clamp(0, calc(1 - var(--q, 0) * 5), 1);
+}
+
+.opening__line {
+  width: 1px;
+  height: 30px;
+  background: currentColor;
+  animation: prompt-line 2s var(--ease) infinite;
+}
+
+@keyframes prompt-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  51% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
 /* ---------- The 3D flight ---------- */
 /* The flight: steps are --H tall and --D deep, --W wide */
 .stairs__flight {
