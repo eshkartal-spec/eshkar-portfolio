@@ -1,11 +1,11 @@
 .intro {
+  --silk: cubic-bezier(0.22, 1, 0.36, 1); /* long, soft landing */
   position: fixed;
   z-index: 100;
   inset: 0;
   display: grid;
   place-items: center;
-  background: var(--ink);
-  color: var(--pink);
+  background: #fff;
   transition:
     opacity var(--dissolve) var(--ease),
     visibility var(--dissolve);
@@ -23,38 +23,40 @@
   overflow: visible;
 }
 
-/* Every shape is traced in pink, one after another (each has pathLength="1"
-   and its place in line as --n, see Intro.jsx) */
+/* Every letter starts hidden, in pink */
 .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
-  stroke: currentColor;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: intro-trace var(--trace) var(--ease) forwards;
-  animation-delay: calc(var(--start) + var(--n, 0) * var(--stagger));
+  fill: var(--pink);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 1.4s var(--silk),
+    transform 1.6s var(--silk),
+    fill 1.1s ease-in-out;
 }
 
-@keyframes intro-trace {
-  to {
-    stroke-dashoffset: 0;
-  }
+/* The first letter (the K) grows in very slightly as it fades in */
+.intro__logo .is-first {
+  transform: scale(0.94);
 }
 
-/* Filled shapes: a fine outline first, then the fill */
-.intro__logo [data-fill='solid'] {
-  fill: currentColor;
-  fill-opacity: 0;
-  stroke-width: 1.5px;
-  vector-effect: non-scaling-stroke;
-  transition: fill-opacity 0.5s var(--ease);
+/* The others start tucked in toward it, and drift out to their places;
+   letters further from the K start a moment later */
+.intro__logo .is-rest {
+  transform: translateX(calc(var(--side) * -46px));
+  transition-delay: calc((var(--away) - 1) * 90ms);
 }
 
-.intro__logo [data-fill='none'] {
-  fill: none;
+.intro:is(.is-first, .is-rest, .is-ink, .is-out) .is-first,
+.intro:is(.is-rest, .is-ink, .is-out) .is-rest {
+  opacity: 1;
+  transform: none;
 }
 
-.intro.is-fill [data-fill='solid'],
-.intro.is-out [data-fill='solid'] {
-  fill-opacity: 1;
+/* Finally the whole word deepens from pink to black */
+.intro:is(.is-ink, .is-out) .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
+  fill: var(--ink);
+  transition-delay: 0s;
 }
 
 .intro.is-out {
@@ -63,16 +65,15 @@
 }
 
 .intro.is-out .intro__logo {
-  transform: scale(0.94);
+  transform: scale(0.97);
 }
 
-/* Reduced motion: the logo simply appears, then the screen fades */
+/* Reduced motion: the black word simply shows, then the screen fades */
 @media (prefers-reduced-motion: reduce) {
   .intro__logo :is(path, line, polyline, polygon, rect, circle, ellipse) {
-    animation: none;
-    stroke-dashoffset: 0;
-  }
-  .intro__logo [data-fill='solid'] {
-    fill-opacity: 1;
+    opacity: 1;
+    transform: none;
+    fill: var(--ink);
+    transition: none;
   }
 }

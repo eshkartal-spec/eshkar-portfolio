@@ -6,8 +6,9 @@
   --glide: 0.85s;
   /* The open card's width, fixed so its text doesn't reflow while the spine widens */
   --open-w: calc(100cqi * var(--grow) / (var(--grow) + 5));
-  /* The name's size in the card: every title fits on one line */
-  --name: calc((var(--open-w) - 2 * var(--pad)) / 10);
+  /* The name's size in the card: every title fits on one line. --fit is how many
+     font-sizes wide the longest title is (measured in Library.jsx) */
+  --name: calc((var(--open-w) - 2 * var(--pad)) / var(--fit, 11));
   /* ...and down a spine, as a share of that */
   --spine-scale: 0.56;
   container-type: inline-size;

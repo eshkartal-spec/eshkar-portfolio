@@ -4,19 +4,21 @@ import { INTRO_SEEN_KEY } from '../intro'
 import './Intro.css'
 
 // ---- Timing (ms) ---------------------------------------------------------
-const START = 250 // short pause on the dark screen before the outline starts
-const TRACE = 950 // each letter's outline is traced in this long
-const STAGGER = 110 // each letter starts this much after the one before
-const DISSOLVE = 800
+const FIRST_AT = 250 // the K fades in alone
+const REST_AT = 1250 // then the other letters unfold out from it
+const INK_AT = 2700 // the pink word deepens to black
+const LEAVE_AT = 3700 // and the screen dissolves into the site
+const DISSOLVE = 900
 // -------------------------------------------------------------------------
 
 const SHAPES = 'path, line, polyline, polygon, rect, circle, ellipse'
 
-// A dark screen where the logo (src/assets/logo.svg) is traced in pink, filled in,
-// then dissolves to reveal the site. Works with any SVG logo made of shapes.
+// A white screen where the logo (src/assets/logo.svg) appears in pink: first the
+// letter marked data-first (the K), then the others, each drifting out from it into
+// place. The word then turns black and the screen dissolves into the site.
 // Click or press any key to skip.
 export default function Intro({ onDone }) {
-  const [phase, setPhase] = useState('draw')
+  const [phase, setPhase] = useState('wait')
   const logoRef = useRef(null)
   const leaving = useRef(false)
 
@@ -35,18 +37,20 @@ export default function Intro({ onDone }) {
     } catch {
       /* private mode: it will simply play again next time */
     }
-    // Every shape is traced in the same time, whatever its real length, one after
-    // another in the file's order; shapes that had no fill in the logo stay as lines
+    // Each letter knows which side of the first letter it sits on (--side: -1 left,
+    // 1 right) and how far away it is (--away), so the others unfold outward from it
     const shapes = [...logoRef.current.querySelectorAll(SHAPES)]
+    const first = Math.max(0, shapes.findIndex((el) => el.hasAttribute('data-first')))
     shapes.forEach((el, i) => {
-      el.setAttribute('pathLength', '1')
-      el.style.setProperty('--n', i)
-      el.dataset.fill = getComputedStyle(el).fill === 'none' ? 'none' : 'solid'
+      el.classList.add(i === first ? 'is-first' : 'is-rest')
+      el.style.setProperty('--side', Math.sign(i - first))
+      el.style.setProperty('--away', Math.abs(i - first))
     })
-    const traced = START + (shapes.length - 1) * STAGGER + TRACE
     const timers = [
-      setTimeout(() => setPhase('fill'), traced - 250), // fill in as the last letter finishes
-      setTimeout(leave, traced + 650), // then the screen dissolves
+      setTimeout(() => setPhase('first'), FIRST_AT),
+      setTimeout(() => setPhase('rest'), REST_AT),
+      setTimeout(() => setPhase('ink'), INK_AT),
+      setTimeout(leave, LEAVE_AT),
     ]
     window.addEventListener('pointerdown', leave)
     window.addEventListener('keydown', leave)
@@ -58,16 +62,7 @@ export default function Intro({ onDone }) {
   }, [leave])
 
   return (
-    <div
-      className={`intro is-${phase}`}
-      style={{
-        '--start': `${START}ms`,
-        '--trace': `${TRACE}ms`,
-        '--stagger': `${STAGGER}ms`,
-        '--dissolve': `${DISSOLVE}ms`,
-      }}
-      aria-hidden="true"
-    >
+    <div className={`intro is-${phase}`} style={{ '--dissolve': `${DISSOLVE}ms` }} aria-hidden="true">
       <div ref={logoRef} className="intro__logo" dangerouslySetInnerHTML={{ __html: logo }} />
     </div>
   )

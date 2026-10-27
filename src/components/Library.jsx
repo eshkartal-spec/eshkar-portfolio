@@ -24,13 +24,22 @@ export default function Library() {
   }
   useEffect(() => () => clearTimeout(timer.current), [])
 
-  // Where each name lands: the spot of the (invisible) title inside its card
+  // Sizes the names so the longest fits its card on one line, then notes where each
+  // name lands: the spot of the (invisible) title inside its card
   useLayoutEffect(() => {
     const list = listRef.current
     const measure = () => {
-      for (const spine of list.children) {
-        const slot = spine.querySelector('.spine__title')
-        spine.style.setProperty('--land-y', `${slot.offsetTop}px`)
+      const slots = [...list.querySelectorAll('.spine__title')]
+      const widest = Math.max(
+        ...slots.map((slot) => {
+          const text = document.createRange()
+          text.selectNodeContents(slot)
+          return text.getBoundingClientRect().width / parseFloat(getComputedStyle(slot).fontSize)
+        }),
+      )
+      if (widest > 0) list.style.setProperty('--fit', (widest * 1.03).toFixed(3))
+      for (const slot of slots) {
+        slot.closest('.spine').style.setProperty('--land-y', `${slot.offsetTop}px`)
       }
     }
     measure()
