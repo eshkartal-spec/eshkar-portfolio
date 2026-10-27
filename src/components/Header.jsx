@@ -35,7 +35,7 @@ export default function Header() {
       <nav className="header__nav">
         <Link to="/#work" className="label label--ink">Work</Link>
         <Link to="/#about" className="label label--ink">About</Link>
-        <a href="#contact" className="label label--ink">Contact</a>
+        <Link to="/#contact" className="label label--ink">Contact</Link>
         <a href={site.resume} target="_blank" rel="noreferrer" className="pill header__resume">
           Resume ↗
         </a>

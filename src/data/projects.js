@@ -13,12 +13,14 @@ export const projects = [
     // The page is a staircase you climb by scrolling (src/pages/StairsPage.jsx)
     layout: 'stairs',
     stairs: {
-      // Full-screen opening photo. `risers` are the fronts of its bottom steps, in the
-      // photo's own pixels (x, y = top-left; w, h = size): the title and details are
-      // painted on them, bottom step first.
+      // Full-screen opening photo. If its steps already have the title and details
+      // printed on them, set `painted: true` and leave out `risers`. Otherwise the site
+      // paints them on: `risers` are the fronts of its bottom steps, in the photo's own
+      // pixels (x, y = top-left; w, h = size), bottom step first.
       photo: {
         src: '/images/step-up-stairs/stairs-photo.webp',
         alt: 'Concrete stairs climbing between trees',
+        painted: false,
         width: 736,
         height: 1104,
         risers: [
@@ -28,7 +30,7 @@ export const projects = [
           { x: 106, y: 772, w: 420, h: 56 },
         ],
       },
-      // Someone carrying the bike, seen from behind: climbs away up the opening photo
+      // Someone carrying the bike, seen from behind: climbs beside the stairs (desktop)
       climber: img('step-up-stairs', 'climber-back', 'Carrying the STEP UP bike up the stairs'),
       // Seamless texture for the 3D stairs
       texture: '/images/step-up-stairs/concrete.webp',

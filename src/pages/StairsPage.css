@@ -1,8 +1,8 @@
 /* ---------- The staircase page (see StairsPage.jsx) ----------
-   A tall scroll track; inside it a screen-sized view stays put while the opening photo
-   and then a 3D flight of stairs move through it. --q is the walk into the opening
-   photo (0–1) and --p the camera's position on the flight in steps, both set while
-   scrolling. */
+   A tall scroll track (its height set in StairsPage.jsx); inside it a screen-sized view
+   stays put while the opening photo and then a 3D flight of stairs move through it.
+   --q is the walk into the opening photo (0–1), --p the camera's position on the flight
+   in steps and --stride the lift within the current step, all set while scrolling. */
 
 /* The opening photo fills the screen from the very top */
 main.stairs {
@@ -11,18 +11,31 @@ main.stairs {
 
 .stairs__track {
   position: relative;
-  /* The walk in, plus one stretch per step up to the top one, plus the screen itself */
-  height: calc((var(--opening) + (var(--steps) - 1) * var(--per-step) + 1) * 100vh);
 }
 
 .stairs__view {
+  /* Where the flight stands across the screen: left of center on desktop, leaving
+     room for the climber on the right */
+  --flight-x: 38%;
   position: sticky;
   top: 0;
   height: 100vh;
   overflow: hidden;
   background: var(--bg);
   perspective: 1500px;
-  perspective-origin: 50% 28%;
+  perspective-origin: var(--flight-x) 28%;
+}
+
+/* Climbing alongside the stairs: rises a little with every step */
+.stairs__climber {
+  position: absolute;
+  z-index: 1;
+  right: 2vw;
+  bottom: -3vh;
+  height: 74vh;
+  transform: translateY(calc(var(--stride, 0) * -2.4vh));
+  opacity: clamp(0, calc((var(--q, 0) - 0.84) * 7), 1);
+  pointer-events: none;
 }
 
 /* ---------- The opening: real stairs, with paint on them ---------- */
@@ -58,18 +71,6 @@ main.stairs {
   display: block;
   width: 100%;
   height: 100%;
-}
-
-/* Climbing away up the flight, into the light */
-.opening__climber {
-  position: absolute;
-  left: 62%;
-  top: 34%;
-  height: 24%;
-  translate: -50% 0;
-  transform-origin: 50% 100%;
-  transform: translateY(calc(var(--q, 0) * -45%)) scale(calc(1 - var(--q, 0) * 0.4));
-  opacity: clamp(0, calc((0.8 - var(--q, 0)) * 4), 1);
 }
 
 /* A painted area on one of the photo's steps; its text is sized by the step's height */
@@ -133,9 +134,9 @@ main.stairs {
 .stairs__flight {
   --H: 17vh;
   --D: 36vh;
-  --W: min(1500px, 96vw);
+  --W: min(1100px, 64vw);
   position: absolute;
-  left: 50%;
+  left: var(--flight-x);
   top: 69vh;
   width: var(--W);
   margin-left: calc(var(--W) / -2);
@@ -297,11 +298,19 @@ main.stairs {
   flex: 1;
 }
 
-/* ---------- Phones ---------- */
+/* ---------- Phones: the flight takes the whole width; no room for the climber ---------- */
 @media (max-width: 760px) {
+  .stairs__view {
+    --flight-x: 50%;
+  }
+
+  .stairs__climber {
+    display: none;
+  }
+
   .stairs__flight {
-    --H: 12vh;
-    --D: 15vh;
+    --H: 11vh;
+    --D: 22vh;
     --W: 94vw;
     top: 76vh;
   }

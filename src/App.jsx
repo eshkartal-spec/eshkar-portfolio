@@ -34,7 +34,8 @@ export default function App({ playIntro }) {
         <Route path="/projects/:slug" element={<ProjectPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Contact />
+      {/* Contact details live on the Home page only */}
+      {pathname === '/' && <Contact />}
       {showIntro && <Intro onDone={() => setShowIntro(false)} />}
     </>
   )

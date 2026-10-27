@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getProject, projects } from '../data/projects'
 import NotFound from './NotFound'
 import StairsPage from './StairsPage'
+import NextProject from '../components/NextProject'
 import './ProjectPage.css'
 
 const num = (i) => String(i + 1).padStart(2, '0')
@@ -140,16 +141,7 @@ export default function ProjectPage() {
         </section>
       )}
 
-      <Link to={`/projects/${next.slug}`} className="next wrap">
-        <div className="section-head">
-          <p className="label label--ink">Next project</p>
-          <p className="label">{next.field}</p>
-        </div>
-        <div className="next__row">
-          <h2 className="display next__title">{next.title} <span aria-hidden="true">→</span></h2>
-          <Photo image={next.cover} className="next__photo" />
-        </div>
-      </Link>
+      <NextProject project={next} />
     </main>
   )
 }
