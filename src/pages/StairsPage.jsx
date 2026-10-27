@@ -9,6 +9,7 @@ const ARRIVE = 400 // past the top step: the next project fades in over the stai
 const SETTLE = 140 // ms after the scrolling stops, the camera settles on the nearest step
 const FOLLOW = 0.12 // how quickly the camera catches up (0–1): each step glides
 const JUMP_FOLLOW = 0.22 // the same, after clicking a feature's name: a quicker climb to it
+const FLICK_FRICTION = 0.95 // touch screens: how much of a flick's speed is kept each frame
 // --------------------------------------------------------------------------
 const AHEAD = 9 // steps visible ahead before they fade into the distance
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi)
@@ -90,7 +91,7 @@ function Riser({ step, onJump }) {
 // on its bottom steps (wide on landscape screens, tall on portrait ones). The words are
 // in the photo, so they're also here, hidden, for screen readers and search engines.
 // A dark gradient falls from the top, with a prompt in it that invites the climb.
-function Opening({ project }) {
+function Opening({ project, touch }) {
   const { wide, tall } = project.stairs.opening
   return (
     <div className="opening">
@@ -102,7 +103,7 @@ function Opening({ project }) {
       <h1 className="visually-hidden">{project.title}</h1>
       <p className="visually-hidden">{project.summary}</p>
       <p className="label opening__prompt">
-        Scroll to climb
+        {touch ? 'Swipe down to climb' : 'Scroll to climb'}
         <span className="opening__line" />
       </p>
     </div>
@@ -114,9 +115,11 @@ function Opening({ project }) {
 // which gives way to a 3D concrete flight. From there each tick climbs one step, with
 // text and photos painted on the risers (the steps' fronts), while someone carrying the
 // bike stands on the flight in front of them. Past the top step the next project fades
-// in over the stairs.
+// in over the stairs. On touch screens the climb is swiped instead of scrolled, the other
+// way round: swiping down pulls the stairs down toward you.
 export default function StairsPage({ project, next }) {
   const steps = useMemo(() => buildSteps(project), [project])
+  const touch = useMemo(() => window.matchMedia('(pointer: coarse)').matches, [])
   const trackRef = useRef(null)
   const viewRef = useRef(null)
   const flightRef = useRef(null)
@@ -166,7 +169,9 @@ export default function StairsPage({ project, next }) {
     let settle = 0
     let lastY = 0
     let goingUp = false // scrolling back toward the top of the page
-    const scrolled = () => Math.max(0, -track.getBoundingClientRect().top)
+    // Touch screens: the page itself doesn't scroll; swipes move this instead (see below)
+    let swiped = 0
+    const scrolled = () => (touch ? swiped : Math.max(0, -track.getBoundingClientRect().top))
     const nearestStep = (y) => {
       if (y <= OPENING) return y
       // Past the top step the next project finishes fading in, or fades back out,
@@ -180,7 +185,10 @@ export default function StairsPage({ project, next }) {
       lastY = y
       target = y > topY && !goingUp ? topY + ARRIVE : y
       clearTimeout(settle)
-      settle = setTimeout(() => (target = nearestStep(scrolled())), SETTLE)
+      settle = setTimeout(() => {
+        target = nearestStep(scrolled())
+        if (touch) swiped = target // the next swipe starts from the step it settled on
+      }, SETTLE)
     }
     const frame = () => {
       pos += (target - pos) * (jumping < 0 ? FOLLOW : JUMP_FOLLOW)
@@ -216,34 +224,92 @@ export default function StairsPage({ project, next }) {
     // Clicking a feature's name climbs quickly to the step where it's lit
     jumpRef.current = (i) => {
       const y = OPENING + (i - 1) * STEP
-      window.scrollTo({ top: window.scrollY + track.getBoundingClientRect().top + y, behavior: 'instant' })
+      if (touch) {
+        cancelAnimationFrame(flick)
+        swiped = y
+      } else {
+        window.scrollTo({ top: window.scrollY + track.getBoundingClientRect().top + y, behavior: 'instant' })
+      }
       target = y
       jumping = titleSteps.indexOf(i)
     }
+
+    // Touch screens: a finger moving down climbs, one pixel of swipe for one of scroll,
+    // and a flick keeps coasting and slows down, like the phone's own scrolling. Each
+    // move is announced as a scroll, which the camera reads (and which wakes the header).
+    let flick = 0
+    let fingerY = 0
+    let fingerT = 0
+    let speed = 0 // px per ms
+    const moveTo = (y) => {
+      swiped = clamp(y, 0, topY + ARRIVE)
+      window.dispatchEvent(new Event('scroll'))
+    }
+    const onTouchStart = (e) => {
+      cancelAnimationFrame(flick)
+      fingerY = e.touches[0].clientY
+      fingerT = e.timeStamp
+      speed = 0
+    }
+    const onTouchMove = (e) => {
+      e.preventDefault()
+      const y = e.touches[0].clientY
+      const dt = Math.max(1, e.timeStamp - fingerT)
+      speed = 0.8 * ((y - fingerY) / dt) + 0.2 * speed
+      moveTo(swiped + y - fingerY)
+      fingerY = y
+      fingerT = e.timeStamp
+    }
+    const onTouchEnd = (e) => {
+      if (e.timeStamp - fingerT > 80) speed = 0 // the finger had stopped before lifting
+      let last = performance.now()
+      const coast = (now) => {
+        const dt = now - last
+        last = now
+        speed *= FLICK_FRICTION ** (dt / 16.7)
+        if (Math.abs(speed) < 0.05) return
+        moveTo(swiped + speed * dt)
+        flick = requestAnimationFrame(coast)
+      }
+      flick = requestAnimationFrame(coast)
+    }
+    if (touch) {
+      html.dataset.touchClimb = ''
+      window.addEventListener('touchstart', onTouchStart, { passive: true })
+      window.addEventListener('touchmove', onTouchMove, { passive: false })
+      window.addEventListener('touchend', onTouchEnd, { passive: true })
+    }
+
     read()
     window.addEventListener('scroll', read, { passive: true })
     window.addEventListener('resize', read)
     raf = requestAnimationFrame(frame)
     return () => {
       cancelAnimationFrame(raf)
+      cancelAnimationFrame(flick)
       clearTimeout(settle)
       window.removeEventListener('scroll', read)
       window.removeEventListener('resize', read)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('touchend', onTouchEnd)
       delete html.dataset.headerHidden
+      delete html.dataset.touchClimb
     }
-  }, [steps])
+  }, [steps, touch])
 
   const { climber, backdrop } = project.stairs
   return (
     <main className="stairs" aria-label={project.fullTitle ?? project.title}>
-      {/* The scroll track: the walk in, one tick of scrolling per step, the arrival */}
+      {/* The scroll track: the walk in, one tick of scrolling per step, the arrival (on
+          touch screens, just the screen: the climb is swiped) */}
       <div
         ref={trackRef}
         className="stairs__track"
-        style={{ height: `calc(${OPENING + (steps.length - 1) * STEP + ARRIVE}px + 100vh)` }}
+        style={{ height: touch ? '100dvh' : `calc(${OPENING + (steps.length - 1) * STEP + ARRIVE}px + 100dvh)` }}
       >
         <div ref={viewRef} className="stairs__view" style={{ '--backdrop': `url("${backdrop}")` }}>
-          <Opening project={project} />
+          <Opening project={project} touch={touch} />
           <div ref={flightRef} className="stairs__flight">
             {steps.map((step, i) => (
               <div key={i} className="step" style={{ '--i': i }}>

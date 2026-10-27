@@ -13,13 +13,21 @@ main.stairs {
   position: relative;
 }
 
+/* Touch screens: the climb is swiped (see StairsPage.jsx), so the page stays still, with
+   no pull-to-refresh. The browser's bars stay out too, so everything here is measured
+   against the screen left between them (dvh) */
+html[data-touch-climb] {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 /* The flight is pinned to the left edge of the screen, like stairs running along a
    wall: the camera's vanishing point sits on that edge too, so every step's left end
    lines up on it, and the steps narrow toward it as they rise */
 .stairs__view {
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   /* A shade deeper than the page, so the steps' white edges read */
   --stage: 225, 224, 221;
@@ -57,7 +65,7 @@ main.stairs {
   z-index: 2;
   right: 4vw;
   bottom: 0;
-  height: 96vh;
+  height: 96dvh;
   /* The photo's shape, so the feature frames sit on it */
   aspect-ratio: 1023 / 1537;
   transform-origin: 50% 100%;
@@ -206,7 +214,7 @@ main.stairs {
 .opening__prompt {
   position: absolute;
   left: 50%;
-  top: 7vh;
+  top: 7dvh;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -246,13 +254,13 @@ main.stairs {
 /* ---------- The 3D flight ---------- */
 /* The flight: steps are --H tall and --D deep, --W wide */
 .stairs__flight {
-  --H: 17vh;
-  --D: 36vh;
+  --H: 17dvh;
+  --D: 36dvh;
   /* Wide enough to run under the climber, so he stands on it */
   --W: 86vw;
   position: absolute;
   left: 0;
-  top: 69vh;
+  top: 69dvh;
   width: var(--W);
   transform-style: preserve-3d;
   transform: translate3d(0, calc(var(--p, 0) * var(--H)), calc(var(--p, 0) * var(--D)));
@@ -393,8 +401,11 @@ main.stairs {
   transition: color 0.2s var(--ease);
 }
 
-.riser__feature-title:hover {
-  color: var(--pink);
+/* Only with a mouse: on touch screens the last tapped name would stay pink */
+@media (hover: hover) {
+  .riser__feature-title:hover {
+    color: var(--pink);
+  }
 }
 
 /* As large as the details on the first steps, in even lines */
@@ -464,8 +475,8 @@ main.stairs {
   .stairs__climber {
     right: -12vw;
     /* His wheel clears the second step, where each feature's name is lit */
-    bottom: 36vh;
-    height: 50vh;
+    bottom: 36dvh;
+    height: 50dvh;
   }
 
   .stairs__shade {
@@ -480,9 +491,9 @@ main.stairs {
 /* ---------- Phones: the flight takes the whole width ---------- */
 @media (max-width: 760px) {
   .stairs__flight {
-    --H: 11vh;
-    --D: 22vh;
+    --H: 11dvh;
+    --D: 22dvh;
     --W: 100vw;
-    top: 76vh;
+    top: 76dvh;
   }
 }
