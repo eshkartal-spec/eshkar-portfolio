@@ -1,0 +1,111 @@
+/* Photos in a row, their words in a tooltip that follows the cursor (see DetailRow.jsx) */
+.details {
+  padding-block: clamp(64px, 9vw, 140px);
+}
+
+.details__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.5vw, 24px);
+}
+
+.details__item {
+  position: relative;
+  margin: 0;
+  cursor: default;
+}
+
+.details__item img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  background: var(--surface);
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease);
+}
+
+/* Hovered, a photo pops out of the row: a little bigger, lifted on a soft shadow */
+@media (hover: hover) {
+  .details__item:hover {
+    z-index: 1;
+  }
+
+  .details__item:hover img {
+    transform: scale(1.05);
+    box-shadow: 0 24px 48px -16px rgba(17, 17, 17, 0.35);
+  }
+}
+
+.details__title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  font-stretch: 125%;
+  line-height: 1.2;
+}
+
+.details__text {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* ---------- The tooltip ---------- */
+.details__tip {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  max-width: 300px;
+  padding: 14px 16px;
+  color: var(--bg);
+  background: var(--ink);
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
+  pointer-events: none;
+}
+
+.details__tip.is-on {
+  opacity: 1;
+}
+
+.details__tip .details__text {
+  opacity: 0.8;
+}
+
+/* With a cursor the words are in the tooltip, so the captions are only read out */
+@media (hover: hover) {
+  .details__caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Without one, they sit under each photo, and there's no tooltip */
+@media (hover: none) {
+  .details__caption {
+    display: block;
+    margin-top: 14px;
+  }
+
+  .details__tip {
+    display: none;
+  }
+}
+
+/* Phones: one photo under another */
+@media (max-width: 600px) {
+  .details__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+}

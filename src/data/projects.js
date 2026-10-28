@@ -119,41 +119,55 @@ export const projects = [
     },
   },
   {
-    slug: 'my-chair',
-    title: 'My Chair',
+    slug: 'pipe-dream',
+    title: 'Pipe Dream',
     field: 'Furniture',
+    // The page's background: the cool grey of the studio photos, with soft pleats
+    backdrop: { color: '#e4e7e4', pleats: true },
+    // Full-screen photo at the top of the page, with the title already on it and the
+    // details (type, year, duration, tools) along its bottom: a wide photo for landscape
+    // screens and a tall one for portrait (phones)
+    opening: {
+      wide: img('my-chair', 'pipe-dream-banner', 'Pleated pink fabric with PIPE DREAM across it'),
+      tall: img('my-chair', 'pipe-dream-mobile-1290x2796', 'Pleated pink fabric with PIPE DREAM across it'),
+    },
+    // A video played by scrolling, with the summary over it
+    scrub: { src: '/images/my-chair/pipe-video.mp4', poster: '/images/my-chair/pipe-video.webp' },
+    // Two full-screen photos taking turns
+    swap: [
+      img('my-chair', 'seated-studio-wide-3840x2160', 'Sitting in Pipe Dream, legs crossed'),
+      img('my-chair', 'reclining-studio-wide-3840x2160', 'Lying back over Pipe Dream, upside down'),
+    ],
     summary:
       'A chair exploring the meeting point between flexibility and rigidity, geometric order and organic flow.',
     intro:
       'A chair exploring the meeting point between flexibility and rigidity, geometric order and organic flow.',
     type: 'Furniture design',
-    year: null,
-    duration: null,
-    tools: null,
-    cover: img('my-chair', 'seat', 'My Chair'),
-    hero: img('my-chair', 'seat', 'My Chair'),
-    materials: [
+    // Placeholders until the real details come in
+    year: '20XX',
+    duration: 'X weeks',
+    tools: 'Tool, tool, tool',
+    cover: img('my-chair', 'seat', 'Pipe Dream'),
+    hero: img('my-chair', 'seat', 'Pipe Dream'),
+    // The materials: three photos in a row, each with its words in a tooltip that
+    // follows the cursor over it (on touch screens, under it)
+    details: [
       {
-        label: 'Frame',
-        title: 'Galvanized pipes',
-        text: 'Galvanized steel pipes joined with threaded elbows and tees give the chair its geometric order and rigidity.',
-        image: img('my-chair', 'frame-pipes', 'Galvanized pipe elbow and tee joint'),
+        image: img('my-chair', 'hero', 'Pipe Dream, the whole chair'),
+        title: 'Rigid meets flexible',
+        text: 'Rigid and flexible meet when someone sits in the chair.',
       },
       {
-        label: 'Textile',
+        image: img('my-chair', 'detail2', 'The pleated textile over the frame'),
         title: 'Pink textile',
         text: 'A pleated pink textile wraps over the pipes, bringing flexibility and organic flow to the frame.',
-        image: img('my-chair', 'textile-pleats', 'Pleated pink textile close-up'),
       },
       {
-        label: 'In use',
-        title: 'Frame and textile together',
-        text: 'Rigid and flexible meet when someone sits in the chair.',
-        image: null,
+        image: img('my-chair', 'detail', 'A threaded elbow and tee joining the pipes'),
+        title: 'Galvanized pipes',
+        text: 'Galvanized steel pipes joined with threaded elbows and tees give the chair its geometric order and rigidity.',
       },
     ],
-    // Photos in originals/my-chair that v1 didn't use: hero, detail
-    todo: ['One more sentence on the idea, material or making', 'Year, duration, tools', 'Photo of the chair in use', 'Detail and process photos'],
   },
   {
     slug: 'shrafraf',

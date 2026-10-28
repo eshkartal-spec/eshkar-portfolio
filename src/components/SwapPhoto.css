@@ -1,0 +1,32 @@
+/* Two photos in one frame (see SwapPhoto.jsx): the whole screen, the second fading in
+   over the first */
+.swap {
+  position: relative;
+  height: 100svh;
+  margin: 0;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.swap img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swap__second {
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+.swap.is-turned .swap__second {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .swap--hover:hover .swap__second {
+    opacity: 1;
+  }
+}
