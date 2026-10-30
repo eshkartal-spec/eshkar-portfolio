@@ -8,6 +8,8 @@ const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi)
 // A video played by scrolling: the section is a few screens tall and the video stays on
 // screen while you scroll through it, each scroll position showing its moment of the
 // video (forward scrolling down, backward scrolling up). `children` sit over it.
+// With `video.loop`, it's one screen tall instead, and the video simply plays on a loop
+// while it's on screen (not with reduced motion).
 export default function ScrubVideo({ video, children }) {
   const trackRef = useRef(null)
   const videoRef = useRef(null)
@@ -15,6 +17,21 @@ export default function ScrubVideo({ video, children }) {
   useEffect(() => {
     const track = trackRef.current
     const v = videoRef.current
+
+    if (video.loop) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+      // Playing once a little of it is in view (not just touching the screen's edge)
+      const io = new IntersectionObserver(
+        ([e]) => {
+          if (e.intersectionRatio >= 0.1) v.play().catch(() => {})
+          else v.pause()
+        },
+        { threshold: [0, 0.1] },
+      )
+      io.observe(track)
+      return () => io.disconnect()
+    }
+
     let raf = 0
     let shown = 0 // the moment on screen, 0–1, easing toward the scroll's
     const scrolled = () => {
@@ -48,10 +65,10 @@ export default function ScrubVideo({ video, children }) {
       io.disconnect()
       cancelAnimationFrame(raf)
     }
-  }, [])
+  }, [video.loop])
 
   return (
-    <section ref={trackRef} className="scrub">
+    <section ref={trackRef} className={`scrub${video.loop ? ' scrub--loop' : ''}`}>
       <div className="scrub__view">
         <video
           ref={videoRef}
@@ -60,6 +77,7 @@ export default function ScrubVideo({ video, children }) {
           poster={video.poster}
           muted
           playsInline
+          loop={video.loop}
           preload="auto"
         />
         <div className="scrub__text wrap">{children}</div>

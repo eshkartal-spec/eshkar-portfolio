@@ -1,0 +1,20 @@
+/* A photo that ripples like water under the cursor (see RippleWarp.jsx): the moving copy
+   is drawn on a canvas exactly over the photo, and shows once it has drawn */
+.ripple-warp {
+  position: relative;
+  /* A finger dragged sideways stirs the water; up and down still scrolls the page */
+  touch-action: pan-y;
+}
+
+.ripple-warp__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ripple-warp__canvas.is-on {
+  opacity: 1;
+}

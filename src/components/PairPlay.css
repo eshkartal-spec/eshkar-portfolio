@@ -1,0 +1,257 @@
+/* ---------- A pair's section: the name and explainer centred above the stage ---------- */
+.pair-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 2vw, 32px);
+  padding-block: clamp(48px, 7vw, 112px);
+  text-align: center;
+}
+
+.pair-section__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.8vw, 46px);
+  font-weight: 600;
+  font-stretch: 125%;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+.pair-section__about {
+  margin: 14px auto 0;
+  max-width: 36ch;
+  font-size: clamp(16px, 1.25vw, 19px);
+  text-wrap: pretty;
+}
+
+/* ---------- The stage (see PairPlay.jsx): in the page's own colour, no edges ---------- */
+.pair {
+  position: relative;
+  width: min(100%, 1180px);
+  height: clamp(420px, 64svh, 680px);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* The middle, where the halves meet: a glow of white with a light, soft blue-grey line
+   down its centre, fading out to the sides and toward the top and bottom, a little
+   fainter once they've met */
+.pair__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: clamp(160px, 18vw, 300px);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 35%, #fff 65%, rgba(255, 255, 255, 0));
+  mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent);
+  transform: translateX(-50%);
+  transition: opacity 0.8s var(--ease);
+}
+
+/* Soft at its sides too, not only its ends, and parted around the prompt */
+.pair__line::after {
+  --gap: 30px;
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 8px;
+  background: linear-gradient(90deg, rgba(112, 122, 138, 0), rgba(112, 122, 138, 0.2), rgba(112, 122, 138, 0));
+  filter: blur(1.5px);
+  mask-image: linear-gradient(
+    #000 calc(50% - var(--gap) - 18px),
+    transparent calc(50% - var(--gap)),
+    transparent calc(50% + var(--gap)),
+    #000 calc(50% + var(--gap) + 18px)
+  );
+  transform: translateX(-50%);
+}
+
+.pair.is-joined .pair__line {
+  opacity: 0.55;
+}
+
+/* Each half is placed by PairPlay.jsx, and shows once it's in place */
+.pair__half {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  touch-action: none;
+  cursor: grab;
+  transition: opacity 0.4s var(--ease);
+}
+
+.pair.is-ready .pair__half {
+  opacity: 1;
+}
+
+.pair.is-grabbing,
+.pair.is-grabbing .pair__half {
+  cursor: grabbing;
+}
+
+/* ---------- The soft cursor (with a mouse; see PairPlay.jsx): over the stage the pointer
+   is a circle gliding after the mouse, blended by difference, so it shows dark over the
+   light page and in the halves' opposite colours over them. It swells over a half that
+   can be picked up, and tightens while holding one ---------- */
+.pair__cursor {
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+  opacity: 0;
+  scale: 0.3;
+  pointer-events: none;
+  transition:
+    opacity 0.3s var(--ease),
+    scale 0.35s var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pair,
+  .pair .pair__half,
+  .pair.is-grabbing,
+  .pair.is-grabbing .pair__half {
+    cursor: none;
+  }
+
+  .pair.is-pointing .pair__cursor {
+    opacity: 1;
+  }
+
+  .pair.is-over .pair__cursor {
+    scale: 1;
+  }
+
+  .pair.is-grabbing .pair__cursor {
+    scale: 0.6;
+  }
+}
+
+.pair__half img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* The prompt, in the middle of the glow */
+.pair__hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  transition: opacity 0.5s var(--ease);
+}
+
+/* ...out of the way while a half is held, and once they've met */
+.pair.is-grabbing .pair__hint,
+.pair.is-joined .pair__hint {
+  opacity: 0;
+}
+
+/* ---------- When a pair meets: one ring spreads out from the seam the moment the
+   halves touch, slowing as it fades, behind the halves (made in PairPlay.jsx). It fades
+   out softly toward the stage's edges rather than being cut off there ---------- */
+.pair__burst {
+  position: absolute;
+  inset: 0;
+  mask-image:
+    linear-gradient(transparent, #000 18%, #000 82%, transparent),
+    linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-composite: intersect;
+  pointer-events: none;
+}
+
+/* It grows by its size, not by scaling, so its line stays the same thin line all the way */
+.pair__ring {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  border: 1.5px solid rgba(112, 122, 138, 0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: pair-ring 2.4s cubic-bezier(0.25, 0.9, 0.35, 1) both;
+}
+
+@keyframes pair-ring {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.85;
+  }
+  100% {
+    width: var(--size);
+    height: var(--size);
+    opacity: 0;
+  }
+}
+
+/* ...or sand: fine grains drawn on a canvas over the whole stage (PairPlay.jsx), fading
+   out softly toward its edges in the same way */
+.pair__sand {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mask-image:
+    linear-gradient(transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-composite: intersect;
+  pointer-events: none;
+}
+
+/* ...and water: the stage's surface rippling out from the seam, drawn on a canvas over
+   the whole stage (stageWater.js), fading out softly toward its edges the same way */
+.pair__water {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mask-image:
+    linear-gradient(transparent, #000 14%, #000 86%, transparent),
+    linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-composite: intersect;
+  pointer-events: none;
+}
+
+/* A pair still waiting for its photos: a short placeholder, not a whole empty stage */
+.pair--empty {
+  display: grid;
+  place-items: center;
+  height: clamp(140px, 18svh, 220px);
+}
+
+/* ---------- Phones: a shorter stage, and the prompt on two short lines ---------- */
+@media (max-width: 760px) {
+  .pair {
+    height: min(64svh, 540px);
+  }
+
+  .pair__hint {
+    text-align: center;
+  }
+
+  .pair__hint span {
+    display: block;
+  }
+
+  /* The prompt takes two lines here, so the line parts a little wider */
+  .pair__line::after {
+    --gap: 40px;
+  }
+}

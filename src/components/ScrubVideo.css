@@ -1,8 +1,13 @@
 /* A video played by scrolling (see ScrubVideo.jsx): three screens of scrolling for the
-   whole video, with the video held on screen throughout */
+   whole video, with the video held on screen throughout (or one screen, on a loop) */
 .scrub {
   position: relative;
   height: 300svh;
+}
+
+/* Played on a loop instead: one screen */
+.scrub--loop {
+  height: 100svh;
 }
 
 .scrub__view {

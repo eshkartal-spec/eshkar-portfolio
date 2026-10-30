@@ -45,6 +45,21 @@
   .proj__opening .proj__opening-specs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  /* With no tall photo, or one meant to show whole, it sits across the screen under the
+     top bar, and the details sit under it */
+  .proj--opening:has(.proj__opening--whole) {
+    padding-top: var(--header-h);
+  }
+
+  .proj__opening--whole img {
+    height: auto;
+  }
+
+  .proj__opening--whole .proj__opening-specs {
+    position: static;
+    padding-top: 24px;
+  }
 }
 
 /* ---------- Title block ---------- */
@@ -149,6 +164,71 @@
 .proj__intro-photo {
   grid-column: 10 / span 3;
   aspect-ratio: 2 / 3;
+}
+
+/* A calm, centred page (centered in the project's data): the intro in one column down
+   the middle, its photo under it */
+.proj--centered .proj__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.proj--centered .proj__intro-label {
+  padding-top: 0;
+}
+
+.proj--centered .proj__intro-text {
+  max-width: 30ch;
+  margin-top: 20px;
+  text-wrap: balance;
+}
+
+.proj--centered .proj__intro-photo {
+  width: min(880px, 100%);
+  aspect-ratio: 4 / 3;
+  margin-top: clamp(32px, 4vw, 56px);
+  /* Its top and bottom fade softly into the page */
+  --edge: 12%;
+  mask-image: linear-gradient(transparent, #000 var(--edge), #000 calc(100% - var(--edge)), transparent);
+}
+
+/* The concept written over a full-screen photo (introOnPhoto in the project's data),
+   centred in the photo's empty left side, near its top; on phones it stays above it */
+@media (min-width: 761px) {
+  .proj--centered .proj__intro--on-photo {
+    display: grid;
+    grid-template-columns: 44% 1fr;
+    grid-template-rows: auto auto 1fr;
+    justify-items: center;
+    height: min(100svh, 75vw);
+    padding: 0;
+  }
+
+  .proj__intro--on-photo .proj__intro-label {
+    grid-area: 1 / 1;
+    z-index: 1;
+    margin-top: clamp(56px, 9vw, 140px);
+  }
+
+  .proj__intro--on-photo .proj__intro-text {
+    grid-area: 2 / 1;
+    z-index: 1;
+  }
+
+  .proj--centered .proj__intro--on-photo .proj__intro-photo {
+    grid-area: 1 / 1 / -1 / -1;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    margin: 0;
+  }
+
+  /* Cut from the bottom, so the empty top stays */
+  .proj__intro--on-photo .proj__intro-photo img {
+    object-position: 50% 0;
+  }
 }
 
 /* ---------- Pink band ---------- */

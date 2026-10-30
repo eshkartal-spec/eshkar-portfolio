@@ -199,39 +199,104 @@ export const projects = [
     slug: 'odds-or-evens',
     title: 'Odds or Evens',
     field: 'Personal project',
+    // Full-screen photo at the top of the page, with the title already on it and the
+    // details along its bottom: on wide screens the pieces spread out, clear of the
+    // details; on tall ones a centred version, shown whole (whole: true) with the
+    // details under it, as filling the screen would cut the title's sides
+    opening: {
+      wide: img('odds-or-evens', 'oddsbanner2', 'The Odds or Evens pieces with ODDS OR EVENS across them'),
+      tall: img('odds-or-evens', 'oddsbanner', 'The Odds or Evens pieces with ODDS OR EVENS across them'),
+      whole: true,
+      // Where the cursor passes, a leather-textured version of the wide photo shows through
+      // (TextureReveal.jsx; with a mouse only). Instead, ripples: true makes the photo
+      // ripple softly like water (RippleWarp.jsx)
+      texture: img('odds-or-evens', 'oddstex2', ''),
+    },
     summary: 'Personal design project exploring relationships through objects.',
     intro: 'A personal design project exploring relationships through objects.',
+    // The intro is headed "Concept", and the page is laid out calm and centred
+    introLabel: 'Concept',
+    centered: true,
     type: 'Personal project',
-    year: null,
-    duration: null,
-    tools: null,
-    cover: img('odds-or-evens', 'group', 'Odds or Evens, the group of objects'),
-    hero: img('odds-or-evens', 'group', 'Odds or Evens, the group of objects'),
-    features: [
-      { title: null, text: null, image: img('odds-or-evens', '1', 'Odds or Evens object') },
-      { title: null, text: null, image: img('odds-or-evens', '2', 'Odds or Evens object') },
-      { title: null, text: null, image: img('odds-or-evens', '3', 'Odds or Evens object') },
+    // Placeholders until the real details come in
+    year: '20XX',
+    duration: 'X weeks',
+    tools: 'Tool, tool, tool',
+    // A tall photo: the Home page's library shows it with the ring and the hands in view
+    cover: { ...img('odds-or-evens', 'main', 'Fitting the halves of Odds or Evens together'), position: '50% 35%' },
+    // A full-screen photo with the concept written over it, in its empty top-left
+    // corner (introOnPhoto); on phones the concept sits above the photo instead
+    hero: img('odds-or-evens', 'concept', 'Bringing the white and brown halves of the triangle together'),
+    introOnPhoto: true,
+    // The three pairs, one section each: a name, a short explainer, and the two halves
+    // to bring together (white on the left, brown on the right; PairPlay.jsx). The
+    // photos are placeholders for now. join: where the right half sits against the left
+    // when joined; seam: how far along the left half its seam runs; pivot: the point the
+    // joined pair turns around; all in the left photo's pixels. motion: what the joined
+    // pair does, 'wobble' (rocks on its bottom point) or 'spin' (spins when flicked)
+    pairs: [
+      {
+        title: 'Triangle',
+        text: 'A short explainer about this pair: what the two halves are, and what happens when they meet. Placeholder text for now.',
+        left: img('odds-or-evens', 'trianglewhite', 'The white half of the triangle'),
+        right: img('odds-or-evens', 'trianglebrown', 'The brown half of the triangle'),
+        join: [162, -2],
+        seam: 212,
+        pivot: [185, 305],
+        motion: 'wobble',
+      },
+      {
+        title: 'Circle',
+        text: 'A short explainer about this pair: what the two halves are, and what happens when they meet. Placeholder text for now.',
+        left: img('odds-or-evens', 'circlewhite', 'The white half of the circle'),
+        right: img('odds-or-evens', 'circlebrown', 'The brown half of the circle'),
+        join: [172, 9],
+        seam: 181,
+        pivot: [184, 152],
+        motion: 'spin',
+      },
+      {
+        title: 'Third pair',
+        text: 'A short explainer about this pair: what the two halves are, and what happens when they meet. Placeholder text for now.',
+      },
     ],
-    todo: ['What the objects are and how they relate', 'Year, duration, tools', 'Name and text for each object', 'Detail and process photos'],
+    todo: ['What the objects are and how they relate', 'Year, duration, tools', 'Name and text for each pair', 'Photos of the third pair, and final photos of the first two'],
   },
   {
-    slug: 'playstation',
-    title: 'PlayStation',
+    // Renamed from PlayStation (it's an Xbox controller); its photos are still in the playstation folders
+    slug: 'xbox',
+    title: 'Xbox',
     field: '3D modeling · Rendering',
-    summary: '3D design of a PlayStation controller, modeled in SolidWorks and rendered in KeyShot.',
-    intro: '3D design of a PlayStation controller, modeled in SolidWorks and rendered in KeyShot.',
+    summary: '3D design of an Xbox controller, modeled in SolidWorks and rendered in KeyShot.',
+    intro: '3D design of an Xbox controller, modeled in SolidWorks and rendered in KeyShot.',
     type: '3D modeling · Rendering',
     year: null,
     duration: null,
     tools: 'SolidWorks, KeyShot',
-    cover: img('playstation', 'render-1', 'PlayStation controller render'),
-    hero: img('playstation', 'render-1', 'PlayStation controller render'),
-    features: [
-      { title: 'Surfacing', text: null, image: img('playstation', 'render-2', 'PlayStation controller render') },
-      { title: 'Details', text: null, image: img('playstation', 'render-3', 'PlayStation controller render') },
-      { title: 'Rendering', text: null, image: img('playstation', 'render-4', 'PlayStation controller render') },
-    ],
-    todo: ['The goal of the exercise', 'Year, duration', 'Text for each feature', 'More renders and process'],
+    // Full-screen banner, in black and white with the title on it; where the cursor passes,
+    // the color version shows through in square pixels (TextureReveal.jsx; with a mouse
+    // only, over the wide banner)
+    opening: {
+      wide: img('playstation', 'xboxbanner', 'The Xbox controller in black and white, XBOX on its front in pink'),
+      tall: img('playstation', 'xbox-mobile-1290x2796', 'The Xbox controller in black and white, XBOX on its front in pink'),
+      texture: img('playstation', 'xboxbannercolor', ''),
+      pixels: 24,
+    },
+    cover: img('playstation', 'render-1', 'Xbox controller render'),
+    // The sped-up modeling video, playing on a loop while it's on screen (cut to the
+    // modeling area and sped up twice over in scripts/optimize-images.mjs), with these
+    // words over it
+    scrub: { src: '/images/playstation/video.mp4', poster: '/images/playstation/video.webp', loop: true },
+    scrubText: 'Modeled surface by surface in SolidWorks, from the first sketch to the finished controller.',
+    // Then the model itself (ModelStage.jsx), facing the front: drag to turn it, slide the
+    // line between render and CAD. It can also carry notes on its details (notes: [{ title,
+    // text, at }], at: a point on the surface in the model's own units, meters)
+    model: {
+      src: '/images/playstation/part2.glb',
+      label: 'The Xbox controller in 3D',
+      fallback: img('playstation', 'render-1', 'Xbox controller render'),
+    },
+    todo: ['The goal of the exercise', 'Year, duration', 'The line over the video'],
   },
   {
     slug: 'bazelet',

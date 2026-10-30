@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react'
+import { lazy, Suspense, useLayoutEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getProject, projects } from '../data/projects'
 import NotFound from './NotFound'
@@ -8,7 +8,13 @@ import ScrubVideo from '../components/ScrubVideo'
 import SwapPhoto from '../components/SwapPhoto'
 import DetailRow from '../components/DetailRow'
 import PleatWarp from '../components/PleatWarp'
+import PairSection from '../components/PairPlay'
+import RippleWarp from '../components/RippleWarp'
+import TextureReveal from '../components/TextureReveal'
 import './ProjectPage.css'
+
+// The 3D stage brings three.js with it, so it's only fetched for pages that have one
+const ModelStage = lazy(() => import('../components/ModelStage'))
 
 const num = (i) => String(i + 1).padStart(2, '0')
 
@@ -74,16 +80,29 @@ export default function ProjectPage() {
   )
 
   return (
-    <main className={`proj${p.opening ? ' proj--opening' : ''}`} style={{ '--fade': p.opening?.fade }}>
+    <main
+      className={`proj${p.opening ? ' proj--opening' : ''}${p.centered ? ' proj--centered' : ''}`}
+      // Without a photo above it, a video played by scrolling comes out of the page itself
+      style={{ '--fade': p.opening?.fade ?? (p.scrub ? 'var(--bg)' : undefined) }}
+    >
       {p.opening ? (
         // A full-screen photo with the title already on it (also here, hidden, for screen
         // readers and search engines), and the details along its bottom
-        <header className="proj__opening">
+        <header className={`proj__opening${p.opening.tall && !p.opening.whole ? '' : ' proj__opening--whole'}`}>
           {p.opening.warp ? (
             <PleatWarp wide={p.opening.wide} tall={p.opening.tall} />
+          ) : p.opening.texture ? (
+            <TextureReveal
+              wide={p.opening.wide}
+              tall={p.opening.tall}
+              texture={p.opening.texture}
+              pixels={p.opening.pixels}
+            />
+          ) : p.opening.ripples ? (
+            <RippleWarp wide={p.opening.wide} tall={p.opening.tall} />
           ) : (
             <picture>
-              <source media="(orientation: portrait)" srcSet={p.opening.tall.src} />
+              {p.opening.tall && <source media="(orientation: portrait)" srcSet={p.opening.tall.src} />}
               <img src={p.opening.wide.src} alt={p.opening.wide.alt} />
             </picture>
           )}
@@ -133,20 +152,26 @@ export default function ProjectPage() {
       {/* The summary over a video played by scrolling, in place of the overview */}
       {p.scrub ? (
         <ScrubVideo video={p.scrub}>
-          <p className="sub">{p.summary}</p>
+          <p className="sub">{p.scrubText ?? p.summary}</p>
         </ScrubVideo>
       ) : (
-        <section className="proj__intro wrap">
-          <p className="label label--ink proj__intro-label">Overview — {title}</p>
+        <section className={`proj__intro wrap${p.introOnPhoto ? ' proj__intro--on-photo' : ''}`}>
+          <p className="label label--ink proj__intro-label">{p.introLabel ?? 'Overview'} — {title}</p>
           <p className="proj__intro-text reveal">{p.intro}</p>
-          {p.hero.src !== (p.banner ?? p.cover).src && (
+          {p.hero && p.hero.src !== (p.banner ?? p.cover).src && (
             <Photo image={p.hero} className="proj__intro-photo reveal" />
           )}
         </section>
       )}
 
+      {p.model && (
+        <Suspense fallback={<div style={{ height: '100svh' }} />}>
+          <ModelStage model={p.model} />
+        </Suspense>
+      )}
       {p.details && <DetailRow items={p.details} />}
       {p.swap && <SwapPhoto images={p.swap} />}
+      {p.pairs?.map((pair) => <PairSection key={pair.title} pair={pair} />)}
 
       {p.pull && (
         <section className="band">

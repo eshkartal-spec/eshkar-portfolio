@@ -1,0 +1,232 @@
+/* A 3D model on a full-screen stage, split by a line into render and CAD (see
+   ModelStage.jsx) */
+/* A screen tall, or less on a phone, where the model is only as tall as it is wide */
+.model {
+  position: relative;
+  height: min(100svh, max(520px, 140vw));
+  overflow: hidden;
+}
+
+.model__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: grab;
+  /* A finger dragged sideways turns it; up and down still scrolls the page */
+  touch-action: pan-y;
+  transition: opacity 1s var(--ease);
+}
+
+.model.is-ready .model__canvas {
+  opacity: 1;
+}
+
+.model.is-turning .model__canvas {
+  cursor: grabbing;
+}
+
+.model__fallback {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The prompt, near the top, until it's first turned */
+.model__hint {
+  position: absolute;
+  top: clamp(24px, 6svh, 64px);
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+  pointer-events: none;
+}
+
+.model.is-ready:not(.is-turned) .model__hint {
+  opacity: 1;
+}
+
+/* ---------- The notes: small dots on the model's details, their words above them ---------- */
+.model__note {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+}
+
+.model.is-ready .model__note {
+  opacity: 1;
+}
+
+/* Hidden while its side of the model faces away */
+.model .model__note.is-away {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.model__note::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 1.5px var(--pink),
+    0 2px 8px rgba(17, 17, 17, 0.25);
+  transition: scale 0.3s var(--ease);
+}
+
+.model__note:hover::before,
+.model__note:focus-visible::before,
+.model__note.is-open::before {
+  scale: 1.4;
+}
+
+.model__note:focus-visible {
+  outline: none;
+}
+
+.model__tip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  width: max-content;
+  max-width: 260px;
+  padding: 12px 14px;
+  color: var(--bg);
+  text-align: left;
+  background: var(--ink);
+  opacity: 0;
+  transform: translate(calc(-50% + var(--shift, 0px)), 4px);
+  transition:
+    opacity 0.2s var(--ease),
+    transform 0.2s var(--ease);
+  pointer-events: none;
+}
+
+.model__note:hover .model__tip,
+.model__note:focus-visible .model__tip,
+.model__note.is-open .model__tip {
+  opacity: 1;
+  transform: translate(calc(-50% + var(--shift, 0px)), 0);
+}
+
+.model__tip-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  font-stretch: 125%;
+  line-height: 1.2;
+}
+
+.model__tip-text {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+  line-height: 1.45;
+  opacity: 0.8;
+  text-wrap: pretty;
+}
+
+/* ---------- The line between render and CAD: grabbed anywhere along it ---------- */
+.model__split {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: var(--split);
+  width: 28px;
+  margin-left: -14px;
+  cursor: ew-resize;
+  touch-action: none;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+}
+
+.model.is-ready .model__split {
+  opacity: 1;
+}
+
+.model__split::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(17, 17, 17, 0.3);
+  /* Fading out at the top, clear of the prompt, and at the bottom */
+  mask-image: linear-gradient(transparent 8%, #000 24%, #000 85%, transparent);
+}
+
+.model__handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(17, 17, 17, 0.25);
+  border-radius: 50%;
+  background: var(--bg);
+  cursor: inherit;
+  transform: translate(-50%, -50%);
+  transition: scale 0.3s var(--ease);
+}
+
+/* Two small arrows, pointing either way */
+.model__handle::before,
+.model__handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border: solid var(--ink);
+  border-width: 0 0 1.5px 1.5px;
+}
+
+.model__handle::before {
+  left: 11px;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.model__handle::after {
+  right: 11px;
+  transform: translateY(-50%) rotate(-135deg);
+}
+
+.model__split:hover .model__handle,
+.model.is-splitting .model__handle {
+  scale: 1.1;
+}
+
+/* "Render" and "CAD" on either side of the line, near the bottom */
+.model__side {
+  position: absolute;
+  bottom: clamp(24px, 6svh, 56px);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.model__side--render {
+  right: calc(50% + 16px);
+}
+
+.model__side--cad {
+  left: calc(50% + 16px);
+}

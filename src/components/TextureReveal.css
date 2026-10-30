@@ -1,0 +1,18 @@
+/* A photo whose textured version shows where the cursor passes (see TextureReveal.jsx):
+   drawn on a canvas exactly over the photo, and shown while any texture shows */
+.texture-reveal {
+  position: relative;
+}
+
+.texture-reveal__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.texture-reveal__canvas.is-on {
+  opacity: 1;
+}
