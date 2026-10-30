@@ -20,6 +20,17 @@
   object-fit: cover;
 }
 
+/* Coming out of the color the photo above fades into, if any (--fade, ProjectPage.css) */
+.scrub__view::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 auto;
+  height: 30%;
+  background: linear-gradient(var(--fade, transparent), transparent);
+  pointer-events: none;
+}
+
 /* A white fade up from the bottom, so the words read over whatever moves under them,
    meeting the page's own background at the very bottom */
 .scrub__view::after {

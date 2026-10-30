@@ -130,6 +130,12 @@ export const projects = [
     opening: {
       wide: img('my-chair', 'pipe-dream-banner', 'Pleated pink fabric with PIPE DREAM across it'),
       tall: img('my-chair', 'pipe-dream-mobile-1290x2796', 'Pleated pink fabric with PIPE DREAM across it'),
+      // The pleats bend aside where the cursor passes, as if running your fingers
+      // through them (PleatWarp.jsx)
+      warp: true,
+      // The fabric's pink: the photo fades into it at the bottom, and the video under it
+      // comes out of it
+      fade: '#e3b6a1',
     },
     // A video played by scrolling, with the summary over it
     scrub: { src: '/images/my-chair/pipe-video.mp4', poster: '/images/my-chair/pipe-video.webp' },

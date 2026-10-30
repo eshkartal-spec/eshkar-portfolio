@@ -7,6 +7,7 @@ import NextProject from '../components/NextProject'
 import ScrubVideo from '../components/ScrubVideo'
 import SwapPhoto from '../components/SwapPhoto'
 import DetailRow from '../components/DetailRow'
+import PleatWarp from '../components/PleatWarp'
 import './ProjectPage.css'
 
 const num = (i) => String(i + 1).padStart(2, '0')
@@ -73,15 +74,19 @@ export default function ProjectPage() {
   )
 
   return (
-    <main className={`proj${p.opening ? ' proj--opening' : ''}`}>
+    <main className={`proj${p.opening ? ' proj--opening' : ''}`} style={{ '--fade': p.opening?.fade }}>
       {p.opening ? (
         // A full-screen photo with the title already on it (also here, hidden, for screen
         // readers and search engines), and the details along its bottom
         <header className="proj__opening">
-          <picture>
-            <source media="(orientation: portrait)" srcSet={p.opening.tall.src} />
-            <img src={p.opening.wide.src} alt={p.opening.wide.alt} />
-          </picture>
+          {p.opening.warp ? (
+            <PleatWarp wide={p.opening.wide} tall={p.opening.tall} />
+          ) : (
+            <picture>
+              <source media="(orientation: portrait)" srcSet={p.opening.tall.src} />
+              <img src={p.opening.wide.src} alt={p.opening.wide.alt} />
+            </picture>
+          )}
           <h1 className="visually-hidden">{title}</h1>
           {specs.length > 0 && (
             <dl className="specs proj__opening-specs wrap">

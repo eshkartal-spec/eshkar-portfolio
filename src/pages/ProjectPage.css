@@ -16,8 +16,20 @@
 }
 
 /* The details in one row along the photo's bottom */
+/* Optionally, the photo fades into a color at its bottom (--fade, from the project's
+   data), under the details; the section below can carry it on (ScrubVideo.css) */
+.proj__opening::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 35%;
+  background: linear-gradient(transparent, var(--fade, transparent));
+  pointer-events: none;
+}
+
 .proj__opening .proj__opening-specs {
   position: absolute;
+  z-index: 1;
   inset: auto 0 0;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   padding-bottom: clamp(24px, 3vw, 40px);
