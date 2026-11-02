@@ -178,17 +178,42 @@ export const projects = [
     intro:
       'Who Holds Whom? An exercise in balance between two birch plywood pieces held together by textile straps.',
     type: 'Object design',
-    year: null,
-    duration: null,
-    tools: null,
+    // Placeholders until the real details come in
+    year: '20XX',
+    duration: 'X weeks',
+    tools: 'Tool, tool, tool',
+    // Full-screen banner: the piece nudged and rocking until it settles, played once on
+    // arrival and again at each click (BounceVideo.jsx; the still is its last frame, at
+    // rest), with the title written large in white in the bottom left (name), it and the
+    // details over a soft dark shade (light); on tall screens the clip is shown whole (its
+    // shape: tallRatio), the details under it
+    opening: {
+      video: {
+        src: '/images/shrafraf/shrafrafbounce.mp4',
+        poster: '/images/shrafraf/shrafrafbounce.webp',
+        alt: 'Shrafraf rocking from side to side and settling',
+      },
+      name: true,
+      light: true,
+      whole: true,
+      tallRatio: '16 / 9',
+    },
     cover: img('shrafraf', 'hero', 'Shrafraf'),
-    hero: img('shrafraf', 'hero', 'Shrafraf'),
-    features: [
-      { title: 'Balance', text: null, image: null },
-      { title: 'Textile straps', text: null, image: null },
-      { title: 'Birch plywood', text: null, image: null },
+    // The assembly, sped up (scripts/optimize-images.mjs), playing on a loop while it's on
+    // screen, with the idea over it: its lead as the title, the rest under it, smaller
+    scrub: { src: '/images/shrafraf/shrafraf.mp4', poster: '/images/shrafraf/shrafraf.webp', loop: true },
+    scrubLead: 'Who holds whom?',
+    scrubText: 'An exercise in balance between two birch plywood pieces held together by textile straps.',
+    // Then the rendering and the photos, in one frame, slid along to the side one by one
+    // by scrolling (PhotoSlide.jsx; ratio: their shape, width / height; the frame takes the
+    // first one's)
+    photos: [
+      { ...img('shrafraf', 'petite-sculptural-stool-in-sunlit-living-room', 'Shrafraf in a sunlit living room, a blanket over it (rendering)'), ratio: 1447 / 1087 },
+      { ...img('shrafraf', 'gemini-generated-image-s9mut5s9mut5s9mu', 'Shrafraf, its white plywood held by olive straps'), ratio: 1194 / 896 },
+      { ...img('shrafraf', 'gemini-generated-image-fepmc5fepmc5fepm', 'Shrafraf from above: the straps across the frame'), ratio: 1194 / 896 },
+      { ...img('shrafraf', 'gemini-generated-image-xginx4xginx4xgin', 'Shrafraf from the side, its two pieces crossing'), ratio: 1195 / 896 },
     ],
-    todo: ['One more sentence on the idea', 'Year, duration, tools', 'Text and photos for each feature', 'Detail and process photos'],
+    todo: ['Year, duration, tools'],
   },
   {
     slug: 'odds-or-evens',

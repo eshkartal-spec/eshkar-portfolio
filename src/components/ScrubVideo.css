@@ -60,3 +60,40 @@
   color: var(--ink);
   text-wrap: balance;
 }
+
+/* With a lead (scrubLead): the lead on its own line as the title, the rest after it a
+   fifth smaller */
+.scrub__lead {
+  display: block;
+}
+
+.scrub__after {
+  display: block;
+  font-size: 0.8em;
+}
+
+/* Tall screens: a video on a loop is shown whole, across the screen, its words under it
+   (filling the screen would cut most of a wide video away) */
+@media (orientation: portrait) {
+  .scrub--loop {
+    height: auto;
+  }
+
+  .scrub--loop .scrub__view {
+    position: static;
+    height: auto;
+  }
+
+  .scrub--loop .scrub__video {
+    height: auto;
+  }
+
+  .scrub--loop .scrub__view::after {
+    display: none;
+  }
+
+  .scrub--loop .scrub__text {
+    position: static;
+    padding-top: 24px;
+  }
+}

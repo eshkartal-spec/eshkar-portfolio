@@ -12,6 +12,8 @@ import PleatWarp from '../components/PleatWarp'
 import PairSection from '../components/PairPlay'
 import RippleWarp from '../components/RippleWarp'
 import TextureReveal from '../components/TextureReveal'
+import BounceVideo from '../components/BounceVideo'
+import PhotoSlide from '../components/PhotoSlide'
 import './ProjectPage.css'
 
 // The 3D stage brings three.js with it, so it's only fetched for pages that have one
@@ -92,10 +94,12 @@ export default function ProjectPage() {
         // A full-screen photo with the title already on it (also here, hidden, for screen
         // readers and search engines), and the details along its bottom
         <header
-          className={`proj__opening${p.opening.tall && !p.opening.whole ? '' : ' proj__opening--whole'}${p.opening.specsTop ? ' proj__opening--specs-top' : ''}${p.opening.grit ? ' proj__opening--grit' : ''}`}
+          className={`proj__opening${p.opening.tall && !p.opening.whole ? '' : ' proj__opening--whole'}${p.opening.specsTop ? ' proj__opening--specs-top' : ''}${p.opening.grit ? ' proj__opening--grit' : ''}${p.opening.light ? ' proj__opening--light' : ''}`}
           style={p.opening.tallRatio && { '--tall-ratio': p.opening.tallRatio }}
         >
-          {p.opening.warp ? (
+          {p.opening.video ? (
+            <BounceVideo video={p.opening.video} />
+          ) : p.opening.warp ? (
             <PleatWarp wide={p.opening.wide} tall={p.opening.tall} />
           ) : p.opening.texture ? (
             <TextureReveal
@@ -128,6 +132,12 @@ export default function ProjectPage() {
             ))}
           {/* A fine grain over the photo, like raw concrete */}
           {p.opening.grit && <div className="proj__grit" aria-hidden="true" />}
+          {/* Or the title written out over it */}
+          {p.opening.name && (
+            <p className="display proj__opening-name" aria-hidden="true">
+              {p.title}
+            </p>
+          )}
           <h1 className="visually-hidden">{title}</h1>
           {specs.length > 0 && (
             <dl className="specs proj__opening-specs wrap">
@@ -175,7 +185,11 @@ export default function ProjectPage() {
           overview at all: overview: false) */}
       {p.scrub ? (
         <ScrubVideo video={p.scrub}>
-          <p className="sub">{p.scrubText ?? p.summary}</p>
+          <p className="sub">
+            {/* A lead, if any, as the title; the rest a size down */}
+            {p.scrubLead && <span className="scrub__lead">{p.scrubLead}</span>}
+            <span className={p.scrubLead ? 'scrub__after' : undefined}>{p.scrubText ?? p.summary}</span>
+          </p>
         </ScrubVideo>
       ) : (
         p.overview !== false && (
@@ -191,6 +205,7 @@ export default function ProjectPage() {
 
       {p.climb && <StairsClimb climb={p.climb} />}
       {p.wall && <BrickWall items={p.wall} />}
+      {p.photos && <PhotoSlide photos={p.photos} />}
       {p.model && (
         <Suspense fallback={<div style={{ height: '100svh' }} />}>
           <ModelStage model={p.model} />

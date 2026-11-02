@@ -47,7 +47,18 @@ const VIDEO_PATCHES = {
 // ...and sped up (2: twice as fast, and half as long)
 const VIDEO_SPEEDS = {
   'playstation/video.mp4': 2,
+  'shrafraf/shrafraf.mp4': 2.5,
 }
+// ...and wider, for a full-screen banner
+const VIDEO_WIDTHS = {
+  'shrafraf/shrafrafBOUNCE.mp4': 1920,
+}
+// ...and with the poster taken from the last frame instead of the first (a clip that
+// ends at rest, shown still until it plays)
+const POSTER_AT_END = new Set(['shrafraf/shrafrafBOUNCE.mp4'])
+// Videos that only ever play straight through (not by scrolling) don't need a keyframe
+// every few frames, and come out far smaller without
+const PLAYED_THROUGH = new Set(['shrafraf/shrafraf.mp4', 'shrafraf/shrafrafBOUNCE.mp4'])
 
 const io = new NodeIO().registerExtensions([EXTMeshoptCompression, KHRMeshQuantization]).registerDependencies({
   'meshopt.encoder': MeshoptEncoder,
@@ -116,10 +127,12 @@ for (const folder of fs.readdirSync(SRC)) {
       const crop = patch + (VIDEO_CROPS[key] ? `crop=${VIDEO_CROPS[key]},` : found ? `${found.at(-1)},` : '')
       const speed = VIDEO_SPEEDS[key] ? `setpts=PTS/${VIDEO_SPEEDS[key]},fps=30,` : ''
       // H.264 (plays everywhere), no sound, a keyframe every 6 frames, no B-frames
+      const keyframes = PLAYED_THROUGH.has(key) ? ['-crf', '27'] : ['-crf', '24', '-g', '6', '-bf', '0']
       execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', src, '-an',
-        '-vf', `${crop}${speed}scale=${VIDEO_WIDTH}:-2,setsar=1`, '-c:v', 'libx264', '-preset', 'slow', '-crf', '24',
-        '-g', '6', '-bf', '0', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', name + '.mp4'])
-      execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', name + '.mp4', '-frames:v', '1', name + '.png'])
+        '-vf', `${crop}${speed}scale=${VIDEO_WIDTHS[key] ?? VIDEO_WIDTH}:-2,setsar=1`, '-c:v', 'libx264', '-preset', 'slow',
+        ...keyframes, '-pix_fmt', 'yuv420p', '-movflags', '+faststart', name + '.mp4'])
+      execFileSync(ffmpeg, ['-y', '-loglevel', 'error', ...(POSTER_AT_END.has(key) ? ['-sseof', '-0.1'] : []),
+        '-i', name + '.mp4', '-frames:v', '1', '-update', '1', name + '.png'])
       await sharp(name + '.png').webp({ quality: QUALITY }).toFile(name + '.webp')
       fs.rmSync(name + '.png')
       made++
