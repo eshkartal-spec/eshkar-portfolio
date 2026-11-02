@@ -10,113 +10,108 @@ const img = (project, name, alt) => ({ src: `/images/${project}/${name}.webp`, a
 export const projects = [
   {
     slug: 'step-up',
-    // The page is a staircase you climb by scrolling (src/pages/StairsPage.jsx)
-    layout: 'stairs',
-    stairs: {
-      // Full-screen opening: stairs with the title and summary already painted on their
-      // bottom steps, a wide photo for landscape screens and a tall one for portrait
-      // (phones). Each fills the screen and stays anchored on its bottom steps, so keep
-      // the paint clear of the sides.
-      opening: {
-        wide: img('step-up-stairs', 'step-up-banner-3840px-copy', 'Concrete stairs close up, with STEP UP painted on the bottom step'),
-        tall: img('step-up-stairs', 'step-up-mobile-1290x2796', 'Concrete stairs climbing toward the sky, with STEP UP painted on the bottom step'),
-      },
-      // Someone carrying the bike, seen from behind: climbs beside the stairs (desktop)
-      climber: img('step-up-stairs', 'climber-back', 'Carrying the STEP UP bike up the stairs'),
-      // The same stairs without the paint: the page's background, muted, behind the climb
-      backdrop: '/images/step-up-stairs/banner-blank.webp',
-    },
     title: 'STEP UP',
     fullTitle: 'STEP UP Bicycle',
     field: 'Product design',
     summary: 'A lightweight urban bicycle designed for stair carrying.',
-    intro:
+    // Under the banner, calm and centred: the line that was painted on the banner's
+    // second step
+    introLabel: 'Concept',
+    intro: 'A lightweight urban bicycle designed for stair carrying.',
+    centered: true,
+    hero: null,
+    // The longer version, not on the page for now
+    about:
       'In the city, a bicycle is often carried up stairs and through narrow corridors, not only ridden. STEP UP is a lightweight urban bicycle designed to be easier to carry and maneuver, without compromising its everyday functionality.',
     type: 'Industrial design student project',
     year: 2025,
     duration: '3 months',
     tools: 'SolidWorks, BikeCAD, KeyShot, 3D printing, hand modeling, physical prototyping',
+    // Full-screen banner: stairs with the title painted on their bottom step (the "clean"
+    // copies have the line that was on the second step painted over), a wide photo for
+    // landscape screens and a tall one for portrait (phones). The details run along its
+    // top (specsTop), clear of the title; on tall screens the photo is shown whole, the
+    // details under it
+    opening: {
+      wide: img('step-up-stairs', 'step-up-banner-3840px-clean', 'Concrete stairs close up, with STEP UP painted on the bottom step'),
+      tall: img('step-up-stairs', 'step-up-mobile-1290x2796-clean', 'Concrete stairs climbing toward the sky, with STEP UP painted on the bottom step'),
+      whole: true,
+      specsTop: true,
+      // The painted title cut out of each photo, letter by letter (white where the paint
+      // is, made from the clean photos at their web size: <wide>-1.png to -6.png), for the
+      // letters' colors to change in turn; and the tall photo's shape
+      paint: { wide: '/images/step-up-stairs/step-up-paint-wide', tall: '/images/step-up-stairs/step-up-paint-tall', letters: 6 },
+      tallRatio: '1290 / 2796',
+      // A grain over the photo, for an urban, raw-concrete feel
+      grit: true,
+    },
     cover: img('step-up', 'strap', 'STEP UP bicycle'),
-    // Wide photo under the title on the project page (default: cover)
-    banner: img('step-up', 'street', 'STEP UP in the city'),
-    hero: img('step-up', 'three-quarter', 'STEP UP bicycle, studio shot'),
-    heroAlt: img('step-up', 'carry', 'Eshkar carrying the STEP UP bike'),
-    // Short line shown large, next to heroAlt
-    pull: 'In the city, you often carry a bike up stairs, not only ride it.',
-    // frame: the center of the feature on the climber photo of the stairs page, in % of
-    // the photo as saved
-    features: [
+    // A flight of stairs climbed by scrolling, in a window, with someone carrying the bike
+    // on it (StairsClimb.jsx): how many steps, the line above the window, the climber (seen
+    // from behind) and the same stairs as the banner without the paint, shown muted behind
+    climb: {
+      steps: 14,
+      line: 'In the city, you often carry a bike up stairs, not only ride it.',
+      climber: img('step-up-stairs', 'climber-back', 'Carrying the STEP UP bike up the stairs'),
+      backdrop: '/images/step-up-stairs/banner-blank.webp',
+    },
+    // The studio photos, as a wall (BrickWall.jsx), each once (wide: a landscape photo);
+    // clicking one opens them all in a gallery that turns like a wheel (WheelGallery.jsx).
+    // The bike's features are highlighted, with their words (note). Left out as near
+    // repeats: v (of side), hrt-322 (of strap-close) and hrt-319 (of the other pedal
+    // shots); the hrt-306 to -310 and hrt-318 copies are the same photos as three-quarter,
+    // fork, logo-frame, handle, wheel and pedal-close
+    wall: [
+      img('step-up', 'three-quarter', 'STEP UP, three-quarter view'),
       {
-        title: 'Ergonomic carrying handle',
-        text: 'Positioned close to the bicycle’s center of mass for more balanced and comfortable lifting.',
-        image: img('step-up', 'handle-close', 'The carrying handle set into the frame'),
-        frame: { x: 57.5, y: 57.5 },
+        ...img('step-up', 'handle-close', 'The carrying handle set into the frame'),
+        wide: true,
+        note: {
+          title: 'Ergonomic carrying handle',
+          text: 'Positioned close to the bicycle’s center of mass for more balanced and comfortable lifting.',
+        },
       },
+      { ...img('step-up', 'hrt-311', 'The saddle'), wide: true },
+      img('step-up', 'fork', 'The fork and front wheel'),
+      { ...img('step-up', 'hrt-313', 'The grip and the STEP UP logo'), wide: true },
+      img('step-up', 'side', 'STEP UP, side view'),
       {
-        title: 'Adjustable shoulder strap',
-        text: 'Extends and retracts as needed, allowing the bicycle to be carried over the opposite shoulder.',
-        image: img('step-up', 'strap-close', 'Pulling out the shoulder strap'),
-        frame: { x: 35.5, y: 25 },
+        ...img('step-up', 'strap-close', 'Pulling out the shoulder strap'),
+        wide: true,
+        note: {
+          title: 'Adjustable shoulder strap',
+          text: 'Extends and retracts as needed, allowing the bicycle to be carried over the opposite shoulder.',
+        },
       },
-      {
-        title: 'Quick-release pedal',
-        text: 'Can be repositioned during carrying to prevent interference with the rider’s leg.',
-        image: img('step-up', 'pedal-close', 'The quick-release pedal mounted by the seat post'),
-        frame: { x: 39, y: 46.5 },
-      },
-      {
-        title: 'Folding handlebar',
-        text: 'Reduces the bicycle’s width and enables smooth movement through narrow staircases.',
-        image: img('step-up', 'bar-close', 'The folding handlebar'),
-        frame: { x: 65, y: 33.5 },
-      },
-    ],
-    gallery: [
-      img('step-up', 'wheel', 'Wheel detail'),
+      img('step-up', 'hrt-317', 'The folding handlebar, from the front'),
       img('step-up', 'logo-frame', 'STEP UP logo on the frame'),
+      { ...img('step-up', 'hrt-312', 'The handlebar folded along the frame'), wide: true },
+      {
+        ...img('step-up', 'pedal-close', 'The quick-release pedal mounted by the seat post'),
+        note: {
+          title: 'Quick-release pedal',
+          text: 'Can be repositioned during carrying to prevent interference with the rider’s leg.',
+        },
+      },
+      img('step-up', 'wheel', 'Wheel detail'),
+      // (ratio: a shape of its own, width / height)
+      { ...img('step-up', 'background-png', 'Carrying STEP UP by its handle in the studio'), ratio: 5288 / 6512 },
+      img('step-up', 'hrt-333', 'The carrying handle, from below the frame'),
+      img('step-up', 'hrt-314', 'STEP UP from the side'),
+      {
+        ...img('step-up', 'bar-close', 'The folding handlebar'),
+        wide: true,
+        note: {
+          title: 'Folding handlebar',
+          text: 'Reduces the bicycle’s width and enables smooth movement through narrow staircases.',
+        },
+      },
+      img('step-up', 'handle', 'The handle and the logo'),
+      { ...img('step-up', 'hrt-323', 'Pulling the strap out of the frame'), wide: true },
+      img('step-up', 'hrt-320', 'The pedal clipped beside the seat post'),
+      { ...img('step-up', 'hrt-315', 'Folding the handlebar'), wide: true },
       img('step-up', 'carry-shoulder', 'Carrying STEP UP on the shoulder with the strap and handle'),
     ],
-    process: [
-      { label: 'Sketch', image: img('step-up', 'process-sketch', 'Early sketch: strap and handle placement') },
-      { label: 'CAD', image: img('step-up', 'process-cad', 'BikeCAD sketch of the frame junction') },
-      { label: 'Frame building', image: img('step-up', 'process-frame-jig', 'Aluminium frame tubes held in a laser-cut MDF jig') },
-    ],
-    // "More images": the panel the climb ends on, and the page it opens
-    // (/projects/step-up/images), which ends with the process above. Left out as near
-    // repeats: frame (of logo-frame) and strap (of strap-close).
-    more: {
-      cover: img('step-up', 'see-more', 'STEP UP in a dark studio'),
-      sections: [
-        {
-          title: 'The bike',
-          items: [
-            img('step-up', 'three-quarter', 'STEP UP, three-quarter view'),
-            img('step-up', 'side', 'STEP UP, side view'),
-          ],
-        },
-        {
-          title: 'In use',
-          items: [
-            img('step-up', 'street', 'STEP UP parked by city stairs'),
-            img('step-up', 'carry', 'Carrying STEP UP up the stairs'),
-            img('step-up', 'carry-shoulder', 'Carrying STEP UP on the shoulder with the strap and handle'),
-          ],
-        },
-        {
-          title: 'Details',
-          items: [
-            img('step-up', 'handle-close', 'The carrying handle set into the frame'),
-            img('step-up', 'strap-close', 'Pulling out the shoulder strap'),
-            img('step-up', 'bar-close', 'The folding handlebar'),
-            img('step-up', 'pedal-close', 'The quick-release pedal mounted by the seat post'),
-            img('step-up', 'logo-frame', 'STEP UP logo on the frame'),
-            img('step-up', 'handle', 'The handle and the logo'),
-            img('step-up', 'fork', 'The fork and front wheel'),
-            img('step-up', 'wheel', 'Wheel detail'),
-          ],
-        },
-      ],
-    },
   },
   {
     slug: 'pipe-dream',

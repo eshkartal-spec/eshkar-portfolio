@@ -17,12 +17,13 @@
 
 /* The details in one row along the photo's bottom */
 /* Optionally, the photo fades into a color at its bottom (--fade, from the project's
-   data), under the details; the section below can carry it on (ScrubVideo.css) */
+   data), under the details, over the bottom --fade-size of it; the section below can
+   carry it on (ScrubVideo.css) */
 .proj__opening::after {
   content: '';
   position: absolute;
   inset: auto 0 0;
-  height: 35%;
+  height: var(--fade-size, 35%);
   background: linear-gradient(transparent, var(--fade, transparent));
   pointer-events: none;
 }
@@ -38,6 +39,115 @@
 .proj__opening-specs .label {
   color: var(--ink);
   opacity: 0.6;
+}
+
+/* Or along its top, under the top bar, in white over a soft dark shade (specsTop, from
+   the project's data: for a photo whose title sits low on it) */
+@media (orientation: landscape) {
+  .proj__opening--specs-top .proj__opening-specs {
+    inset: 0 0 auto;
+    padding-top: calc(var(--header-h) + 12px);
+    padding-bottom: 0;
+    color: #fff;
+  }
+
+  .proj__opening--specs-top .proj__opening-specs .label {
+    color: #fff;
+    opacity: 0.7;
+  }
+
+  .proj__opening--specs-top .proj__opening-specs div {
+    border-top-color: rgba(255, 255, 255, 0.35);
+  }
+
+  .proj__opening--specs-top::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset: 0 0 auto;
+    height: 58%;
+    background: linear-gradient(rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.5) 35%, rgba(0, 0, 0, 0.18) 70%, rgba(0, 0, 0, 0));
+    pointer-events: none;
+  }
+}
+
+/* ---------- Over the photo (from the project's data): the painted title, cut out
+   (opening.paint: a mask per letter, wide and tall), its colors changing; and a fine
+   grain (opening.grit), like raw concrete. Both lie exactly over the photo: a screen
+   tall, or on tall screens showing it whole, as tall as the photo (--tall-ratio) ---------- */
+.proj__paint,
+.proj__grit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  pointer-events: none;
+}
+
+@media (orientation: portrait) {
+  .proj__opening--whole .proj__paint,
+  .proj__opening--whole .proj__grit {
+    height: auto;
+    aspect-ratio: var(--tall-ratio);
+  }
+}
+
+/* Each letter of the paint (--i: 0 to 5) steps through the site's pinks and a purple
+   on a steady beat, one color on from the letter before it, so the colors chase along
+   the word. They are laid over the paint in hard light, so the concrete under it (its
+   pits, grain and shading) still shows through every color */
+.proj__paint {
+  --beat: 0.42s;
+  background: #ff6fa8;
+  mask: var(--paint-wide) center / cover no-repeat;
+  mix-blend-mode: hard-light;
+  opacity: 0.4;
+  animation: paint-step calc(var(--beat) * 5) step-end calc(var(--i) * var(--beat) * -1) infinite;
+}
+
+@media (orientation: portrait) {
+  .proj__paint {
+    mask-image: var(--paint-tall);
+  }
+}
+
+@keyframes paint-step {
+  0% {
+    background: #ff6fa8;
+  }
+  20% {
+    background: #ff2f86;
+  }
+  40% {
+    background: #ffc2dc;
+  }
+  60% {
+    background: #c04cff;
+  }
+  80% {
+    background: #8a3cff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proj__paint {
+    animation: none;
+  }
+}
+
+/* Grit: fine grain over everything, and broad soft blotches, like weathered concrete;
+   the photo itself a touch harder and less colorful */
+.proj__grit {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23b)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+}
+
+.proj__opening--grit img {
+  filter: contrast(1.08) saturate(0.86);
 }
 
 /* On tall screens, two by two */

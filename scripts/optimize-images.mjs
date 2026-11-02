@@ -69,10 +69,11 @@ for (const folder of fs.readdirSync(SRC)) {
   const outDir = path.join(OUT, clean(folder))
   fs.mkdirSync(outDir, { recursive: true })
 
-  // The folder's files, and models in the folders inside it
+  // The folder's files, and the photos and models in the folders inside it (their web
+  // copies go in with the rest, under their own names)
   const files = fs.readdirSync(srcDir).flatMap((file) =>
     fs.statSync(path.join(srcDir, file)).isDirectory()
-      ? fs.readdirSync(path.join(srcDir, file)).filter((f) => /\.gltf$/i.test(f)).map((f) => path.join(file, f))
+      ? fs.readdirSync(path.join(srcDir, file)).filter((f) => /\.(gltf|jpe?g|png|webp|tiff?)$/i.test(f)).map((f) => path.join(file, f))
       : [file],
   )
   for (const file of files) {

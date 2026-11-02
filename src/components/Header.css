@@ -20,12 +20,10 @@
     opacity 0.6s var(--ease);
 }
 
-/* Out of sight over the Home page's project library, over full-screen openings that
-   ask for it (html[data-header-hidden], e.g. the Step Up stairs photo), and after a
-   second without scrolling (header--asleep, see Header.jsx) */
+/* Out of sight over the Home page's project library, and after a second without
+   scrolling (header--asleep, see Header.jsx) */
 .header--hidden,
-.header--asleep,
-html[data-header-hidden] .header {
+.header--asleep {
   transform: translateY(-100%);
   opacity: 0;
   pointer-events: none;

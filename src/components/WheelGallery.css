@@ -1,0 +1,227 @@
+/* The photos around the rim of a big wheel (see WheelGallery.jsx). The hub sits --r
+   below the middle of the screen; each photo is turned to its place on the rim and
+   pushed out to it, so the one on top is upright in the middle. --w and --h: the
+   photos' frame; --off: how far round a photo is from the top (0 to 3) */
+.wheel {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  overflow: hidden;
+  color: #fff;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+/* The dark screen behind, fading in as the photo picked moves into the middle; the
+   controls and words follow */
+.wheel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: wheel-in 0.55s var(--ease) both;
+}
+
+.wheel__words,
+.wheel__arrow,
+.wheel__close {
+  animation: wheel-in 0.5s var(--ease) 0.35s both;
+}
+
+@keyframes wheel-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.wheel__hub {
+  position: absolute;
+  left: 50%;
+  top: calc(46% + var(--r));
+  width: 0;
+  height: 0;
+  /* Settling with a long, soft slow-down, like a wheel spun by hand */
+  transition: transform var(--time) cubic-bezier(0.16, 0.84, 0.24, 1);
+}
+
+/* The rim: a faint line running through the photos */
+.wheel__hub::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--r) * -1);
+  top: calc(var(--r) * -1);
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  transition: opacity 0.6s var(--ease);
+}
+
+.wheel__photo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--w);
+  height: var(--h);
+  margin: calc(var(--h) / -2) 0 0 calc(var(--w) / -2);
+  transform-origin: 50% 50%;
+}
+
+/* The photo on top above its neighbours */
+.wheel__photo.is-on {
+  z-index: 1;
+}
+
+/* What moves the photo picked in from its place on the page (see WheelGallery.jsx) */
+.wheel__fly {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Each photo whole in the frame; the one on top full size, the others smaller and dimmer
+   the further round they are */
+.wheel__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  scale: calc(1 - min(var(--off), 1) * 0.38);
+  opacity: calc(1 - min(var(--off), 1) * 0.55 - max(var(--off) - 1, 0) * 0.3);
+  transition:
+    scale var(--time) cubic-bezier(0.16, 0.84, 0.24, 1),
+    opacity var(--time) cubic-bezier(0.16, 0.84, 0.24, 1);
+  pointer-events: none;
+}
+
+/* Opening, while the photo picked moves in, the rest of the wheel waits out of sight,
+   then appears around it */
+.wheel.is-arriving .wheel__photo:not(.is-on) img,
+.wheel.is-arriving .wheel__hub::before {
+  opacity: 0;
+}
+
+/* ---------- Under the photo: its number, and the words of a highlighted one ---------- */
+.wheel__words {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(20px, 4svh, 44px);
+  width: min(560px, calc(100% - 2 * var(--gutter)));
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.wheel__count {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.wheel__note {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.8);
+  text-wrap: balance;
+}
+
+.wheel__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 125%;
+  color: var(--pink);
+}
+
+/* ---------- The controls: thin round buttons, the arrows at the sides, ✕ in the corner ---------- */
+.wheel__arrow,
+.wheel__close {
+  position: absolute;
+  z-index: 1;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(17, 17, 17, 0.4);
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+
+.wheel__arrow:hover,
+.wheel__close:hover {
+  border-color: var(--pink);
+  background: rgba(255, 111, 168, 0.15);
+}
+
+.wheel__arrow {
+  top: 46%;
+  translate: 0 -50%;
+}
+
+.wheel__arrow--back {
+  left: var(--gutter);
+}
+
+.wheel__arrow--on {
+  right: var(--gutter);
+}
+
+/* The arrows' chevrons */
+.wheel__arrow::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  border: solid #fff;
+  border-width: 0 0 1.5px 1.5px;
+}
+
+.wheel__arrow--back::before {
+  transform: translate(-30%, -50%) rotate(45deg);
+}
+
+.wheel__arrow--on::before {
+  transform: translate(-70%, -50%) rotate(-135deg);
+}
+
+.wheel__close {
+  top: calc(var(--gutter) * 0.75);
+  right: var(--gutter);
+}
+
+/* ✕ */
+.wheel__close::before,
+.wheel__close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 1.5px;
+  background: #fff;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.wheel__close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Phones: smaller buttons, the arrows down by the words */
+@media (max-width: 640px) {
+  .wheel__arrow,
+  .wheel__close {
+    width: 44px;
+    height: 44px;
+  }
+
+  .wheel__arrow {
+    top: auto;
+    bottom: clamp(16px, 3svh, 32px);
+    translate: none;
+  }
+}

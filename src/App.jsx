@@ -6,7 +6,6 @@ import Footer from './components/Footer'
 import Intro from './components/Intro'
 import Home from './pages/Home'
 import ProjectPage from './pages/ProjectPage'
-import ImagesPage from './pages/ImagesPage'
 import NotFound from './pages/NotFound'
 import { useReveal } from './useReveal'
 import { useNoOrphans } from './noOrphans'
@@ -34,7 +33,6 @@ export default function App({ playIntro }) {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projects/:slug" element={<ProjectPage />} />
-        <Route path="/projects/:slug/images" element={<ImagesPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {/* Contact details live on the Home page only, and end with the footer line; other

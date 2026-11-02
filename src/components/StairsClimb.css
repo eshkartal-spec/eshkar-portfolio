@@ -1,0 +1,273 @@
+/* ---------- A flight of stairs climbed by scrolling (see StairsClimb.jsx) ----------
+   A tall scroll track (its height set in StairsClimb.jsx); inside it a screen-sized view
+   stays put, holding a line of words and a window in which a 3D flight of stairs moves
+   (and a prompt to scroll on it).
+   --p is the camera's position on the flight in steps and --climb how far up the
+   flight (0–1), set while scrolling. Sizes in the window are in its own units (cqw, cqh) */
+.climb {
+  position: relative;
+}
+
+.climb__view {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 3svh, 32px);
+  height: 100svh;
+  padding: calc(var(--header-h) + 8px) var(--gutter) clamp(24px, 5svh, 56px);
+}
+
+/* The line, in pink, over the window (beside it on wide screens) */
+.climb__line {
+  flex: none;
+  max-width: 24ch;
+  margin: 0;
+  color: var(--pink);
+  font-size: clamp(20px, 2.6vw, 40px);
+  line-height: 1.15;
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* The window. The flight is pinned to its left edge, like stairs running along a wall:
+   the camera's vanishing point sits on that edge too, so every step's left end lines up
+   on it, and the steps narrow toward it as they rise */
+.climb__window {
+  position: relative;
+  flex: 1;
+  width: min(100%, 1240px);
+  min-height: 0;
+  overflow: hidden;
+  isolation: isolate;
+  container-type: size;
+  /* A shade deeper than the page, so the steps' white edges read */
+  --stage: 225, 224, 221;
+  background: rgb(var(--stage));
+  box-shadow: 0 30px 60px -40px rgba(17, 17, 17, 0.45);
+  perspective: 1500px;
+  perspective-origin: 0% 28%;
+}
+
+/* Behind everything: real stairs, mirrored to run the same way as the flight, and
+   muted (greyed, softened and washed with the stage's tone) so the flight stays the focus */
+.climb__window::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -12px;
+  background:
+    linear-gradient(rgba(var(--stage), 0.6), rgba(var(--stage), 0.6)),
+    var(--backdrop) 60% 100% / cover no-repeat;
+  filter: grayscale(0.7) blur(3px);
+  transform: scaleX(-1);
+}
+
+/* ---------- The 3D flight: steps --H tall, --D deep and --W wide ---------- */
+.climb__flight {
+  --H: 19cqh;
+  --D: 40cqh;
+  --W: 92cqw;
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  top: 72cqh;
+  width: var(--W);
+  transform-style: preserve-3d;
+  transform: translate3d(0, calc(var(--p, 0) * var(--H)), calc(var(--p, 0) * var(--D)));
+}
+
+.climb__step {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  transform-style: preserve-3d;
+  transform: translate3d(0, calc(var(--i) * var(--H) * -1), calc(var(--i) * var(--D) * -1));
+}
+
+/* The stairs are suggested rather than drawn: each step is a faint change of tone,
+   the fronts a little darker, the tops a little lighter, and a fine white line along
+   each step's edge, all fading out to the right. Each also fades by its distance (--o,
+   set in StairsClimb.jsx): done on the faces, since a see-through 3D group would be
+   flattened by the browser */
+.climb__riser,
+.climb__tread {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  opacity: var(--o, 1);
+}
+
+/* The step's front */
+.climb__riser {
+  height: var(--H);
+}
+
+.climb__riser::before,
+.climb__tread {
+  mask-image: linear-gradient(90deg, #000 55%, transparent 100%);
+}
+
+.climb__riser::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(207, 206, 203, 0.62), rgba(217, 216, 213, 0.5));
+}
+
+/* The step's edge, with a hairline of shadow under it so the white reads */
+.climb__riser::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, #fff 20%, rgba(255, 255, 255, 0) 95%);
+  box-shadow: 0 1px 0 rgba(17, 17, 17, 0.06);
+}
+
+/* The step's top, as if lit from above */
+.climb__tread {
+  height: var(--D);
+  background: linear-gradient(rgba(234, 233, 230, 0.66), rgba(226, 225, 222, 0.5));
+  transform-origin: top;
+  transform: rotateX(-90deg);
+}
+
+/* ---------- The climber ---------- */
+/* Standing in the middle of the stairs, facing up the flight (the photo is mirrored).
+   Over the climb the view slowly draws back from him: he starts a little closer
+   (--climb, 0–1) */
+.climb__climber {
+  position: absolute;
+  z-index: 2;
+  left: 46cqw;
+  bottom: 0;
+  height: 94cqh;
+  aspect-ratio: 1023 / 1537;
+  transform-origin: 50% 100%;
+  transform: translateX(-50%) scaleX(-1) scale(calc(1.12 - var(--climb, 0) * 0.12));
+  pointer-events: none;
+}
+
+/* A soft darkening on the stairs around and below him, so he stands in front of them
+   rather than on top of a flat picture */
+.climb__shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: radial-gradient(ellipse 30% 55% at 46% 80%, rgba(0, 0, 0, 0.26), transparent 70%);
+  pointer-events: none;
+}
+
+/* ---------- The prompt: in the window's top left corner, over a line that keeps
+   drawing downward; it fades away as the climb starts (--climb) ---------- */
+.climb__prompt {
+  position: absolute;
+  z-index: 3;
+  top: clamp(16px, 4cqh, 32px);
+  left: clamp(16px, 4cqw, 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  color: var(--ink);
+  white-space: nowrap;
+  opacity: clamp(0, calc(1 - var(--climb, 0) * 14), 1);
+  pointer-events: none;
+}
+
+.climb__prompt-line {
+  width: 1px;
+  height: 34px;
+  margin-left: 2px;
+  background: currentColor;
+  animation: climb-prompt 2s var(--ease) infinite;
+}
+
+@keyframes climb-prompt {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  51% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+/* ---------- Wide screens: the line on the left, beside a square window as tall as
+   the screen allows, close in on him, so he fills most of it ---------- */
+@media (orientation: landscape) {
+  .climb__view {
+    flex-direction: row;
+    justify-content: center;
+    gap: clamp(32px, 6vw, 96px);
+  }
+
+  .climb__line {
+    max-width: 13ch;
+    font-size: clamp(24px, 3.2vw, 52px);
+    text-align: left;
+  }
+
+  .climb__window {
+    flex: none;
+    width: auto;
+    height: 100%;
+    max-width: 64vw;
+    aspect-ratio: 1;
+  }
+
+  .climb__flight {
+    --H: 17cqh;
+    --D: 36cqh;
+    --W: 100cqw;
+    top: 74cqh;
+  }
+
+  .climb__climber {
+    left: 54cqw;
+    height: 90cqh;
+    transform: translateX(-50%) scaleX(-1) scale(calc(1.06 - var(--climb, 0) * 0.08));
+  }
+
+  .climb__shade {
+    background: radial-gradient(ellipse 42% 50% at 54% 84%, rgba(0, 0, 0, 0.26), transparent 70%);
+  }
+}
+
+/* ---------- Tall screens (phones): the climber stands at the bottom, in the middle,
+   his legs running off the bottom like someone just ahead of you on the stairs ---------- */
+@media (orientation: portrait) {
+  .climb__window {
+    perspective-origin: 0% 12%;
+  }
+
+  .climb__flight {
+    --H: 11cqh;
+    --D: 24cqh;
+    --W: 100cqw;
+    top: 34cqh;
+  }
+
+  .climb__climber {
+    left: 52cqw;
+    height: 62cqh;
+  }
+
+  .climb__shade {
+    background: radial-gradient(ellipse 50% 35% at 52% 86%, rgba(0, 0, 0, 0.24), transparent 70%);
+  }
+}

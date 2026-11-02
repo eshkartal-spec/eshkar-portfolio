@@ -1,0 +1,222 @@
+/* Photos laid like a wall of uneven bricks (see BrickWall.jsx). Each photo's depth, --z
+   (1: standing out, 0: flush, -1: sunk in), is drawn with light and shadow, and shifts
+   it a little with the lean (--lx, --ly, -1 to 1; --lean px per px of --depth) */
+.wall {
+  padding: clamp(64px, 9vw, 140px) var(--gutter);
+}
+
+/* The wall itself: a surface a shade deeper than the page, showing in the even joints
+   between the photos, like mortar */
+.wall__plane {
+  --joint: clamp(8px, 1vw, 14px);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--joint);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--joint);
+  background: #e3e1dd;
+  box-shadow: inset 0 1px 3px rgba(17, 17, 17, 0.08);
+}
+
+.wall__column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--joint);
+  min-width: 0;
+}
+
+/* ---------- The bricks ---------- */
+.wall__brick {
+  --shift: calc(var(--z) * var(--depth) * var(--lean) * 1px);
+  position: relative;
+  margin: 0;
+  translate: calc(var(--lx, 0) * var(--shift)) calc(var(--ly, 0) * var(--shift));
+  transition:
+    scale 0.45s var(--ease),
+    box-shadow 0.45s var(--ease);
+}
+
+.wall__open {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.wall__brick img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  background: var(--surface);
+}
+
+/* Standing out: lifted off the wall on a soft shadow that falls away from the lean */
+.wall__brick--out {
+  box-shadow:
+    0 1px 2px rgba(17, 17, 17, 0.12),
+    calc(var(--lx, 0) * -10px) calc(16px - var(--ly, 0) * 8px) 30px -14px rgba(40, 30, 20, 0.45);
+}
+
+/* Flush with the wall: only a hairline of shadow */
+.wall__brick--flush {
+  box-shadow: 0 1px 3px rgba(17, 17, 17, 0.14);
+}
+
+/* Sunk into the wall: a little darker, with the wall's edge casting a shadow in over
+   its top and a catch of light along its bottom */
+.wall__brick--in img {
+  filter: brightness(0.92);
+}
+
+.wall__brick--in::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow:
+    inset 0 12px 20px -6px rgba(0, 0, 0, 0.42),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.55),
+    inset 1px 0 4px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+
+/* With a mouse: a photo comes forward a touch under the cursor, and gives when pressed */
+@media (hover: hover) {
+  .wall__brick:hover {
+    z-index: 1;
+    scale: 1.02;
+  }
+
+  .wall__brick--out:hover,
+  .wall__brick--flush:hover {
+    box-shadow:
+      0 1px 2px rgba(17, 17, 17, 0.12),
+      0 24px 40px -16px rgba(40, 30, 20, 0.5);
+  }
+
+  .wall__brick:active {
+    scale: 0.985;
+    transition-duration: 0.15s;
+  }
+}
+
+/* ---------- The highlighted photos (a feature of the bike): a pink frame, and a small
+   pink mark in the corner that their words are there ---------- */
+.wall__brick.is-noted::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border: 2px solid var(--pink);
+  pointer-events: none;
+}
+
+/* (highlighted photos always stand out, so ::after is free here) */
+.wall__brick.is-noted::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: 0 0 0 4px rgba(255, 111, 168, 0.25);
+  pointer-events: none;
+}
+
+.wall__title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  font-stretch: 125%;
+  line-height: 1.2;
+}
+
+.wall__text {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* The words: with a mouse, in a tooltip that follows the cursor (and here only read
+   out); on touch screens, over the bottom of the photo once it's tapped */
+.wall__note {
+  position: absolute;
+  z-index: 1;
+  inset: auto 0 0;
+  padding: 16px;
+  color: var(--bg);
+  background: rgba(17, 17, 17, 0.88);
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+  pointer-events: none;
+}
+
+.wall__brick.is-open .wall__note {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .wall__note {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.wall__tip {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  max-width: 300px;
+  padding: 14px 16px;
+  color: var(--bg);
+  background: var(--ink);
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
+  pointer-events: none;
+}
+
+.wall__tip.is-on {
+  opacity: 1;
+}
+
+.wall__tip .wall__text {
+  opacity: 0.8;
+}
+
+@media (hover: none) {
+  .wall__tip {
+    display: none;
+  }
+}
+
+/* Phones: two columns, and the words smaller to fit over the photo */
+@media (max-width: 640px) {
+  .wall__note {
+    padding: 12px;
+  }
+
+  .wall__note .wall__title {
+    font-size: 14px;
+  }
+
+  .wall__note .wall__text {
+    margin-top: 4px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+}

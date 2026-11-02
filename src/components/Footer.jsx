@@ -3,10 +3,8 @@ import './Footer.css'
 
 const year = new Date().getFullYear()
 
-// Back to the top of the page, smoothly. Pages that move without scrolling (the Step Up
-// climb on touch screens) hear about it first, as a "back-to-top" event.
+// Back to the top of the page, smoothly
 function backToTop() {
-  window.dispatchEvent(new Event('back-to-top'))
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
