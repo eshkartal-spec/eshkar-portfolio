@@ -15,10 +15,19 @@ const SETTLE = 0.24 // how quickly a released half glides into place (0–1)
 const TOUCH = 3 // this close, gliding together, the halves count as touching: they click
 const BREAK = 70 // how far a joined half must be pulled before the magnet lets go
 const STRETCH = 0.25 // how much a joined half gives while being pulled, before it lets go
-const WOBBLE = 2.6 // the joined triangle's gentle rock either way...
+const WOBBLE = 4.5 // the joined triangle's gentle rock either way...
 const WOBBLE_TIME = 2.8 // ...and how long one rock takes, in seconds
-const KICK = 7 // the bigger rock it gives as it clicks together, dying down to the gentle one
+const KICK = 10 // the bigger rock it gives as it clicks together, dying down to the gentle one
 const FRICTION = 0.6 // how quickly a flicked ring slows down (share of its spin lost per second)
+const JOIN_SPIN = 110 // the gentle turn a ring starts on as it clicks together (degrees per second)
+// Halves that repel (motion: 'repel') instead of joining:
+const REPEL_REACH = 1.2 // ...start pushing apart when their middles are this near (in the halves' widths together)
+const REPEL_CLOSEST = 0.5 // ...and can't be pushed nearer than this share of that
+const REPEL = 9 // ...how hard the one not held is pushed away (px per frame, at the closest)
+const LEAN = 7 // ...how far each leans away from the other, at the closest (degrees)
+const TREMBLE = 2.2 // ...how much they shudder, at the closest (px)
+const REPEL_SPAN = 0.8 // ...the two together at most this share of the stage's width
+const HOME = 0.012 // ...and how gently a half let go of drifts back to where it started (0–1)
 const TRAIL = 0.4 // how closely the soft cursor follows the mouse (0–1): lower trails more
 // What plays when a pair meets, any of: 'ring' (one ring spreading out and fading),
 // 'sand' (a burst of fine grains drifting apart and fading), 'water' (the stage behind
@@ -30,15 +39,19 @@ const GRAIN_TIME = 1.5 // how long the sand takes to settle and fade, in seconds
 
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi)
 
-// One pair of halves on a stage: white on the left, brown on the right. Each can be
-// dragged around its own side; near the middle, where they meet, a magnet pulls a half
-// onto its seat, and two seated halves click together along their seam. Joined, a
-// triangle rocks gently on its bottom point; a circle spins when flicked. Pulled hard
-// enough, a half comes away again.
+// One pair of halves on a stage, one on each side. Each can be dragged around its own
+// side; near the middle, where they meet, a magnet pulls a half onto its seat, and two
+// seated halves click together along their seam. Joined, a triangle rocks gently on its
+// bottom point; a circle spins when flicked. Pulled hard enough, a half comes away again.
+// A pair that repels (motion: 'repel') never joins: brought near each other, the half
+// not held is pushed away, both lean away and shudder, and they can't be made to touch.
 //
 // pair.join: where the right half sits against the left one when joined, and
 // pair.seam: how far along the left half its seam runs (where the stage's middle goes),
 // pair.pivot: the point the joined pair turns around; all in the left image's pixels.
+// pair.mirror: 'left' or 'right' shows that half's photo mirrored (join measured on it so);
+// pair.front: 'left' puts the left half in front of the right one where they overlap;
+// pair.tilt: the middle line leaned this many degrees (clockwise), to match the halves.
 function PairPlay({ pair }) {
   const stageRef = useRef(null)
   const leftRef = useRef(null)
@@ -50,6 +63,7 @@ function PairPlay({ pair }) {
     const els = [leftRef.current, rightRef.current]
     const halves = els.map(() => ({ x: 0, y: 0, tx: 0, ty: 0, w: 0, h: 0, drag: false, gx: 0, gy: 0 }))
     const [L, R] = halves
+    const repels = pair.motion === 'repel'
     let W = 0
     let H = 0
     let s = 1 // stage pixels per image pixel
@@ -85,8 +99,10 @@ function PairPlay({ pair }) {
       H = r.height
       const [li, ri] = els.map((el) => el.querySelector('img'))
       if (!li.naturalWidth || !ri.naturalWidth) return false
-      const span = W < NARROW ? NARROW_SPAN : SPAN
-      s = Math.min((H * SIZE) / li.naturalHeight, (W * span) / (pair.join[0] + ri.naturalWidth))
+      // (halves that never join only need to fit side by side, apart, so they can be larger)
+      const span = repels ? REPEL_SPAN : W < NARROW ? NARROW_SPAN : SPAN
+      const across = repels ? li.naturalWidth + ri.naturalWidth : pair.join[0] + ri.naturalWidth
+      s = Math.min((H * SIZE) / li.naturalHeight, (W * span) / across)
       L.w = li.naturalWidth * s
       L.h = li.naturalHeight * s
       R.w = ri.naturalWidth * s
@@ -100,6 +116,8 @@ function PairPlay({ pair }) {
         const edge = W < NARROW ? 0.02 : 0.06
         Object.assign(L, { x: W * edge, y: (H - L.h) / 2 + H * 0.06, placed: true })
         Object.assign(R, { x: W * (1 - edge) - R.w, y: (H - R.h) / 2 - H * 0.06 })
+        // (where a repelling half drifts back to)
+        halves.forEach((h) => Object.assign(h, { hx: h.x, hy: h.y }))
       } else if (joined) {
         Object.assign(L, seat(0))
         Object.assign(R, seat(1))
@@ -108,12 +126,28 @@ function PairPlay({ pair }) {
       return true
     }
 
-    // Keeps a half on its own side of the seam, and on the stage
+    // Keeps a half on its own side of the seam (or, repelling, of the stage's middle), and
+    // on the stage (repelling, wholly, so one pushed to the edge stays in view)
     const keep = (i, p) => {
       const h = halves[i]
-      const st = seat(i)
-      const x = i === 0 ? clamp(p.x, -h.w * 0.25, st.x) : clamp(p.x, st.x, W - h.w * 0.75)
-      return { x, y: clamp(p.y, -h.h * 0.25, H - h.h * 0.75) }
+      const st = repels ? { x: i === 0 ? W / 2 - h.w * 0.35 : W / 2 - h.w * 0.65 } : seat(i)
+      const out = repels ? 0 : 0.25
+      const x = i === 0 ? clamp(p.x, -h.w * out, st.x) : clamp(p.x, st.x, W - h.w * (1 - out))
+      return { x, y: clamp(p.y, -h.h * out, H - h.h * (1 - out)) }
+    }
+    // Repelling: where a half's middle is, and how near the two are (1 at the closest they
+    // can come, 0 out of each other's reach)
+    const middle = (h, x = h.x, y = h.y) => ({ x: x + h.w / 2, y: y + h.h / 2 })
+    const reach = () => (L.w + R.w) * REPEL_REACH
+    const nearness = (d) => clamp((reach() - d) / (reach() * (1 - REPEL_CLOSEST)), 0, 1)
+    // ...and a held half's aim, kept out of the other's closest reach
+    const fend = (i, t) => {
+      const a = middle(halves[i], t.x, t.y)
+      const b = middle(halves[1 - i])
+      const d = Math.hypot(a.x - b.x, a.y - b.y) || 1
+      const min = reach() * REPEL_CLOSEST
+      if (d >= min) return t
+      return keep(i, { x: t.x + ((a.x - b.x) / d) * (min - d), y: t.y + ((a.y - b.y) / d) * (min - d) })
     }
     const seated = (i) => Math.abs(halves[i].x - seat(i).x) < 1.5
 
@@ -140,6 +174,27 @@ function PairPlay({ pair }) {
           }
         }
       }
+      // Repelling: within reach of each other, a half that isn't held is pushed away, the
+      // harder the nearer; out of reach, one let go of drifts back to where it started
+      let near = 0
+      let away = { x: 1, y: 0 } // from the left half toward the right one
+      if (repels) {
+        const a = middle(L)
+        const b = middle(R)
+        const d = Math.hypot(b.x - a.x, b.y - a.y) || 1
+        away = { x: (b.x - a.x) / d, y: (b.y - a.y) / d }
+        near = nearness(d)
+        halves.forEach((h, i) => {
+          if (h.drag) return
+          const sign = i === 0 ? -1 : 1
+          const push = near * near * REPEL * dt * 60
+          let t = { x: h.tx + away.x * sign * push, y: h.ty + away.y * sign * push }
+          if (near === 0) t = { x: t.x + (h.hx - t.x) * HOME, y: t.y + (h.hy - t.y) * HOME }
+          t = keep(i, t)
+          h.tx = t.x
+          h.ty = t.y
+        })
+      }
       halves.forEach((h) => {
         const ease = h.drag ? FOLLOW : SETTLE
         h.x += (h.tx - h.x) * ease
@@ -151,22 +206,37 @@ function PairPlay({ pair }) {
       // edges touch: both land exactly in place and the rings burst out from the seam
       const headed = (i) => Math.abs(halves[i].tx - seat(i).x) < 0.5
       const lined = (a, b) => Math.abs(b - a - pair.join[1] * s) < 0.5
-      if (!joined && !L.drag && !R.drag && headed(0) && headed(1) && lined(L.ty, R.ty)) {
+      if (!repels && !joined && !L.drag && !R.drag && headed(0) && headed(1) && lined(L.ty, R.ty)) {
         const near = (i) => Math.abs(halves[i].x - seat(i).x) < TOUCH
         if (near(0) && near(1) && Math.abs(R.y - L.y - pair.join[1] * s) < TOUCH) {
           ;[L, R].forEach((h) => Object.assign(h, { x: h.tx, y: h.ty }))
           joined = true
           since = 0
+          if (pair.motion === 'spin') spin = JOIN_SPIN
           stage.classList.add('is-joined')
           burst(L.x + pair.seam * s, L.y + L.h / 2)
         }
       }
-      const pv = pivot()
-      els.forEach((el, i) => {
-        const h = halves[i]
-        el.style.transformOrigin = `${pv.x - h.x}px ${pv.y - h.y}px`
-        el.style.transform = `translate(${h.x}px, ${h.y}px) rotate(${joined ? angle : 0}deg)`
-      })
+      if (repels) {
+        // Each leans away from the other on its bottom, and both shudder, the nearer the more
+        els.forEach((el, i) => {
+          const h = halves[i]
+          const sign = i === 0 ? -1 : 1
+          const shake = near * TREMBLE
+          const jx = (Math.random() - 0.5) * 2 * shake
+          const jy = (Math.random() - 0.5) * 2 * shake
+          el.style.transformOrigin = '50% 100%'
+          el.style.transform = `translate(${h.x + jx}px, ${h.y + jy}px) rotate(${sign * near * LEAN * Math.sign(away.x || 1)}deg)`
+        })
+        stage.classList.toggle('is-pushing', near > 0.05)
+      } else {
+        const pv = pivot()
+        els.forEach((el, i) => {
+          const h = halves[i]
+          el.style.transformOrigin = `${pv.x - h.x}px ${pv.y - h.y}px`
+          el.style.transform = `translate(${h.x}px, ${h.y}px) rotate(${joined ? angle : 0}deg)`
+        })
+      }
       // Shown while the pointer is over the stage, checked every frame, so it stays right
       // even as the page scrolls under a still mouse
       if (aim) {
@@ -339,7 +409,12 @@ function PairPlay({ pair }) {
           h.ty = st.y + dy * STRETCH
         }
       }
-      if (grab.mode === 'drag') {
+      if (grab.mode === 'drag' && repels) {
+        // Repelling: held, it goes where it's moved, but never into the other's closest reach
+        const t = fend(i, keep(i, { x: p.x - grab.gx, y: p.y - grab.gy }))
+        h.tx = t.x
+        h.ty = t.y
+      } else if (grab.mode === 'drag') {
         let t = keep(i, { x: p.x - grab.gx, y: p.y - grab.gy })
         // Near the middle, the magnet draws the half in along the seam
         const st = seat(i)
@@ -364,7 +439,7 @@ function PairPlay({ pair }) {
       if (grab.mode === 'pull') {
         // Not pulled far enough: back to its seat
         Object.assign(h, { tx: seat(i).x, ty: seat(i).y })
-      } else if (grab.mode === 'drag') {
+      } else if (grab.mode === 'drag' && !repels) {
         const st = seat(i)
         if (Math.abs(h.tx - st.x) < SNAP) {
           h.tx = st.x
@@ -426,16 +501,26 @@ function PairPlay({ pair }) {
   }, [pair])
 
   return (
-    <div ref={stageRef} className="pair">
+    <div ref={stageRef} className="pair" style={pair.tilt ? { '--tilt': `${pair.tilt}deg` } : undefined}>
       <span className="pair__line" aria-hidden="true" />
-      <div ref={leftRef} className="pair__half">
-        <img src={pair.left.src} alt={pair.left.alt} draggable="false" />
+      <div ref={leftRef} className={`pair__half${pair.front === 'left' ? ' is-front' : ''}`}>
+        <img
+          src={pair.left.src}
+          alt={pair.left.alt}
+          draggable="false"
+          className={pair.mirror === 'left' ? 'is-mirrored' : undefined}
+        />
       </div>
       <div ref={rightRef} className="pair__half">
-        <img src={pair.right.src} alt={pair.right.alt} draggable="false" />
+        <img
+          src={pair.right.src}
+          alt={pair.right.alt}
+          draggable="false"
+          className={pair.mirror === 'right' ? 'is-mirrored' : undefined}
+        />
       </div>
       <p className="label pair__hint">
-        Bring them <span>together</span>
+        {pair.motion === 'repel' ? 'Try to bring them' : 'Bring them'} <span>together</span>
       </p>
       <span ref={cursorRef} className="pair__cursor" aria-hidden="true" />
     </div>

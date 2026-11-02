@@ -39,13 +39,14 @@
    fainter once they've met */
 .pair__line {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: -20%;
+  bottom: -20%;
   left: 50%;
   width: clamp(160px, 18vw, 300px);
   background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 35%, #fff 65%, rgba(255, 255, 255, 0));
-  mask-image: linear-gradient(transparent, #000 22%, #000 78%, transparent);
-  transform: translateX(-50%);
+  mask-image: linear-gradient(transparent 12%, #000 30%, #000 70%, transparent 88%);
+  /* Leaned to match the halves, if they ask (--tilt, from the pair's tilt) */
+  transform: translateX(-50%) rotate(var(--tilt, 0deg));
   transition: opacity 0.8s var(--ease);
 }
 
@@ -142,6 +143,16 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+}
+
+/* A half shown in front of the other where they overlap (pair.front), and a photo shown
+   mirrored (pair.mirror) */
+.pair__half.is-front {
+  z-index: 1;
+}
+
+.pair__half img.is-mirrored {
+  transform: scaleX(-1);
 }
 
 /* The prompt, in the middle of the glow */

@@ -249,38 +249,55 @@ export const projects = [
     hero: img('odds-or-evens', 'concept', 'Bringing the white and brown halves of the triangle together'),
     introOnPhoto: true,
     // The three pairs, one section each: a name, a short explainer, and the two halves
-    // to bring together (white on the left, brown on the right; PairPlay.jsx). The
-    // photos are placeholders for now. join: where the right half sits against the left
-    // when joined; seam: how far along the left half its seam runs; pivot: the point the
-    // joined pair turns around; all in the left photo's pixels. motion: what the joined
-    // pair does, 'wobble' (rocks on its bottom point) or 'spin' (spins when flicked)
+    // to bring together (PairPlay.jsx; the photos trimmed to the object by
+    // scripts/optimize-images.mjs). join: where the right half sits against the left when
+    // joined; seam: how far along the left half its seam runs; pivot: the point the joined
+    // pair turns around; all in the left photo's pixels. motion: what the joined pair
+    // does, 'wobble' (rocks on its bottom point) or 'spin' (spins when flicked); or
+    // 'repel': the halves never join, pushing each other away
     pairs: [
       {
+        // Brown on the left, its photo mirrored so its long black edge faces right; the
+        // white one on the right, its long black edge facing left: the two edges together
+        // on the middle line (both turned so the edges stand straight, the brown one
+        // scaled so they're the same length, in scripts/optimize-images.mjs)
         title: 'Triangle',
         text: 'A short explainer about this pair: what the two halves are, and what happens when they meet. Placeholder text for now.',
-        left: img('odds-or-evens', 'trianglewhite', 'The white half of the triangle'),
-        right: img('odds-or-evens', 'trianglebrown', 'The brown half of the triangle'),
-        join: [162, -2],
-        seam: 212,
-        pivot: [185, 305],
+        left: img('odds-or-evens', 'browntriangle2', 'The brown half of the triangle'),
+        right: img('odds-or-evens', 'whitetriangle2', 'The white half of the triangle'),
+        mirror: 'left',
+        join: [685, 0],
+        seam: 697,
+        pivot: [697, 1203],
         motion: 'wobble',
       },
       {
+        // Brown on the left: its ends face right, the white one's face left; both turned a
+        // touch so their ends stand straight, the white one scaled to the brown one's height
+        // (scripts/optimize-images.mjs)
         title: 'Circle',
         text: 'A short explainer about this pair: what the two halves are, and what happens when they meet. Placeholder text for now.',
-        left: img('odds-or-evens', 'circlewhite', 'The white half of the circle'),
-        right: img('odds-or-evens', 'circlebrown', 'The brown half of the circle'),
-        join: [172, 9],
-        seam: 181,
-        pivot: [184, 152],
+        left: img('odds-or-evens', 'brown-circle2', 'The brown half of the circle'),
+        right: img('odds-or-evens', 'whitecircle2', 'The white half of the circle'),
+        join: [638, 0],
+        seam: 646,
+        pivot: [635, 622],
         motion: 'spin',
       },
       {
-        title: 'Third pair',
+        // Reverse magnets: they never join, always pushing each other away. Brown on the
+        // left, turned upside down (scripts/optimize-images.mjs) so the short black lines
+        // where they'd meet face each other; the middle line leaned to the black line's
+        // angle (tilt)
+        title: 'Pyramid',
         text: 'A short explainer about this pair: what the two halves are, and what happens when they meet. Placeholder text for now.',
+        left: img('odds-or-evens', 'brownpyr', 'The brown half of the pyramid'),
+        right: img('odds-or-evens', 'whitepyr', 'The white half of the pyramid'),
+        tilt: -39,
+        motion: 'repel',
       },
     ],
-    todo: ['What the objects are and how they relate', 'Year, duration, tools', 'Name and text for each pair', 'Photos of the third pair, and final photos of the first two'],
+    todo: ['What the objects are and how they relate', 'Year, duration, tools', 'Name and text for each pair'],
   },
   {
     // Renamed from PlayStation (it's an Xbox controller); its photos are still in the playstation folders

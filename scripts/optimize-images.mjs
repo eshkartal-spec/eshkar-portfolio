@@ -60,6 +60,21 @@ const POSTER_AT_END = new Set(['shrafraf/shrafrafBOUNCE.mp4'])
 // every few frames, and come out far smaller without
 const PLAYED_THROUGH = new Set(['shrafraf/shrafraf.mp4', 'shrafraf/shrafrafBOUNCE.mp4'])
 
+// Cut-out photos trimmed to the object, without the see-through margin around it (the
+// Odds or Evens halves, which the page sizes and fits together by their pixels), and
+// optionally first turned (degrees, clockwise: so a triangle's long black edge or a
+// circle half's ends stand straight; 180 turns it upside down), scaled (by a factor, or to
+// a height in pixels: to match its partner's size) and brightened or toned down (sharp's
+// modulate: to match the other whites)
+const CUTOUTS = {
+  'odds-or-evens/whitetriangle2.png': { turn: -12.49 },
+  'odds-or-evens/browntriangle2.png': { turn: -17.33, scale: 1191 / 1320 },
+  'odds-or-evens/whitecircle2.png': { turn: 3.47, height: 1268 },
+  'odds-or-evens/brown circle2.png': { turn: -0.47 },
+  'odds-or-evens/whitePYR.png': { modulate: { brightness: 1.08, saturation: 0.55 } },
+  'odds-or-evens/brownPYR.png': { turn: 180 },
+}
+
 const io = new NodeIO().registerExtensions([EXTMeshoptCompression, KHRMeshQuantization]).registerDependencies({
   'meshopt.encoder': MeshoptEncoder,
 })
@@ -146,8 +161,22 @@ for (const folder of fs.readdirSync(SRC)) {
       skipped++
       continue
     }
-    await sharp(src)
-      .rotate()
+    let photo = sharp(src).rotate()
+    const cut = CUTOUTS[`${folder}/${file}`]
+    if (cut) {
+      // (each step on the last one's result: sharp would otherwise run them in its own order)
+      let buf = await photo.png().toBuffer()
+      if (cut.turn) buf = await sharp(buf).rotate(cut.turn, { background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer()
+      buf = await sharp(buf).trim().png().toBuffer()
+      if (cut.height) buf = await sharp(buf).resize({ height: cut.height }).png().toBuffer()
+      if (cut.scale) {
+        const { width } = await sharp(buf).metadata()
+        buf = await sharp(buf).resize({ width: Math.round(width * cut.scale) }).png().toBuffer()
+      }
+      if (cut.modulate) buf = await sharp(buf).modulate(cut.modulate).png().toBuffer()
+      photo = sharp(buf)
+    }
+    await photo
       .resize({ width: FULL_SCREEN.test(file) ? BANNER_WIDTH : MAX_WIDTH, withoutEnlargement: true })
       .webp({ quality: QUALITY })
       .toFile(out)
