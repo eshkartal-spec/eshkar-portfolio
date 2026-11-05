@@ -75,6 +75,11 @@ const CUTOUTS = {
   'odds-or-evens/brownPYR.png': { turn: 180 },
 }
 
+// Photos exported lying on their side, turned upright (degrees, clockwise)
+const TURNS = {
+  'bazelet/bazeletBANNERmobile.png': 90,
+}
+
 const io = new NodeIO().registerExtensions([EXTMeshoptCompression, KHRMeshQuantization]).registerDependencies({
   'meshopt.encoder': MeshoptEncoder,
 })
@@ -162,6 +167,8 @@ for (const folder of fs.readdirSync(SRC)) {
       continue
     }
     let photo = sharp(src).rotate()
+    const turn = TURNS[`${folder}/${file}`]
+    if (turn) photo = sharp(await photo.png().toBuffer()).rotate(turn)
     const cut = CUTOUTS[`${folder}/${file}`]
     if (cut) {
       // (each step on the last one's result: sharp would otherwise run them in its own order)

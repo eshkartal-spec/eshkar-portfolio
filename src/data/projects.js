@@ -1,3 +1,5 @@
+import { bazeletLogo } from './bazeletLogo'
+
 // All projects, in the order they appear. Text and photos carried over from v1.
 //
 // Images: drop full-size photos into originals/<project>/, run `npm run images`,
@@ -6,6 +8,9 @@
 // null = not written yet. `todo` lists what v1 marked as missing.
 
 const img = (project, name, alt) => ({ src: `/images/${project}/${name}.webp`, alt })
+
+// Words still to come
+const placeholder = 'A short text about this part of the project: what it is and the thinking behind it. Placeholder text for now.'
 
 export const projects = [
   {
@@ -343,12 +348,51 @@ export const projects = [
     tools: null,
     cover: img('bazelet', 'outdoor', 'Bazelet sandals outdoors'),
     hero: img('bazelet', 'outdoor', 'Bazelet sandals outdoors'),
-    features: [
-      { title: 'Packaging', text: null, image: img('bazelet', 'box', 'Bazelet packaging') },
-      { title: 'Product', text: null, image: img('bazelet', 'sandal', 'Bazelet sandal') },
-      { title: 'Visual identity', text: null, image: img('bazelet', 'collage', 'Bazelet brand collage') },
-    ],
-    todo: ['What changed and why', 'Year, duration, tools', 'Text for each feature', 'Detail and process photos'],
+    // Full-screen banner, the title painted on the paving: wide for landscape screens, tall
+    // for portrait (exported on its side, turned upright by the image script). The details
+    // stand down its right side, over the sea (specsSide); on screens narrower than the
+    // photo, its left side is kept, where the title starts (focus). On tall screens it's
+    // shown whole, its sky blurred, fading down (blurTop), and the details sit on it
+    opening: {
+      wide: img('bazelet', 'bazeletbanner', 'Bazelet sandals on a sunny terrace over the sea, BAZELET FOOTWEAR on the paving'),
+      tall: img('bazelet', 'bazeletbannermobile', 'Bazelet sandals on a sunny terrace over the sea, BAZELET FOOTWEAR on the paving'),
+      specsSide: true,
+      focus: '0% 50%',
+      blurTop: true,
+      // with a mouse, a soft mosaic of raised hexagon tiles follows the cursor over it
+      hexes: true,
+    },
+    // After the overview, full screen: the new logo, its seven pieces (PieceLogo.jsx; the
+    // outline from originals/bazelet/logo.svg). The four biggest each stand for a topic
+    // (piece: its place in the logo's list): with the cursor over one, its photo shows
+    // through it, and clicking it opens it big in the middle of the screen, with its words.
+    // Photos and words are placeholders for now
+    logo: {
+      shape: bazeletLogo,
+      topics: [
+        {
+          piece: 4,
+          title: 'Branding',
+          text: placeholder,
+          image: img('bazelet', 'branding2', 'Bazelet cards on a stone block'),
+          // (cursor: the photo trailing the mouse over the opened window, if not the
+          // piece's own; behind: a photo filling the screen behind the window)
+          cursor: img('bazelet', 'branding-1', 'The Bazelet box, sleeve, card and a sandal'),
+          behind: img('bazelet', 'branding2', 'Bazelet cards on a stone block'),
+        },
+        { piece: 5, title: 'Packaging', text: placeholder, image: img('bazelet', 'collage', 'Bazelet brand collage') },
+        { piece: 6, title: 'Product', text: placeholder, image: img('bazelet', 'sandal', 'Bazelet sandal') },
+        { piece: 2, title: 'Logo', text: placeholder, image: img('bazelet', 'box', 'Bazelet packaging with the logo') },
+      ],
+      // The three other pieces each set the section's background to a scene from nature,
+      // until another is chosen or it's clicked again
+      backgrounds: [
+        { piece: 0, title: 'Basalt', image: img('bazelet', 'basalt-3', 'Hexagonal basalt columns') },
+        { piece: 1, title: 'Turtle', image: img('bazelet', 'turtle', 'A tortoise shell, close up') },
+        { piece: 3, title: 'Path', image: img('bazelet', 'path', 'A dirt path through the grass at sunset') },
+      ],
+    },
+    todo: ['What changed and why', 'Year, duration, tools', 'Text and photos for each topic', 'Detail and process photos'],
   },
 ]
 

@@ -16,6 +16,14 @@
   object-fit: cover;
 }
 
+/* Where a wide photo is cut, on screens shaped differently from it (opening.focus: the
+   part to keep, e.g. its left side, where a title starts) */
+@media (orientation: landscape) {
+  .proj__opening img {
+    object-position: var(--focus, 50% 50%);
+  }
+}
+
 /* Or the title written out (opening.name, for a photo or clip without one): large, in
    white, in the bottom left just above the details, about as big as the titles painted
    on the other projects' photos; it and the details sit over a soft dark shade
@@ -128,6 +136,59 @@
     height: 58%;
     background: linear-gradient(rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.5) 35%, rgba(0, 0, 0, 0.18) 70%, rgba(0, 0, 0, 0));
     pointer-events: none;
+  }
+}
+
+/* Or stacked down its right side, in white, over the photo's open sea or sky (specsSide:
+   for a photo whose title runs along its bottom) */
+@media (orientation: landscape) {
+  .proj__opening--specs-side .proj__opening-specs {
+    inset: 24svh var(--gutter) auto auto;
+    width: clamp(220px, 19vw, 300px);
+    padding: 0;
+    grid-template-columns: 1fr;
+    color: #fff;
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.28);
+  }
+
+  .proj__opening--specs-side .proj__opening-specs .label {
+    color: #fff;
+    opacity: 0.8;
+  }
+
+  .proj__opening--specs-side .proj__opening-specs div {
+    border-top-color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+/* On tall screens, the photo's top blurred (blurTop), fading down into it sharp, with
+   the details sitting on the blur, under the top bar, clear of a title low on the photo;
+   the photo shown whole, so a title across it isn't cut at its ends */
+.proj__blur {
+  display: none;
+}
+
+@media (orientation: portrait) {
+  .proj__blur {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    inset: 0 0 auto;
+    height: 38%;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    mask-image: linear-gradient(#000 35%, transparent);
+    pointer-events: none;
+  }
+
+  .proj__opening:has(.proj__blur) img {
+    height: auto;
+  }
+
+  .proj__opening:has(.proj__blur) .proj__opening-specs {
+    inset: 0 0 auto;
+    padding-top: calc(var(--header-h) + 12px);
+    padding-bottom: 0;
   }
 }
 

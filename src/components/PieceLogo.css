@@ -1,0 +1,369 @@
+/* The logo full screen, made of pieces (see PieceLogo.jsx), the picked piece's name or
+   a prompt under it */
+.pieces {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 4svh, 40px);
+  height: 100svh;
+  min-height: 560px;
+  margin-top: clamp(64px, 8vw, 128px);
+  padding: clamp(64px, 10svh, 112px) 0;
+}
+
+/* The section's background, from a background piece: its photo filling the section
+   behind the logo, cross-fading from one to the next */
+.pieces__backdrop {
+  position: absolute;
+  inset: 0;
+  background: center / cover no-repeat;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+
+.pieces__backdrop.is-on {
+  opacity: 1;
+}
+
+.pieces__logo {
+  position: relative;
+  display: block;
+  flex: 0 1 auto;
+  width: min(78vw, 1100px);
+  min-height: 0;
+  max-height: 100%;
+  overflow: visible;
+}
+
+/* Every piece an outline. The one under the cursor pops up like a 3D button: its top
+   (outline, page-colored inside, or its photo) lifts by its own height (--lift), its
+   sides filled in solid under it; the others fade back */
+.pieces__piece {
+  --up: 0px;
+  transition:
+    transform 0.5s var(--ease),
+    opacity 0.4s ease;
+}
+
+.pieces__piece.is-active,
+.pieces__piece.is-chosen {
+  --up: var(--lift);
+}
+
+.pieces__top,
+.pieces__side {
+  transition: transform 0.45s cubic-bezier(0.34, 1.5, 0.64, 1);
+}
+
+/* (a faint shadow under each top, so even at rest the pieces sit a little raised) */
+.pieces__top {
+  transform: translateY(var(--up));
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.12));
+}
+
+.pieces__side {
+  fill: var(--ink);
+  transform: translateY(calc(var(--up) * var(--k)));
+}
+
+.pieces__top path {
+  fill: var(--shade, var(--bg));
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  transition:
+    fill 0.4s ease,
+    stroke 0.4s ease;
+}
+
+/* (white under a piece's photo, for cut-outs whose background is see-through) */
+.pieces__piece.is-active .pieces__top path,
+.pieces__piece.is-chosen .pieces__top path {
+  fill: #fff;
+}
+
+.pieces__piece image {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* The drawn pieces take no pointer; the invisible shapes over them do (PieceLogo.jsx),
+   each its outline and, while popped up, up its side to its top */
+.pieces__piece {
+  pointer-events: none;
+}
+
+.pieces__hit {
+  --up: 0px;
+  outline: none;
+  transition: transform 0.5s var(--ease);
+}
+
+.pieces__hit.is-up {
+  --up: var(--lift);
+}
+
+.pieces__hit path {
+  fill: transparent;
+  transform: translateY(calc(var(--up) * var(--k)));
+}
+
+.pieces__hit.is-live {
+  cursor: pointer;
+}
+
+/* On a background photo, the logo lets it show through, its outlines white */
+.pieces.has-backdrop .pieces__piece:not(.is-active, .is-chosen) {
+  opacity: 0.45;
+}
+
+.pieces.has-backdrop .pieces__top path {
+  stroke: #fff;
+}
+
+.pieces.is-showing .pieces__piece:not(.is-active, .is-chosen) {
+  opacity: 0.25;
+}
+
+.pieces__piece.is-active image,
+.pieces__piece.is-chosen image {
+  opacity: 1;
+}
+
+/* A topic's name, in white along the front of its solid side: halfway up the side as
+   it rises (with the top's spring), there only while it's popped up */
+.pieces__name {
+  opacity: 0;
+  transform: translateY(calc(var(--up) * 0.5));
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.5, 0.64, 1),
+    opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.pieces__piece.is-active .pieces__name {
+  opacity: 1;
+  transition-delay: 0s, 0.12s;
+}
+
+.pieces__name text {
+  fill: #fff;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-stretch: 125%;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 700px) {
+  .pieces__logo {
+    width: 92vw;
+  }
+}
+
+/* A piece flown out to its own view (Tile) leaves its place empty */
+.pieces__piece.is-out {
+  opacity: 0;
+  transition: none;
+}
+
+/* ---------- An opened piece: over the page, its outline turned into a window, a rounded
+   hexagon in the middle of the screen with a little 3D button height (drawn, and morphed,
+   by PieceLogo.jsx), its name and words inside it ---------- */
+/* (while it's open, the cursor is a small black hexagon, over all of it) */
+.window {
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cpath d='M13 1.5 23 7.25v11.5L13 24.5 3 18.75V7.25Z' fill='%23111' stroke='%23fff' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E")
+      13 13,
+    default;
+}
+
+.window * {
+  cursor: inherit;
+}
+
+.window__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity calc(var(--morph) * 0.8) ease;
+}
+
+.window__shape {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.window__helper {
+  fill: none;
+  stroke: none;
+}
+
+.window__side {
+  fill: var(--ink);
+}
+
+.window__top {
+  fill: var(--bg);
+  stroke: var(--ink);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+}
+
+/* A topic's photo filling the screen behind the window (with a mouse), fading in once
+   it has turned into the window, and out as it turns back */
+.window__behind {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: center / cover no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.window.is-open .window__behind {
+  opacity: 1;
+  transition-delay: calc(var(--morph) * 0.5);
+}
+
+/* The words, in the hexagon's middle: the X on top, then the name and the words */
+.window__words {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: auto;
+  scrollbar-width: none;
+  translate: -50% -50%;
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.window__words::-webkit-scrollbar {
+  display: none;
+}
+
+.window__close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  margin-bottom: clamp(16px, 3svh, 32px);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 28px;
+  line-height: 1;
+  transition: transform 0.25s ease;
+}
+
+.window__close:hover {
+  transform: rotate(90deg);
+}
+
+.window__title {
+  font-size: clamp(36px, 5vw, 80px);
+}
+
+.window__text {
+  max-width: 40ch;
+  margin: 18px 0 0;
+  font-size: 17px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.window__words.is-tall .window__title {
+  font-size: clamp(32px, 11vw, 48px);
+}
+
+.window__words.is-tall .window__text {
+  font-size: 15px;
+}
+
+/* With a mouse, the topic's photo trailing the cursor over the window (moved along by
+   PieceLogo.jsx), only once the window has settled */
+.window__photo {
+  position: fixed;
+  z-index: 4;
+  top: 0;
+  left: 0;
+  display: none;
+  width: clamp(200px, 20vw, 320px);
+  height: auto;
+  border-radius: 14px;
+  background: #fff;
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.85;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  transition:
+    opacity 0.3s ease,
+    scale 0.3s ease;
+}
+
+.window__photo.is-on {
+  display: block;
+}
+
+.window.is-open .window__photo {
+  opacity: 1;
+  scale: 1;
+  transition-delay: calc(var(--morph) * 0.75);
+}
+
+/* On touch screens, the photo fills the screen behind the window instead, the window
+   see-through enough to let it show (and without its sides, which would show through
+   as solid black) */
+.window.is-touch .window__photo {
+  z-index: 1;
+  display: block;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  object-fit: cover;
+  box-shadow: none;
+}
+
+.window.is-touch .window__top {
+  fill: color-mix(in srgb, var(--bg) 80%, transparent);
+}
+
+.window.is-touch .window__side {
+  display: none;
+}
+
+.window.is-open .window__backdrop {
+  opacity: 1;
+}
+
+.window.is-open .window__words {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--morph) * 0.75);
+}

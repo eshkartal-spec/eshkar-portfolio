@@ -5,6 +5,8 @@ import NotFound from './NotFound'
 import NextProject from '../components/NextProject'
 import PhotoLine from '../components/PhotoLine'
 import CurveGallery from '../components/CurveGallery'
+import PieceLogo from '../components/PieceLogo'
+import HexMosaic from '../components/HexMosaic'
 import ScrubVideo from '../components/ScrubVideo'
 import SwapPhoto from '../components/SwapPhoto'
 import DetailRow from '../components/DetailRow'
@@ -94,8 +96,8 @@ export default function ProjectPage() {
         // A full-screen photo with the title already on it (also here, hidden, for screen
         // readers and search engines), and the details along its bottom
         <header
-          className={`proj__opening${p.opening.tall && !p.opening.whole ? '' : ' proj__opening--whole'}${p.opening.specsTop ? ' proj__opening--specs-top' : ''}${p.opening.grit ? ' proj__opening--grit' : ''}${p.opening.light ? ' proj__opening--light' : ''}`}
-          style={p.opening.tallRatio && { '--tall-ratio': p.opening.tallRatio }}
+          className={`proj__opening${p.opening.tall && !p.opening.whole ? '' : ' proj__opening--whole'}${p.opening.specsTop ? ' proj__opening--specs-top' : ''}${p.opening.specsSide ? ' proj__opening--specs-side' : ''}${p.opening.grit ? ' proj__opening--grit' : ''}${p.opening.light ? ' proj__opening--light' : ''}`}
+          style={{ '--tall-ratio': p.opening.tallRatio, '--focus': p.opening.focus }}
         >
           {p.opening.video ? (
             <BounceVideo video={p.opening.video} />
@@ -116,6 +118,8 @@ export default function ProjectPage() {
               <img src={p.opening.wide.src} alt={p.opening.wide.alt} />
             </picture>
           )}
+          {/* With a mouse, the photo breaks into raised hexagon tiles around the cursor */}
+          {p.opening.hexes && <HexMosaic image={p.opening.wide} focus={p.opening.focus} />}
           {/* The title painted on the photo, cut out, its colors slowly changing */}
           {p.opening.paint &&
             Array.from({ length: p.opening.paint.letters }, (_, i) => (
@@ -130,6 +134,8 @@ export default function ProjectPage() {
                 }}
               />
             ))}
+          {/* On tall screens, the photo's top blurred, fading down into it */}
+          {p.opening.blurTop && <div className="proj__blur" aria-hidden="true" />}
           {/* A fine grain over the photo, like raw concrete */}
           {p.opening.grit && <div className="proj__grit" aria-hidden="true" />}
           {/* Or the title written out over it */}
@@ -203,6 +209,8 @@ export default function ProjectPage() {
         )
       )}
 
+      {/* The project's logo full screen, its pieces opening onto its topics */}
+      {p.logo && <PieceLogo logo={p.logo} title={title} />}
       {p.still && <PhotoLine photo={p.still} />}
       {p.curve && <CurveGallery photos={p.curve} />}
       {p.photos && <PhotoSlide photos={p.photos} />}
