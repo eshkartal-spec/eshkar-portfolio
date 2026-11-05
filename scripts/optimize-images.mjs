@@ -80,6 +80,13 @@ const TURNS = {
   'bazelet/bazeletBANNERmobile.png': 90,
 }
 
+// Web names of their own, for originals that would otherwise share one (the same name,
+// a different file type)
+const NAMES = {
+  'bazelet/product.jpg': 'product-stone',
+  'bazelet/product.png': 'product-log',
+}
+
 const io = new NodeIO().registerExtensions([EXTMeshoptCompression, KHRMeshQuantization]).registerDependencies({
   'meshopt.encoder': MeshoptEncoder,
 })
@@ -109,7 +116,7 @@ for (const folder of fs.readdirSync(SRC)) {
   )
   for (const file of files) {
     const src = path.join(srcDir, file)
-    const name = path.join(outDir, clean(path.parse(file).name))
+    const name = path.join(outDir, NAMES[`${folder}/${file}`] ?? clean(path.parse(file).name))
     const upToDate = (out) => fs.existsSync(out) && fs.statSync(out).mtimeMs >= fs.statSync(src).mtimeMs
 
     if (/\.(gltf|glb)$/i.test(file)) {

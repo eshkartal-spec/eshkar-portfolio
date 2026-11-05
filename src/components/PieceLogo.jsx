@@ -39,21 +39,29 @@ const measure = (d) => {
     else runs.push({ from: a, to: b, first: slope(a, b) })
   })
   let front = null
-  for (const { from, to } of runs) {
+  let next = null // the next long edge after the front, going round (the face to its right)
+  for (const [n, { from, to }] of runs.entries()) {
     const len = Math.hypot(to[0] - from[0], to[1] - from[1])
     const at = [(from[0] + to[0]) / 2, (from[1] + to[1]) / 2]
     let angle = slope(from, to)
     if (angle > 90) angle -= 180
     if (angle < -90) angle += 180
     if (at[1] <= middle[1] || angle <= 2 || angle > 45) continue
-    if (!front || len > front.len) front = { at, angle, len }
+    if (!front || len > front.len) {
+      front = { at, angle, len }
+      const after = runs.slice(n + 1).concat(runs.slice(0, n)).find((r) => Math.hypot(r.to[0] - r.from[0], r.to[1] - r.from[1]) > 40)
+      next = after && { angle: slope(after.from, after.to) }
+    }
   }
+  if (front) front.next = next
   return { box, mid: middle, front }
 }
 
 // A piece as a 3D button: its sides, solid (outlines stacked from its base up to its top),
-// and its top (outline, page-colored inside, or a photo cut to its shape)
-function Button({ d, box, photo, clip }) {
+// and its top (outline, page-colored inside, or a photo cut to its shape; turn: the photo
+// turned by these degrees to lie square on the piece, shown whole, not cropped)
+function Button({ d, box, photo, clip, turn = 0 }) {
+  const [cx, cy] = [box.x + box.w / 2, box.y + box.h / 2]
   return (
     <>
       {Array.from({ length: LAYERS }, (_, k) => (
@@ -62,15 +70,17 @@ function Button({ d, box, photo, clip }) {
       <g className="pieces__top">
         <path d={d} />
         {photo && (
-          <image
-            href={photo.src}
-            x={box.x}
-            y={box.y}
-            width={box.w}
-            height={box.h}
-            preserveAspectRatio="xMidYMid slice"
-            clipPath={`url(#${clip})`}
-          />
+          <g clipPath={`url(#${clip})`}>
+            <image
+              href={photo.src}
+              x={box.x}
+              y={box.y}
+              width={box.w}
+              height={box.h}
+              preserveAspectRatio={turn ? 'xMidYMid meet' : 'xMidYMid slice'}
+              transform={turn ? `rotate(${turn} ${cx} ${cy})` : undefined}
+            />
+          </g>
         )}
       </g>
     </>
@@ -198,7 +208,13 @@ export default function PieceLogo({ logo, title }) {
               style={{ transform: shiftOf(i), '--lift': `${-LIFTS[i % LIFTS.length]}px` }}
               aria-hidden="true"
             >
-              <Button d={d} box={box} photo={(topic ?? backdropOf(i))?.image} clip={`${uid}-${i}`} />
+              <Button
+                d={d}
+                box={box}
+                photo={(topic ?? backdropOf(i))?.image}
+                clip={`${uid}-${i}`}
+                turn={topic?.square && front?.next ? front.next.angle : 0}
+              />
               {/* its name along the front of its side, halfway up it as it rises */}
               {topic && front && (
                 <g className="pieces__name">
@@ -362,6 +378,8 @@ const toD = (pts, dy = 0) => 'M ' + pts.map(([x, y]) => `${x.toFixed(1)} ${(y + 
 function Window({ topic, pieceOf, lift, onClosed }) {
   const rootRef = useRef(null)
   const sidesRef = useRef(null)
+  const holeRef = useRef(null)
+  const maskId = useId()
   const topRef = useRef(null)
   const helperRef = useRef(null)
   const closeRef = useRef(null)
@@ -385,7 +403,9 @@ function Window({ topic, pieceOf, lift, onClosed }) {
   const draw = (from, to, t, depth) => {
     const pts = from.map((p, k) => [lerp(p[0], to[k][0], t), lerp(p[1], to[k][1], t)])
     // the top raised by the depth, the sides stacked under it down to the base
-    topRef.current.setAttribute('d', toD(pts, -depth))
+    const top = toD(pts, -depth)
+    topRef.current.setAttribute('d', top)
+    holeRef.current.setAttribute('d', top)
     ;[...sidesRef.current.children].forEach((el, k) => el.setAttribute('d', toD(pts, -depth * (k / WINDOW_SIDES))))
   }
   const run = (from, to, depthFrom, depthTo, done) => {
@@ -496,7 +516,14 @@ function Window({ topic, pieceOf, lift, onClosed }) {
       )}
       <svg className="window__shape" aria-hidden="true">
         <path ref={helperRef} className="window__helper" />
-        <g ref={sidesRef}>
+        {/* the sides show only around the face, not through it (it's a little see-through) */}
+        <defs>
+          <mask id={maskId} maskUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+            <rect x="-50%" y="-50%" width="200%" height="200%" fill="#fff" />
+            <path ref={holeRef} fill="#000" />
+          </mask>
+        </defs>
+        <g ref={sidesRef} mask={`url(#${maskId})`}>
           {Array.from({ length: WINDOW_SIDES }, (_, k) => (
             <path key={k} className="window__side" />
           ))}

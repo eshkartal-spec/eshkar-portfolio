@@ -360,8 +360,9 @@ export const projects = [
       specsSide: true,
       focus: '0% 100%',
       blurTop: true,
-      // with a mouse, a soft mosaic of raised hexagon tiles follows the cursor over it
-      hexes: true,
+      // with a mouse, sandal footprints are pressed into it along the cursor's way (steps);
+      // or, instead, raised stone hexagon tiles follow the cursor (hexes: true)
+      steps: true,
     },
     // After the overview, full screen: the new logo, its seven pieces (PieceLogo.jsx; the
     // outline from originals/bazelet/logo.svg). The four biggest each stand for a topic
@@ -382,8 +383,28 @@ export const projects = [
           behind: img('bazelet', 'branding2', 'Bazelet cards on a stone block'),
         },
         { piece: 5, title: 'Packaging', text: placeholder, image: img('bazelet', 'collage', 'Bazelet brand collage') },
-        { piece: 6, title: 'Product', text: placeholder, image: img('bazelet', 'sandal', 'Bazelet sandal') },
-        { piece: 2, title: 'Logo', text: placeholder, image: img('bazelet', 'box', 'Bazelet packaging with the logo') },
+        {
+          piece: 6,
+          title: 'Product',
+          text: placeholder,
+          image: img('bazelet', 'terracotta-woven-sandals-on-stone-pedestal', 'A pair of terracotta woven Bazelet sandals on a stone pedestal'),
+          cursor: img('bazelet', 'product-stone', 'A pair of Bazelet sandals on a stone among leaves'),
+          behind: img('bazelet', 'product-log', 'A pair of Bazelet sandals on a log by the water'),
+        },
+        {
+          piece: 2,
+          title: 'Logo',
+          text: placeholder,
+          // (logo2-mark: logo2.jpg widened with its own paper to fit the wide piece, its word
+          // painted out, the mark only)
+          image: img('bazelet', 'logo2-mark', 'The Bazelet mark cut into paper'),
+          cursor: img('bazelet', 'logo2', 'The Bazelet logo cut into paper'),
+          // (square: its photo turned to lie square on the piece, its bottom along the short
+          // face beside the name, as if printed on it)
+          square: true,
+
+          behind: img('bazelet', 'bazeletmarble-clean', 'The Bazelet logo cut into a marble sign'),
+        },
       ],
       // The three other pieces each set the section's background to a scene from nature,
       // until another is chosen or it's clicked again

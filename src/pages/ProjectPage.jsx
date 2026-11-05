@@ -7,6 +7,7 @@ import PhotoLine from '../components/PhotoLine'
 import CurveGallery from '../components/CurveGallery'
 import PieceLogo from '../components/PieceLogo'
 import HexMosaic from '../components/HexMosaic'
+import Footsteps from '../components/Footsteps'
 import ScrubVideo from '../components/ScrubVideo'
 import SwapPhoto from '../components/SwapPhoto'
 import DetailRow from '../components/DetailRow'
@@ -120,6 +121,8 @@ export default function ProjectPage() {
           )}
           {/* With a mouse, the photo breaks into raised hexagon tiles around the cursor */}
           {p.opening.hexes && <HexMosaic image={p.opening.wide} focus={p.opening.focus} />}
+          {/* ...or footprints are pressed into it along the cursor's way */}
+          {p.opening.steps && <Footsteps />}
           {/* The title painted on the photo, cut out, its colors slowly changing */}
           {p.opening.paint &&
             Array.from({ length: p.opening.paint.letters }, (_, i) => (

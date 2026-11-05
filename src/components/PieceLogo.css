@@ -217,8 +217,9 @@
   fill: var(--ink);
 }
 
+/* (its face a little see-through, so what's behind it shows faintly) */
 .window__top {
-  fill: var(--bg);
+  fill: color-mix(in srgb, var(--bg) 90%, transparent);
   stroke: var(--ink);
   stroke-width: 2px;
   stroke-linejoin: round;
@@ -353,11 +354,7 @@
 }
 
 .window.is-touch .window__top {
-  fill: color-mix(in srgb, var(--bg) 80%, transparent);
-}
-
-.window.is-touch .window__side {
-  display: none;
+  fill: color-mix(in srgb, var(--bg) 84%, transparent);
 }
 
 .window.is-open .window__backdrop {
