@@ -365,6 +365,7 @@ function Window({ topic, pieceOf, lift, onClosed }) {
   const topRef = useRef(null)
   const helperRef = useRef(null)
   const closeRef = useRef(null)
+  const titleRef = useRef(null)
   const photoRef = useRef(null)
   const [shape, setShape] = useState(windowShape)
   const [mouse] = useState(() => window.matchMedia('(hover: hover) and (pointer: fine)').matches)
@@ -476,6 +477,17 @@ function Window({ topic, pieceOf, lift, onClosed }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shape])
 
+  // The name on one line, as big as set but never wider than the words' room: shrunk to
+  // fit if it's a long one (and again when the window changes size)
+  useLayoutEffect(() => {
+    const el = titleRef.current
+    el.style.fontSize = ''
+    const room = el.parentElement.clientWidth
+    const fits = () => el.scrollWidth <= room
+    if (fits()) return
+    el.style.fontSize = `${parseFloat(getComputedStyle(el).fontSize) * (room / el.scrollWidth) * 0.97}px`
+  }, [shape, topic.title])
+
   return createPortal(
     <div ref={rootRef} className={`window${mouse ? '' : ' is-touch'}`} role="dialog" aria-modal="true" aria-label={topic.title} style={{ '--morph': `${MORPH}ms` }}>
       <div className="window__backdrop" onClick={close} />
@@ -503,7 +515,7 @@ function Window({ topic, pieceOf, lift, onClosed }) {
         <button ref={closeRef} type="button" className="window__close" onClick={close} aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
-        <h2 className="display window__title">{topic.title}</h2>
+        <h2 ref={titleRef} className="display window__title">{topic.title}</h2>
         {topic.text && <p className="window__text">{topic.text}</p>}
       </div>
       <img
