@@ -73,6 +73,8 @@
 
 /* ---------- About ---------- */
 .about {
+  /* (the portrait flies in from beyond the screen's edge: no sideways scroll for it) */
+  overflow-x: clip;
   margin-top: clamp(80px, 10vw, 160px);
   scroll-margin-top: var(--header-h);
 }
@@ -81,17 +83,18 @@
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 32px 24px;
-  margin-top: 24px;
 }
 
+/* The title on one line across the section; the paragraphs under it */
 .about__title {
-  grid-column: 1 / span 6;
-  font-size: clamp(52px, 7.6vw, 124px);
+  grid-column: 1 / -1;
+  font-size: clamp(40px, 7vw, 124px);
+  white-space: nowrap;
   color: var(--ink);
 }
 
 .about__text {
-  grid-column: 8 / span 5;
+  grid-column: 1 / span 7;
 }
 
 /* Both paragraphs alike */
@@ -200,7 +203,9 @@
     font-size: 30.4vw;
     line-height: 0.82;
   }
-  .about__title,
+  .about__title {
+    font-size: 9.6vw;
+  }
   .about__text {
     grid-column: 1 / -1;
   }
