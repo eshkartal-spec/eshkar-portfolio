@@ -64,6 +64,37 @@ html[data-intro] .spine {
   transition: background-color 0.7s var(--cine);
 }
 
+/* Frosted glass over a stowed spine's photo (under its name), clearing as it opens:
+   the photo blurred behind a light milky haze, a soft sheen across the pane, fine
+   grain over it, and a bright edge along each side where one pane meets the next */
+.spine__frost {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 38%, rgba(255, 255, 255, 0.04) 62%, rgba(255, 255, 255, 0.16)),
+    rgba(235, 238, 240, 0.12);
+  box-shadow:
+    inset 1px 0 0 rgba(255, 255, 255, 0.35),
+    inset -1px 0 0 rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(14px) saturate(1.1) brightness(1.04);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1) brightness(1.04);
+  transition: opacity 0.8s var(--cine);
+}
+
+.spine__frost::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+
+.spine.is-open .spine__frost {
+  opacity: 0;
+}
+
 .spine::before {
   content: '';
   position: absolute;
@@ -81,20 +112,23 @@ html[data-intro] .spine {
    glides in one motion. */
 .spine__name {
   position: absolute;
-  z-index: 2;
+  z-index: 3; /* over the card and its glow */
   top: 0;
   left: 50%;
   font-size: var(--name);
   line-height: 0.86;
   white-space: nowrap;
   color: #fff; /* white down the spine, pink once open */
+  font-weight: 650; /* lighter down the spine, bold once open */
   transform-origin: 0 0;
   transform: translate(calc(var(--name) * 0.86 * var(--spine-scale) / 2), var(--pad)) rotate(90deg)
     scale(var(--spine-scale));
   transition:
     left var(--glide) var(--cine),
     transform var(--glide) var(--cine),
-    color var(--glide) var(--cine);
+    color var(--glide) var(--cine),
+    font-weight var(--glide) var(--cine),
+    text-shadow var(--glide) var(--cine);
   pointer-events: none;
 }
 
@@ -107,8 +141,32 @@ html[data-intro] .spine {
   padding: var(--pad);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   pointer-events: none;
+}
+
+/* A soft grey glow behind the centred words, darkest in the middle, so they read over
+   light photos too; there only while open */
+.spine__card::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(ellipse 66% 34% at 50% 50%, rgba(24, 24, 24, 0.72), rgba(24, 24, 24, 0.4) 55%, transparent);
+  opacity: 0;
+  transition: opacity 0.6s var(--cine);
+}
+
+.spine.is-open .spine__card::before {
+  opacity: 1;
+  transition-delay: 0.2s;
+}
+
+/* the field along the top; the name, words and link centred in the card */
+.spine__field {
+  position: absolute;
+  top: var(--pad);
+  left: var(--pad);
 }
 
 .spine__field,
@@ -119,6 +177,8 @@ html[data-intro] .spine {
 .spine__text {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 /* On desktop this only marks where the travelling name lands */
@@ -135,8 +195,15 @@ html[data-intro] .spine {
   font-size: clamp(12px, 1vw, 14px);
 }
 
+/* (the small words get a soft dark halo too, to read over light photos) */
+.spine__summary,
 .spine__go {
-  align-self: flex-start;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.spine__go {
+  align-self: center;
+  font-weight: 600;
   margin-top: 22px;
   padding-bottom: 3px;
   border-bottom: 1px solid currentColor;
@@ -170,9 +237,12 @@ html[data-intro] .spine {
 }
 
 .spine.is-open .spine__name {
-  left: var(--pad);
+  left: calc(var(--open-w) / 2);
   color: var(--pink);
-  transform: translate(0, var(--land-y, 70vh)) rotate(0deg) scale(1);
+  font-weight: 800;
+  /* a soft dark halo, so the pink holds up over light and pink photos */
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, var(--land-y, 70vh)) rotate(0deg) scale(1);
 }
 
 .spine.is-open :is(.spine__field, .spine__summary, .spine__go) {

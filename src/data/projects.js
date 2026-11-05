@@ -50,7 +50,7 @@ export const projects = [
       // A grain over the photo, for an urban, raw-concrete feel
       grit: true,
     },
-    cover: img('step-up', 'strap', 'STEP UP bicycle'),
+    cover: img('step-up', 'homepage', 'STEP UP in a dark studio'),
     // Full screen after the concept: carrying the bike up a flight of stairs, the line
     // along its bottom (PhotoLine.jsx; carry2-clean is carry2 with the corner mark painted
     // over)
@@ -199,7 +199,7 @@ export const projects = [
       whole: true,
       tallRatio: '16 / 9',
     },
-    cover: img('shrafraf', 'hero', 'Shrafraf'),
+    cover: { ...img('shrafraf', 'homepage', 'Shrafraf in a sunlit living room'), position: '62% 50%' },
     // The assembly, sped up (scripts/optimize-images.mjs), playing on a loop while it's on
     // screen, with the idea over it: its lead as the title, the rest under it, smaller
     scrub: { src: '/images/shrafraf/shrafraf.mp4', poster: '/images/shrafraf/shrafraf.webp', loop: true },
@@ -320,7 +320,7 @@ export const projects = [
       texture: img('playstation', 'xboxbannercolor', ''),
       pixels: 24,
     },
-    cover: img('playstation', 'render-1', 'Xbox controller render'),
+    cover: { ...img('playstation', 'homepage', 'The Xbox controller on a pink desk'), position: '58% 50%' },
     // The sped-up modeling video, playing on a loop while it's on screen (cut to the
     // modeling area and sped up twice over in scripts/optimize-images.mjs), with these
     // words over it
@@ -346,8 +346,8 @@ export const projects = [
     year: null,
     duration: null,
     tools: null,
-    cover: img('bazelet', 'outdoor', 'Bazelet sandals outdoors'),
-    hero: img('bazelet', 'outdoor', 'Bazelet sandals outdoors'),
+    cover: img('bazelet', 'product-log', 'A pair of Bazelet sandals on a log by the water'),
+    hero: null,
     // Full-screen banner, the title painted on the paving: wide for landscape screens, tall
     // for portrait (exported on its side, turned upright by the image script). The details
     // stand down its right side, over the sea (specsSide); on screens shaped differently

@@ -8,7 +8,8 @@ const OPEN_DELAY = 90 // rest on a spine this long before it opens, so sweeping 
 const CLOSE_DELAY = 180 // leaving the library closes the open spine after this long
 
 // The Home page's project library: one full-height column per project, like book spines,
-// with the name written down the spine over a sliver of the cover photo.
+// with the name written down the spine over a sliver of the cover photo, frosted while
+// it's stowed.
 // Opening a spine widens it into the project's card while the others narrow in place,
 // and its name turns, grows and glides down to its place in the card.
 // Desktop: hover opens. Phones: the spines are horizontal strips; a tap opens one,
@@ -79,6 +80,7 @@ export default function Library() {
             alt=""
             style={p.cover.position && { objectPosition: p.cover.position }}
           />
+          <span className="spine__frost" aria-hidden="true" />
           {/* The name that travels from the spine into the card */}
           <span className="display spine__name" aria-hidden="true">{p.title}</span>
           <span className="spine__card">
