@@ -350,14 +350,15 @@ export const projects = [
     hero: img('bazelet', 'outdoor', 'Bazelet sandals outdoors'),
     // Full-screen banner, the title painted on the paving: wide for landscape screens, tall
     // for portrait (exported on its side, turned upright by the image script). The details
-    // stand down its right side, over the sea (specsSide); on screens narrower than the
-    // photo, its left side is kept, where the title starts (focus). On tall screens it's
+    // stand down its right side, over the sea (specsSide); on screens shaped differently
+    // from the photo, its bottom left is kept, where the title is (focus): it's cut from
+    // the top and the right. On tall screens it's
     // shown whole, its sky blurred, fading down (blurTop), and the details sit on it
     opening: {
       wide: img('bazelet', 'bazeletbanner', 'Bazelet sandals on a sunny terrace over the sea, BAZELET FOOTWEAR on the paving'),
       tall: img('bazelet', 'bazeletbannermobile', 'Bazelet sandals on a sunny terrace over the sea, BAZELET FOOTWEAR on the paving'),
       specsSide: true,
-      focus: '0% 50%',
+      focus: '0% 100%',
       blurTop: true,
       // with a mouse, a soft mosaic of raised hexagon tiles follows the cursor over it
       hexes: true,

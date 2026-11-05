@@ -493,7 +493,12 @@ function Window({ topic, pieceOf, lift, onClosed }) {
       </svg>
       <div
         className={`window__words${shape.tall ? ' is-tall' : ''}`}
-        style={{ left: shape.cx, top: shape.cy - WINDOW_DEPTH, width: shape.inner.w, maxHeight: shape.inner.h }}
+        style={{
+          left: shape.cx - shape.inner.w / 2,
+          top: shape.cy - WINDOW_DEPTH - shape.inner.h / 2,
+          width: shape.inner.w,
+          height: shape.inner.h,
+        }}
       >
         <button ref={closeRef} type="button" className="window__close" onClick={close} aria-label="Close">
           <span aria-hidden="true">×</span>

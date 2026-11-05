@@ -241,7 +241,8 @@
   transition-delay: calc(var(--morph) * 0.5);
 }
 
-/* The words, in the hexagon's middle: the X on top, then the name and the words */
+/* The words, in the hexagon's middle (placed by PieceLogo.jsx): the X on top, then the
+   name and the words, centred in it */
 .window__words {
   position: absolute;
   z-index: 3;
@@ -252,7 +253,6 @@
   text-align: center;
   overflow: auto;
   scrollbar-width: none;
-  translate: -50% -50%;
   opacity: 0;
   transform: translateY(12px);
   transition:
