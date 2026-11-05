@@ -3,8 +3,8 @@ import { Link, useParams } from 'react-router-dom'
 import { getProject, projects } from '../data/projects'
 import NotFound from './NotFound'
 import NextProject from '../components/NextProject'
-import StairsClimb from '../components/StairsClimb'
-import BrickWall from '../components/BrickWall'
+import PhotoLine from '../components/PhotoLine'
+import CurveGallery from '../components/CurveGallery'
 import ScrubVideo from '../components/ScrubVideo'
 import SwapPhoto from '../components/SwapPhoto'
 import DetailRow from '../components/DetailRow'
@@ -203,8 +203,8 @@ export default function ProjectPage() {
         )
       )}
 
-      {p.climb && <StairsClimb climb={p.climb} />}
-      {p.wall && <BrickWall items={p.wall} />}
+      {p.still && <PhotoLine photo={p.still} />}
+      {p.curve && <CurveGallery photos={p.curve} />}
       {p.photos && <PhotoSlide photos={p.photos} />}
       {p.model && (
         <Suspense fallback={<div style={{ height: '100svh' }} />}>

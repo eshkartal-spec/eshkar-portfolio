@@ -1,0 +1,160 @@
+/* Photos on the inside of a turning drum (see CurveGallery.jsx) */
+.curve {
+  padding: clamp(48px, 10svh, 120px) 0;
+  overflow: hidden;
+}
+
+/* The window onto the drum: the photos' height plus room under them for the words, the
+   eye level at the photos' middles. Dragged sideways to turn it; up and down still
+   scrolls the page */
+.curve__view {
+  position: relative;
+  height: calc(var(--h) + 120px);
+  perspective-origin: 50% calc(var(--h) / 2);
+  transform-style: preserve-3d;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.curve__view.is-dragging {
+  cursor: grabbing;
+}
+
+/* With a mouse, the cursor over it is a small black circle saying "Drag", a little
+   smaller while dragging (moved along by CurveGallery.jsx) */
+@media (hover: hover) and (pointer: fine) {
+  .curve__view {
+    cursor: none;
+  }
+
+  .curve__view.is-dragging {
+    cursor: none;
+  }
+}
+
+.curve__pointer {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.curve__pointer span {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-stretch: 125%;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.2s ease, transform 0.25s ease;
+}
+
+.curve__pointer.is-on span {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.curve:has(.is-dragging) .curve__pointer.is-on span {
+  transform: scale(0.82);
+}
+
+/* Each photo hung from the window's middle (placed on the drum by CurveGallery.jsx) */
+.curve__card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: var(--h);
+  margin: 0;
+  transform-style: preserve-3d;
+}
+
+/* ...cut into upright strips from its middle out, each hinged to the one before it:
+   on the right side at its left edge, on the left side at its right edge */
+.curve__strip {
+  position: absolute;
+  top: 0;
+  transform-style: preserve-3d;
+}
+
+.curve__strip--right {
+  left: 100%;
+  transform-origin: 0 50%;
+}
+
+.curve__strip--left {
+  right: 100%;
+  transform-origin: 100% 50%;
+}
+
+.curve__strip--right.is-root {
+  left: 50%;
+}
+
+.curve__strip--left.is-root {
+  right: 50%;
+}
+
+/* A strip's slice of the photo (and of its words), a pixel wider so no hairline shows
+   between strips */
+.curve__clip {
+  position: relative;
+  width: calc(100% + 1px);
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+
+.curve__face {
+  position: absolute;
+  top: 0;
+}
+
+.curve__face img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* A feature's words under its photo */
+.curve__note {
+  margin: 0;
+  padding: 14px 0 0;
+}
+
+.curve__title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  font-stretch: 125%;
+  line-height: 1.2;
+}
+
+.curve__text {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+@media (max-width: 600px) {
+  .curve__title {
+    font-size: 14px;
+  }
+
+  .curve__text {
+    font-size: 13px;
+  }
+}

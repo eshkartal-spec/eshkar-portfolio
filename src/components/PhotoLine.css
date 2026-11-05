@@ -1,0 +1,5 @@
+/* The full-screen photo with its line (PhotoLine.jsx; the rest of its look is in
+   ScrubVideo.css): the same space above it as above the concept */
+.photo-line {
+  margin-top: clamp(64px, 8vw, 128px);
+}

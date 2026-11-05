@@ -153,17 +153,18 @@
   }
 }
 
-/* Each letter of the paint (--i: 0 to 5) steps through the site's pinks and a purple
-   on a steady beat, one color on from the letter before it, so the colors chase along
-   the word. They are laid over the paint in hard light, so the concrete under it (its
-   pits, grain and shading) still shows through every color */
+/* Each letter of the paint (--i: 0 to 5) steps from the painted pink down to the bike's
+   dark red and back up, on a steady beat, each color easing into the next (not a hard
+   blink), one color behind the letter before it, so the colors chase along the word from
+   left to right. They darken the paint itself (multiply: white leaves it its own pink,
+   the last step turns it the bike's red), so the concrete under it (its pits, grain and
+   shading) still shows through every color */
 .proj__paint {
   --beat: 0.42s;
-  background: #ff6fa8;
+  background: #fff;
   mask: var(--paint-wide) center / cover no-repeat;
-  mix-blend-mode: hard-light;
-  opacity: 0.4;
-  animation: paint-step calc(var(--beat) * 5) step-end calc(var(--i) * var(--beat) * -1) infinite;
+  mix-blend-mode: multiply;
+  animation: paint-step calc(var(--beat) * 8) ease-in-out calc((6 - var(--i)) * var(--beat) * -1) infinite;
 }
 
 @media (orientation: portrait) {
@@ -174,19 +175,28 @@
 
 @keyframes paint-step {
   0% {
-    background: #ff6fa8;
+    background: #ffffff;
   }
-  20% {
-    background: #ff2f86;
+  12.5% {
+    background: #ded8d2;
   }
-  40% {
-    background: #ffc2dc;
+  25% {
+    background: #bdb1a4;
   }
-  60% {
-    background: #c04cff;
+  37.5% {
+    background: #9b8a77;
   }
-  80% {
-    background: #8a3cff;
+  50% {
+    background: #7a6349;
+  }
+  62.5% {
+    background: #9b8a77;
+  }
+  75% {
+    background: #bdb1a4;
+  }
+  87.5% {
+    background: #ded8d2;
   }
 }
 

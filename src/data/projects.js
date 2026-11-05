@@ -46,23 +46,19 @@ export const projects = [
       grit: true,
     },
     cover: img('step-up', 'strap', 'STEP UP bicycle'),
-    // A flight of stairs climbed by scrolling, in a window, with someone carrying the bike
-    // on it (StairsClimb.jsx): how many steps, the line above the window, the climber (seen
-    // from behind) and the same stairs as the banner without the paint, shown muted behind
-    climb: {
-      steps: 14,
+    // Full screen after the concept: carrying the bike up a flight of stairs, the line
+    // along its bottom (PhotoLine.jsx; carry2-clean is carry2 with the corner mark painted
+    // over)
+    still: {
+      ...img('step-up', 'carry2-clean', 'Carrying STEP UP up a flight of stone stairs by its handle'),
       line: 'In the city, you often carry a bike up stairs, not only ride it.',
-      climber: img('step-up-stairs', 'climber-back', 'Carrying the STEP UP bike up the stairs'),
-      backdrop: '/images/step-up-stairs/banner-blank.webp',
     },
-    // The studio photos, as a wall (BrickWall.jsx), each once (wide: a landscape photo);
-    // clicking one opens them all in a gallery that turns like a wheel (WheelGallery.jsx).
-    // The bike's features are highlighted, with their words (note). Left out as near
-    // repeats: v (of side), hrt-322 (of strap-close) and hrt-319 (of the other pedal
-    // shots); the hrt-306 to -310 and hrt-318 copies are the same photos as three-quarter,
-    // fork, logo-frame, handle, wheel and pedal-close
-    wall: [
-      img('step-up', 'three-quarter', 'STEP UP, three-quarter view'),
+    // The studio photos on a slowly turning drum (CurveGallery.jsx), each once (wide: a
+    // landscape photo), the bike's features first with their words under them. Left out
+    // as near repeats: v (of side), hrt-322 (of strap-close) and hrt-319 (of the other
+    // pedal shots); the hrt-306 to -310 and hrt-318 copies are the same photos as
+    // three-quarter, fork, logo-frame, handle, wheel and pedal-close
+    curve: [
       {
         ...img('step-up', 'handle-close', 'The carrying handle set into the frame'),
         wide: true,
@@ -71,10 +67,6 @@ export const projects = [
           text: 'Positioned close to the bicycle’s center of mass for more balanced and comfortable lifting.',
         },
       },
-      { ...img('step-up', 'hrt-311', 'The saddle'), wide: true },
-      img('step-up', 'fork', 'The fork and front wheel'),
-      { ...img('step-up', 'hrt-313', 'The grip and the STEP UP logo'), wide: true },
-      img('step-up', 'side', 'STEP UP, side view'),
       {
         ...img('step-up', 'strap-close', 'Pulling out the shoulder strap'),
         wide: true,
@@ -83,9 +75,6 @@ export const projects = [
           text: 'Extends and retracts as needed, allowing the bicycle to be carried over the opposite shoulder.',
         },
       },
-      img('step-up', 'hrt-317', 'The folding handlebar, from the front'),
-      img('step-up', 'logo-frame', 'STEP UP logo on the frame'),
-      { ...img('step-up', 'hrt-312', 'The handlebar folded along the frame'), wide: true },
       {
         ...img('step-up', 'pedal-close', 'The quick-release pedal mounted by the seat post'),
         note: {
@@ -93,11 +82,6 @@ export const projects = [
           text: 'Can be repositioned during carrying to prevent interference with the rider’s leg.',
         },
       },
-      img('step-up', 'wheel', 'Wheel detail'),
-      // (ratio: a shape of its own, width / height)
-      { ...img('step-up', 'background-png', 'Carrying STEP UP by its handle in the studio'), ratio: 5288 / 6512 },
-      img('step-up', 'hrt-333', 'The carrying handle, from below the frame'),
-      img('step-up', 'hrt-314', 'STEP UP from the side'),
       {
         ...img('step-up', 'bar-close', 'The folding handlebar'),
         wide: true,
@@ -106,6 +90,18 @@ export const projects = [
           text: 'Reduces the bicycle’s width and enables smooth movement through narrow staircases.',
         },
       },
+      img('step-up', 'three-quarter', 'STEP UP, three-quarter view'),
+      { ...img('step-up', 'hrt-311', 'The saddle'), wide: true },
+      img('step-up', 'fork', 'The fork and front wheel'),
+      { ...img('step-up', 'hrt-313', 'The grip and the STEP UP logo'), wide: true },
+      img('step-up', 'side', 'STEP UP, side view'),
+      img('step-up', 'hrt-317', 'The folding handlebar, from the front'),
+      img('step-up', 'logo-frame', 'STEP UP logo on the frame'),
+      { ...img('step-up', 'hrt-312', 'The handlebar folded along the frame'), wide: true },
+      img('step-up', 'wheel', 'Wheel detail'),
+      { ...img('step-up', 'background-png', 'Carrying STEP UP by its handle in the studio'), ratio: 5288 / 6512 },
+      img('step-up', 'hrt-333', 'The carrying handle, from below the frame'),
+      img('step-up', 'hrt-314', 'STEP UP from the side'),
       img('step-up', 'handle', 'The handle and the logo'),
       { ...img('step-up', 'hrt-323', 'Pulling the strap out of the frame'), wide: true },
       img('step-up', 'hrt-320', 'The pedal clipped beside the seat post'),
