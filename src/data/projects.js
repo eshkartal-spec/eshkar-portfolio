@@ -386,7 +386,9 @@ export const projects = [
           piece: 5,
           title: 'Packaging',
           text: placeholder,
-          image: img('bazelet', 'basalt-inspired-hebrew-packaging-mockup', 'The Bazelet shoebox on a stone pedestal'),
+          // (packaging-tile: the mockup set wider on its own empty wall and pedestal, so the
+          // whole box fits inside the piece)
+          image: img('bazelet', 'packaging-tile', 'The Bazelet shoebox on a stone pedestal'),
           cursor: img('bazelet', 'basalt-shoebox-in-neutral-elegance', 'Holding the Bazelet shoebox'),
           behind: img('bazelet', 'basalt-inspired-hebrew-packaging-mockup', 'The Bazelet shoebox on a stone pedestal'),
         },
