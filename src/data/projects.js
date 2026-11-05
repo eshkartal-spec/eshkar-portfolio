@@ -382,7 +382,14 @@ export const projects = [
           cursor: img('bazelet', 'branding-1', 'The Bazelet box, sleeve, card and a sandal'),
           behind: img('bazelet', 'branding2', 'Bazelet cards on a stone block'),
         },
-        { piece: 5, title: 'Packaging', text: placeholder, image: img('bazelet', 'collage', 'Bazelet brand collage') },
+        {
+          piece: 5,
+          title: 'Packaging',
+          text: placeholder,
+          image: img('bazelet', 'basalt-inspired-hebrew-packaging-mockup', 'The Bazelet shoebox on a stone pedestal'),
+          cursor: img('bazelet', 'basalt-shoebox-in-neutral-elegance', 'Holding the Bazelet shoebox'),
+          behind: img('bazelet', 'basalt-inspired-hebrew-packaging-mockup', 'The Bazelet shoebox on a stone pedestal'),
+        },
         {
           piece: 6,
           title: 'Product',
