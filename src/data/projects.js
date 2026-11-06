@@ -29,9 +29,9 @@ export const projects = [
     about:
       'In the city, a bicycle is often carried up stairs and through narrow corridors, not only ridden. STEP UP is a lightweight urban bicycle designed to be easier to carry and maneuver, without compromising its everyday functionality.',
     type: 'Industrial design student project',
-    year: 2025,
-    duration: '3 months',
-    tools: 'SolidWorks, BikeCAD, KeyShot, 3D printing, hand modeling, physical prototyping',
+    year: 2026,
+    context: 'Academic project',
+    skills: 'SolidWorks, BikeCAD, KeyShot, 3D printing, hand modeling, physical prototyping',
     // Full-screen banner: stairs with the title painted on their bottom step (the "clean"
     // copies have the line that was on the second step painted over), a wide photo for
     // landscape screens and a tall one for portrait (phones). The details run along its
@@ -121,7 +121,7 @@ export const projects = [
     // The page's background: the cool grey of the studio photos, with soft pleats
     backdrop: { color: '#e4e7e4', pleats: true },
     // Full-screen photo at the top of the page, with the title already on it and the
-    // details (type, year, duration, tools) along its bottom: a wide photo for landscape
+    // details (type, year, context, skills) along its bottom: a wide photo for landscape
     // screens and a tall one for portrait (phones)
     opening: {
       wide: img('my-chair', 'pipe-dream-banner', 'Pleated pink fabric with PIPE DREAM across it'),
@@ -146,9 +146,9 @@ export const projects = [
       'A chair exploring the meeting point between flexibility and rigidity, geometric order and organic flow.',
     type: 'Furniture design',
     // Placeholders until the real details come in
-    year: '20XX',
-    duration: 'X weeks',
-    tools: 'Tool, tool, tool',
+    year: 2026,
+    context: 'Academic project',
+    skills: 'Skill, skill, skill',
     cover: img('my-chair', 'seat', 'Pipe Dream'),
     hero: img('my-chair', 'seat', 'Pipe Dream'),
     // The materials: three photos in a row, each with its words in a tooltip that
@@ -178,11 +178,11 @@ export const projects = [
     summary: 'Who Holds Whom? An Exercise in Balance.',
     intro:
       'Who Holds Whom? An exercise in balance between two birch plywood pieces held together by textile straps.',
-    type: 'Object design',
+    type: 'Furniture design',
     // Placeholders until the real details come in
-    year: '20XX',
-    duration: 'X weeks',
-    tools: 'Tool, tool, tool',
+    year: 2026,
+    context: 'Academic project',
+    skills: 'Skill, skill, skill',
     // Full-screen banner: the piece nudged and rocking until it settles, played once on
     // arrival and again at each click (BounceVideo.jsx; the still is its last frame, at
     // rest), with the title written large in white in the bottom left (name), it and the
@@ -214,7 +214,7 @@ export const projects = [
       { ...img('shrafraf', 'gemini-generated-image-fepmc5fepmc5fepm', 'Shrafraf from above: the straps across the frame'), ratio: 1194 / 896 },
       { ...img('shrafraf', 'gemini-generated-image-xginx4xginx4xgin', 'Shrafraf from the side, its two pieces crossing'), ratio: 1195 / 896 },
     ],
-    todo: ['Year, duration, tools'],
+    todo: ['Skills'],
   },
   {
     slug: 'odds-or-evens',
@@ -240,9 +240,9 @@ export const projects = [
     centered: true,
     type: 'Personal project',
     // Placeholders until the real details come in
-    year: '20XX',
-    duration: 'X weeks',
-    tools: 'Tool, tool, tool',
+    year: 2025,
+    context: 'Academic project',
+    skills: 'Skill, skill, skill',
     // A tall photo: the Home page's library shows it with the ring and the hands in view
     cover: { ...img('odds-or-evens', 'main', 'Fitting the halves of Odds or Evens together'), position: '50% 35%' },
     // A full-screen photo with the concept written over it, in its empty top-left
@@ -298,7 +298,7 @@ export const projects = [
         motion: 'repel',
       },
     ],
-    todo: ['What the objects are and how they relate', 'Year, duration, tools', 'Name and text for each pair'],
+    todo: ['What the objects are and how they relate', 'Skills', 'Name and text for each pair'],
   },
   {
     // Renamed from PlayStation (it's an Xbox controller); its photos are still in the playstation folders
@@ -308,9 +308,9 @@ export const projects = [
     summary: '3D design of an Xbox controller, modeled in SolidWorks and rendered in KeyShot.',
     intro: '3D design of an Xbox controller, modeled in SolidWorks and rendered in KeyShot.',
     type: '3D modeling · Rendering',
-    year: null,
-    duration: null,
-    tools: 'SolidWorks, KeyShot',
+    year: 2025,
+    context: 'Academic project',
+    skills: 'SolidWorks, KeyShot',
     // Full-screen banner, in black and white with the title on it; where the cursor passes,
     // the color version shows through in square pixels (TextureReveal.jsx; with a mouse
     // only, over the wide banner)
@@ -334,7 +334,7 @@ export const projects = [
       label: 'The Xbox controller in 3D',
       fallback: img('playstation', 'render-1', 'Xbox controller render'),
     },
-    todo: ['The goal of the exercise', 'Year, duration', 'The line over the video'],
+    todo: ['The goal of the exercise', 'The line over the video'],
   },
   {
     slug: 'bazelet',
@@ -343,9 +343,9 @@ export const projects = [
     summary: 'Rebranding of the Israeli footwear brand Bazelet.',
     intro: 'Rebranding of the Israeli footwear brand Bazelet.',
     type: 'Brand · Packaging',
-    year: null,
-    duration: null,
-    tools: null,
+    year: 2025,
+    context: 'Academic project',
+    skills: 'Skill, skill, skill',
     cover: img('bazelet', 'product-log', 'A pair of Bazelet sandals on a log by the water'),
     hero: null,
     // Full-screen banner, the title painted on the paving: wide for landscape screens, tall
@@ -423,7 +423,7 @@ export const projects = [
         { piece: 3, title: 'Path', image: img('bazelet', 'path', 'A dirt path through the grass at sunset') },
       ],
     },
-    todo: ['What changed and why', 'Year, duration, tools', 'Text and photos for each topic', 'Detail and process photos'],
+    todo: ['What changed and why', 'Skills', 'Text and photos for each topic', 'Detail and process photos'],
   },
 ]
 

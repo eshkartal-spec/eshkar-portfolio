@@ -80,7 +80,7 @@ export default function ProjectPage() {
   const index = projects.indexOf(p)
   const next = projects[(index + 1) % projects.length]
   const title = p.fullTitle ?? p.title
-  const specs = [['Type', p.type], ['Year', p.year], ['Duration', p.duration], ['Tools', p.tools]].filter(
+  const specs = [['Type', p.type], ['Year', p.year], ['Context', p.context], ['Skills', p.skills]].filter(
     ([, v]) => v,
   )
 
