@@ -11,8 +11,8 @@
   height: var(--header-h);
   /* A light veil: what's behind shows through, softly blurred */
   background: color-mix(in srgb, var(--bg) 30%, transparent);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   transition:
     background 0.35s var(--ease),
     color 0.35s var(--ease),
@@ -32,8 +32,8 @@
 /* Over the Home page photo */
 .header--over {
   background: transparent;
-  backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 

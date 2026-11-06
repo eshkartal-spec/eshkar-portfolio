@@ -77,8 +77,8 @@ html[data-intro] .spine {
   box-shadow:
     inset 1px 0 0 rgba(255, 255, 255, 0.35),
     inset -1px 0 0 rgba(0, 0, 0, 0.12);
-  backdrop-filter: blur(14px) saturate(1.1) brightness(1.04);
   -webkit-backdrop-filter: blur(14px) saturate(1.1) brightness(1.04);
+  backdrop-filter: blur(14px) saturate(1.1) brightness(1.04);
   transition: opacity 0.8s var(--cine);
 }
 

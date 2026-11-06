@@ -69,8 +69,8 @@
   border-radius: 999px;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   white-space: nowrap;
   transform: translateX(-50%);
   transition:

@@ -19,8 +19,8 @@
   position: absolute;
   inset: 0;
   background: rgba(17, 17, 17, 0.96);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   animation: wheel-in 0.55s var(--ease) both;
 }
 

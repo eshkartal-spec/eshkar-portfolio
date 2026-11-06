@@ -192,8 +192,8 @@
   position: absolute;
   inset: 0;
   background: color-mix(in srgb, var(--bg) 86%, transparent);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   opacity: 0;
   transition: opacity calc(var(--morph) * 0.8) ease;
 }
