@@ -62,3 +62,30 @@
 .contact__foot {
   margin-top: clamp(32px, 4vw, 56px);
 }
+
+/* The title's letters (see Contact.jsx): pink outlines that fill in, one after another
+   from the left, each rising from the bottom like ink, as the footer comes into view */
+.contact__word {
+  white-space: nowrap;
+}
+
+.contact__letter {
+  display: inline-block;
+  color: transparent;
+  -webkit-text-stroke: 0.012em var(--pink);
+  /* (the fill is the bottom half of a tall pink-over-clear band, slid up into the letter) */
+  background: linear-gradient(to top, var(--pink) 50%, transparent 50%) 0 0 / 100% 200% no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition:
+    background-position 0.5s var(--ease),
+    -webkit-text-stroke-color 0.5s var(--ease);
+}
+
+.contact__title.is-in .contact__letter {
+  background-position: 0 100%;
+  -webkit-text-stroke-color: transparent;
+  transition:
+    background-position 0.75s cubic-bezier(0.5, 0, 0.25, 1) calc(0.15s + var(--i) * 0.07s),
+    -webkit-text-stroke-color 0.4s ease calc(0.6s + var(--i) * 0.07s);
+}

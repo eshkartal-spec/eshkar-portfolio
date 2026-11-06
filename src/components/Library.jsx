@@ -84,7 +84,6 @@ export default function Library() {
           {/* The name that travels from the spine into the card */}
           <span className="display spine__name" aria-hidden="true">{p.title}</span>
           <span className="spine__card">
-            <span className="label spine__field">{p.field}</span>
             <span className="spine__text">
               {/* Marks where the name lands (and is the name itself on phones) */}
               <span className="display spine__title">{p.title}</span>

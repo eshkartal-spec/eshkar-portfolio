@@ -87,9 +87,9 @@
   position: relative;
 }
 
-/* Her portrait, in the empty space on the right, beside the title and words: a print with
-   a white border, flown in like a tossed sheet of paper (tumbling down from the top right,
-   tilting and fluttering), settling a little askew on a soft shadow */
+/* Her portrait, in the empty space on the right, beside the title and words: flown in like
+   a tossed sheet of paper (tumbling down from the top right, tilting and fluttering),
+   settling a little askew on a flat pink block, offset down and to the right */
 .intro__photo {
   /* (floating over the right of the section, so it doesn't stretch the rows) */
   position: absolute;
@@ -97,9 +97,7 @@
   right: clamp(24px, 6vw, 110px);
   width: clamp(200px, 19vw, 280px);
   margin: 0;
-  padding: 10px;
-  background: #fff;
-  box-shadow: 0 22px 50px rgba(17, 17, 17, 0.2), 0 3px 10px rgba(17, 17, 17, 0.1);
+  box-shadow: 16px 16px 0 var(--pink);
   visibility: hidden;
 }
 
