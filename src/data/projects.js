@@ -365,7 +365,7 @@ export const projects = [
     // outline from originals/bazelet/logo.svg). The four biggest each stand for a topic
     // (piece: its place in the logo's list): with the cursor over one, its photo shows
     // through it, and clicking it opens it big in the middle of the screen, with its words.
-    // (her words; the photos are placeholders for now)
+    // (her words and her final photos)
     logo: {
       shape: bazeletLogo,
       topics: [
@@ -383,9 +383,7 @@ export const projects = [
           piece: 5,
           title: 'Packaging',
           text: "Shaped by the rolling hills of the north, the packaging hints at the adventures the shoes will take you on.",
-          // (packaging-tile: the mockup set wider on its own empty wall and pedestal, so the
-          // whole box fits inside the piece)
-          image: img('bazelet', 'packaging-tile', 'The Bazelet shoebox on a stone pedestal'),
+          image: img('bazelet', 'basalt-inspired-hebrew-packaging-mockup', 'The Bazelet shoebox on a stone pedestal'),
           cursor: img('bazelet', 'basalt-shoebox-in-neutral-elegance', 'Holding the Bazelet shoebox'),
           behind: img('bazelet', 'basalt-inspired-hebrew-packaging-mockup', 'The Bazelet shoebox on a stone pedestal'),
         },
@@ -420,7 +418,7 @@ export const projects = [
         { piece: 3, title: 'Path', image: img('bazelet', 'path', 'A dirt path through the grass at sunset') },
       ],
     },
-    todo: ['What changed and why', 'Skills', 'Final photos for each topic', 'Detail and process photos'],
+    todo: ['What changed and why', 'Skills', 'Detail and process photos'],
   },
 ]
 
