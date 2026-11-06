@@ -1,0 +1,196 @@
+/* ---------- The Work page (Work.jsx) ---------- */
+.work {
+  padding-bottom: clamp(80px, 10vw, 160px);
+}
+
+.work__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding-top: clamp(32px, 5vw, 80px);
+  padding-bottom: clamp(24px, 3vw, 40px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.work__title {
+  font-size: clamp(64px, 12vw, 220px);
+}
+
+.work__count {
+  padding-bottom: 0.6em;
+  white-space: nowrap;
+}
+
+/* Three across (two on tablets, one on phones), each card leaving room above it for the
+   top of its number */
+.work__grid {
+  --no: clamp(72px, 8.5vw, 150px); /* the numbers' size */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(56px, 6vw, 96px) clamp(20px, 2.4vw, 40px);
+  margin: 0;
+  padding: clamp(64px, 7vw, 112px) 0 0;
+  list-style: none;
+}
+
+/* (rising in one after another along each row) */
+.work__item {
+  transition-delay: calc(var(--d) * 0.1s);
+}
+
+.work__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* The number: a pink outline behind the card's top left corner, half of it standing
+   above the photo. It fills from the bottom (the bottom half of a pink-over-clear band,
+   slid up into the letters) */
+.work__no {
+  position: absolute;
+  z-index: 0;
+  top: calc(var(--no) * -0.52);
+  left: -0.04em;
+  font-size: var(--no);
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 0.014em var(--pink);
+  background: linear-gradient(to top, var(--pink) 50%, transparent 50%) 0 0 / 100% 200% no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-position 0.6s cubic-bezier(0.5, 0, 0.25, 1);
+  pointer-events: none;
+}
+
+.work__card:is(:hover, :focus-visible) .work__no {
+  background-position: 0 100%;
+}
+
+.work__photo {
+  position: relative;
+  z-index: 1;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #e6e5e3;
+}
+
+.work__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s var(--ease);
+}
+
+.work__card:is(:hover, :focus-visible) .work__photo img {
+  transform: scale(1.04);
+}
+
+.work__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* (the name on one line, its field under it) */
+.work__name {
+  font-size: clamp(22px, 2vw, 32px);
+  white-space: nowrap;
+  color: var(--ink);
+  transition: color 0.3s;
+}
+
+.work__card:is(:hover, :focus-visible) .work__name {
+  color: var(--pink);
+}
+
+/* ---------- The place still to come ----------
+   Its number filled part of the way (up into the part that shows above the card), like
+   work in progress; its card a frosted pane over a soft pink glow, "More work soon" on it */
+.work__item--soon .work__no {
+  background-position: 0 62%;
+  /* (its level slowly rising and falling a little, still being filled) */
+  animation: work-filling 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes work-filling {
+  from {
+    background-position: 0 54%;
+  }
+  to {
+    background-position: 0 66%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work__item--soon .work__no {
+    animation: none;
+  }
+}
+
+.work__soon {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 30% 30%, var(--pink-soft), transparent 60%),
+    radial-gradient(circle at 75% 80%, rgba(255, 111, 168, 0.35), transparent 55%),
+    var(--surface);
+}
+
+.work__frost {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.08) 40%, rgba(255, 255, 255, 0.05) 62%, rgba(255, 255, 255, 0.28)),
+    rgba(255, 255, 255, 0.18);
+}
+
+.work__frost::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+
+.work__soon-text {
+  position: relative;
+  font-size: clamp(20px, 1.8vw, 28px);
+  color: var(--ink);
+}
+
+.work__item--soon .work__name {
+  color: var(--muted);
+}
+
+/* Tablets: two across */
+@media (max-width: 1000px) {
+  .work__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Phones: one down the page */
+@media (max-width: 600px) {
+  .work__grid {
+    --no: 84px;
+    grid-template-columns: 1fr;
+  }
+
+  .work__item {
+    transition-delay: 0s;
+  }
+
+  .work__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

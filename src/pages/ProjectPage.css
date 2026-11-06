@@ -408,26 +408,26 @@
   aspect-ratio: 2 / 3;
 }
 
-/* A calm, centred page (centered in the project's data): the intro in one column down
-   the middle, its photo under it */
-.proj--centered .proj__intro {
+/* Every project's concept is centred: one column down the middle, its photo (if any)
+   under it */
+.proj__intro {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.proj--centered .proj__intro-label {
+.proj__intro .proj__intro-label {
   padding-top: 0;
 }
 
-.proj--centered .proj__intro-text {
+.proj__intro .proj__intro-text {
   max-width: 30ch;
   margin-top: 20px;
   text-wrap: balance;
 }
 
-.proj--centered .proj__intro-photo {
+.proj__intro .proj__intro-photo {
   width: min(880px, 100%);
   aspect-ratio: 4 / 3;
   margin-top: clamp(32px, 4vw, 56px);

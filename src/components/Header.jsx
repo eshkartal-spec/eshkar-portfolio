@@ -90,7 +90,7 @@ export default function Header() {
         dangerouslySetInnerHTML={{ __html: logo }}
       />
       <nav className="header__nav">
-        <Link to="/#work" className="label label--ink">Work</Link>
+        <Link to="/work" className="label label--ink">Work</Link>
         <Link to="/#about" className="label label--ink">About</Link>
         <Link to="/#contact" className="label label--ink">Contact</Link>
         <a href={site.resume} target="_blank" rel="noreferrer" className="pill header__resume">

@@ -55,7 +55,7 @@
 }
 
 .scrub__text .sub {
-  font-size: clamp(20px, 3.2vw, 56px);
+  font-size: clamp(15px, 2.4vw, 42px); /* 26pt on a 1440px-wide screen */
   line-height: 1.15;
   color: var(--ink);
   text-wrap: balance;

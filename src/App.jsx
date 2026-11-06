@@ -6,6 +6,7 @@ import Footer from './components/Footer'
 import Intro from './components/Intro'
 import Home from './pages/Home'
 import ProjectPage from './pages/ProjectPage'
+import Work from './pages/Work'
 import NotFound from './pages/NotFound'
 import { useReveal } from './useReveal'
 import { useNoOrphans } from './noOrphans'
@@ -32,6 +33,7 @@ export default function App({ playIntro }) {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/work" element={<Work />} />
         <Route path="/projects/:slug" element={<ProjectPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -163,7 +163,7 @@ export default function ProjectPage() {
         <>
           <header className="proj__head wrap">
             <div className="proj__crumbs">
-              <Link to="/#work" className="label label--ink proj__back">← All work</Link>
+              <Link to="/work" className="label label--ink proj__back">← All work</Link>
               <p className="label">{p.field}</p>
             </div>
 
@@ -203,7 +203,7 @@ export default function ProjectPage() {
       ) : (
         p.overview !== false && (
           <section className={`proj__intro wrap${p.introOnPhoto ? ' proj__intro--on-photo' : ''}`}>
-            <p className="label label--ink proj__intro-label">{p.introLabel ?? 'Overview'} — {title}</p>
+            <p className="label label--ink proj__intro-label">{p.introLabel ?? 'Concept'}</p>
             <p className="proj__intro-text reveal">{p.intro}</p>
             {p.hero && p.hero.src !== (p.banner ?? p.cover).src && (
               <Photo image={p.hero} className="proj__intro-photo reveal" />

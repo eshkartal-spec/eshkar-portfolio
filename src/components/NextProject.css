@@ -1,15 +1,25 @@
 /* "Next project" in pink, the project's name under it (see NextProject.jsx) */
 .next-project {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: clamp(14px, 1.6vw, 26px);
   padding-block: clamp(64px, 9vw, 144px);
   color: var(--ink);
   text-decoration: none;
+  --cine: cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+.next-project__title,
+.next-project__name {
+  position: relative;
+  z-index: 1;
 }
 
 .next-project__title {
   font-size: clamp(52px, 9vw, 168px);
+  transition: text-shadow 0.6s var(--cine);
 }
 
 .next-project__name {
@@ -17,17 +27,84 @@
   align-items: baseline;
   gap: 0.6em;
   font-size: clamp(18px, 2vw, 30px);
-  transition: color 0.3s;
+  transition:
+    color 0.6s var(--cine),
+    text-shadow 0.6s var(--cine);
 }
 
 .next-project__arrow {
   transition: transform 0.35s var(--ease);
 }
 
-.next-project:hover .next-project__name {
-  color: var(--pink);
+.next-project:hover .next-project__arrow,
+.next-project:focus-visible .next-project__arrow {
+  transform: translateX(8px);
 }
 
-.next-project:hover .next-project__arrow {
-  transform: translateX(8px);
+/* ---------- The frosted glass ----------
+   The next project's photo, blurred behind a milky pane with a soft sheen and fine grain
+   (the same glass as the stowed spines on the Home page, Library.css), under a grey tint
+   so the words stay readable. It fades in over the whole section while pointed at. */
+.next-project__glass {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.7s var(--cine);
+  pointer-events: none;
+}
+
+.next-project__glass img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.12);
+  transition: transform 1.3s var(--cine);
+}
+
+.next-project__glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 40, 40, 0.5);
+}
+
+.next-project__frost {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 38%, rgba(255, 255, 255, 0.04) 62%, rgba(255, 255, 255, 0.16)),
+    rgba(235, 238, 240, 0.12);
+  /* (the -webkit- line first: the build keeps only the last of the two) */
+  -webkit-backdrop-filter: blur(14px) saturate(1.1) brightness(1.04);
+  backdrop-filter: blur(14px) saturate(1.1) brightness(1.04);
+}
+
+.next-project__frost::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+
+.next-project:is(:hover, :focus-visible) .next-project__glass {
+  opacity: 1;
+}
+
+.next-project:is(:hover, :focus-visible) .next-project__glass img {
+  transform: scale(1);
+}
+
+/* Over the glass: the name turns white, both lifted by a soft shadow */
+.next-project:is(:hover, :focus-visible) .next-project__title {
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.35);
+}
+
+.next-project:is(:hover, :focus-visible) .next-project__name {
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
 }
