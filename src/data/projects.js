@@ -9,9 +9,6 @@ import { bazeletLogo } from './bazeletLogo'
 
 const img = (project, name, alt) => ({ src: `/images/${project}/${name}.webp`, alt })
 
-// Words still to come
-const placeholder = 'A short text about this part of the project: what it is and the thinking behind it. Placeholder text for now.'
-
 export const projects = [
   {
     slug: 'step-up',
@@ -368,14 +365,14 @@ export const projects = [
     // outline from originals/bazelet/logo.svg). The four biggest each stand for a topic
     // (piece: its place in the logo's list): with the cursor over one, its photo shows
     // through it, and clicking it opens it big in the middle of the screen, with its words.
-    // Photos and words are placeholders for now
+    // (her words; the photos are placeholders for now)
     logo: {
       shape: bazeletLogo,
       topics: [
         {
           piece: 4,
           title: 'Branding',
-          text: placeholder,
+          text: "Together, the logo and color palette ground the brand, giving its message and story one clear, steady voice.",
           image: img('bazelet', 'branding2', 'Bazelet cards on a stone block'),
           // (cursor: the photo trailing the mouse over the opened window, if not the
           // piece's own; behind: a photo filling the screen behind the window)
@@ -385,7 +382,7 @@ export const projects = [
         {
           piece: 5,
           title: 'Packaging',
-          text: placeholder,
+          text: "Shaped by the rolling hills of the north, the packaging hints at the adventures the shoes will take you on.",
           // (packaging-tile: the mockup set wider on its own empty wall and pedestal, so the
           // whole box fits inside the piece)
           image: img('bazelet', 'packaging-tile', 'The Bazelet shoebox on a stone pedestal'),
@@ -395,7 +392,7 @@ export const projects = [
         {
           piece: 6,
           title: 'Product',
-          text: placeholder,
+          text: "Made for walking in comfort: as steady as the rock formations, as free as the northern landscape.",
           image: img('bazelet', 'terracotta-woven-sandals-on-stone-pedestal', 'A pair of terracotta woven Bazelet sandals on a stone pedestal'),
           cursor: img('bazelet', 'product-stone', 'A pair of Bazelet sandals on a stone among leaves'),
           behind: img('bazelet', 'product-log', 'A pair of Bazelet sandals on a log by the water'),
@@ -403,7 +400,7 @@ export const projects = [
         {
           piece: 2,
           title: 'Logo',
-          text: placeholder,
+          text: "The mark joins a turtle's shell, a home carried everywhere, with the landscape this handmade brand comes from, evoking stability, movement and comfort.",
           // (logo2-mark: logo2.jpg widened with its own paper to fit the wide piece, its word
           // painted out, the mark only)
           image: img('bazelet', 'logo2-mark', 'The Bazelet mark cut into paper'),
@@ -423,7 +420,7 @@ export const projects = [
         { piece: 3, title: 'Path', image: img('bazelet', 'path', 'A dirt path through the grass at sunset') },
       ],
     },
-    todo: ['What changed and why', 'Skills', 'Text and photos for each topic', 'Detail and process photos'],
+    todo: ['What changed and why', 'Skills', 'Final photos for each topic', 'Detail and process photos'],
   },
 ]
 
