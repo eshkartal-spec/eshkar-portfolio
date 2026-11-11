@@ -1,4 +1,5 @@
-/* ---------- The library: six spines filling the whole first screen ---------- */
+/* ---------- The library: six spines filling the first screen, inside the page's
+   side margins ---------- */
 .library {
   --pad: clamp(18px, 2.2vw, 32px);
   --grow: 8; /* how much wider the open spine gets than each of the others */
@@ -15,6 +16,8 @@
   display: flex;
   height: 100svh;
   min-height: 560px;
+  margin-inline: var(--frame);
+  overflow: hidden;
   scroll-margin-top: 0;
 }
 
@@ -218,6 +221,67 @@ html[data-intro] .spine {
 /* ---------- Open ---------- */
 .spine.is-open .spine__photo {
   transform: scale(1);
+}
+
+/* A tall photo shown whole (cover.whole in the project's data), on wide screens: its full
+   height, centred, over a blurred, enlarged copy of itself that fills the card's sides
+   (on phones the open card is tall anyway, so it simply fills it) */
+.spine__photo--blur {
+  display: none;
+}
+
+@media (min-width: 761px) {
+  .spine__photo--blur {
+    display: block;
+    filter: blur(40px) saturate(1.05);
+    transform: scale(1.3);
+  }
+
+  .spine.is-open .spine__photo--blur {
+    transform: scale(1.2);
+  }
+
+  .spine__photo--whole {
+    left: 50%;
+    width: auto;
+    max-width: none;
+    transform: translateX(-50%) scale(1.12);
+    /* (its sides feathered into the blur, so there's no hard edge) */
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  .spine.is-open .spine__photo--whole {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* A photo fitted whole inside the card (cover.contain), on every screen, over the blurred
+   copy of itself that fills the space around it */
+.spine__photo--blur.spine__photo--fill {
+  display: block;
+  filter: blur(40px) saturate(1.05);
+  transform: scale(1.3);
+}
+
+.spine.is-open .spine__photo--blur.spine__photo--fill {
+  transform: scale(1.2);
+}
+
+/* (the photo itself as big as fits, centred, its top and bottom feathered into the blur) */
+.spine__photo--contain {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  transform: translate(-50%, -50%) scale(1.12);
+  mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+}
+
+.spine.is-open .spine__photo--contain {
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .spine.is-open::after {

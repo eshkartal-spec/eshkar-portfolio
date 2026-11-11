@@ -1,9 +1,11 @@
-/* Two photos in one frame (see SwapPhoto.jsx): the whole screen, the second fading in
-   over the first */
+/* Two photos in one frame (see SwapPhoto.jsx), the second fading in over the first. The
+   frame is framed like the page's other photos: inside its margins, shaped like the
+   photos (16:9) and no taller than fits the screen, so both are always seen whole */
 .swap {
   position: relative;
-  height: 100svh;
-  margin: 0;
+  width: min(100% - 2 * var(--frame), var(--media-h) * 16 / 9);
+  aspect-ratio: 16 / 9;
+  margin: calc((var(--fit-h) - var(--media-h)) / 2) auto;
   overflow: hidden;
   background: var(--surface);
 }

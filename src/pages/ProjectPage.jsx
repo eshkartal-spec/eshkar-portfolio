@@ -4,7 +4,8 @@ import { getProject, projects } from '../data/projects'
 import NotFound from './NotFound'
 import NextProject from '../components/NextProject'
 import PhotoLine from '../components/PhotoLine'
-import CurveGallery from '../components/CurveGallery'
+import FeatureFlip from '../components/FeatureFlip'
+import WheelSpokes from '../components/WheelSpokes'
 import PieceLogo from '../components/PieceLogo'
 import HexMosaic from '../components/HexMosaic'
 import Footsteps from '../components/Footsteps'
@@ -89,7 +90,7 @@ export default function ProjectPage() {
       className={`proj${p.opening ? ' proj--opening' : ''}${p.centered ? ' proj--centered' : ''}`}
       // Without a photo above it, a video played by scrolling comes out of the page itself
       style={{
-        '--fade': p.opening?.fade ?? (p.scrub ? 'var(--bg)' : undefined),
+        '--fade': p.opening?.fade,
         '--fade-size': p.opening?.fadeSize,
       }}
     >
@@ -98,8 +99,17 @@ export default function ProjectPage() {
         // readers and search engines), and the details along its bottom
         <header
           className={`proj__opening${p.opening.tall && !p.opening.whole ? '' : ' proj__opening--whole'}${p.opening.specsTop ? ' proj__opening--specs-top' : ''}${p.opening.specsSide ? ' proj__opening--specs-side' : ''}${p.opening.grit ? ' proj__opening--grit' : ''}${p.opening.light ? ' proj__opening--light' : ''}`}
-          style={{ '--tall-ratio': p.opening.tallRatio, '--focus': p.opening.focus }}
+          // (the photos' shapes: wide ones are all 16:9; tall ones a phone screen, unless
+          // the project says otherwise)
+          style={{
+            '--wide-ratio': p.opening.wideRatio ?? '16 / 9',
+            '--tall-ratio': p.opening.tallRatio ?? (p.opening.tall ? '1290 / 2796' : '16 / 9'),
+            '--focus': p.opening.focus,
+          }}
         >
+          {/* The photo and everything drawn over it, in one frame inside the page's side
+              margins */}
+          <div className="proj__frame">
           {p.opening.video ? (
             <BounceVideo video={p.opening.video} />
           ) : p.opening.warp ? (
@@ -147,6 +157,7 @@ export default function ProjectPage() {
               {p.title}
             </p>
           )}
+          </div>
           <h1 className="visually-hidden">{title}</h1>
           {specs.length > 0 && (
             <dl className="specs proj__opening-specs wrap">
@@ -190,6 +201,14 @@ export default function ProjectPage() {
         </>
       )}
 
+      {/* With a video in the overview's place, the concept can still come first (concept) */}
+      {p.scrub && p.concept && (
+        <section className="proj__intro proj__intro--before-video wrap">
+          <p className="label label--ink proj__intro-label">Concept</p>
+          <p className="proj__intro-text reveal">{p.concept}</p>
+        </section>
+      )}
+
       {/* The summary over a video played by scrolling, in place of the overview (or no
           overview at all: overview: false) */}
       {p.scrub ? (
@@ -215,7 +234,8 @@ export default function ProjectPage() {
       {/* The project's logo full screen, its pieces opening onto its topics */}
       {p.logo && <PieceLogo logo={p.logo} title={title} />}
       {p.still && <PhotoLine photo={p.still} />}
-      {p.curve && <CurveGallery photos={p.curve} />}
+      {p.flip && <FeatureFlip features={p.flip} photoHeight={p.flipPhotoHeight} />}
+      {p.wheel && <WheelSpokes photos={p.wheel} />}
       {p.photos && <PhotoSlide photos={p.photos} />}
       {p.model && (
         <Suspense fallback={<div style={{ height: '100svh' }} />}>

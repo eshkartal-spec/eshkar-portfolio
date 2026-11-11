@@ -5,6 +5,8 @@
   display: flex;
   flex-direction: column;
   gap: clamp(14px, 1.6vw, 26px);
+  /* (inside the page's margins, so its frosted photo is framed like the rest) */
+  margin-inline: var(--frame);
   padding-block: clamp(64px, 9vw, 144px);
   color: var(--ink);
   text-decoration: none;

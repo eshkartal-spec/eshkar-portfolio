@@ -1,6 +1,7 @@
+/* A black band across the page, closing it */
 .contact {
   margin-top: clamp(64px, 8vw, 120px);
-  padding-top: clamp(48px, 7vw, 96px);
+  padding-top: clamp(24px, 3vw, 40px);
   padding-bottom: 24px;
   background: var(--ink);
   color: var(--bg);
@@ -9,15 +10,23 @@
 }
 
 /* One line at every screen width: the size follows the footer's width
-   (100cqi), divided by how many font-sizes wide the words are */
+   (100cqi), divided by how many font-sizes wide the words are, then taken down to about
+   two thirds of the width */
 .contact {
   container-type: inline-size;
 }
 
 .contact__title {
-  font-size: calc(100cqi / var(--title-width));
+  font-size: calc(100cqi / var(--title-width) * 0.62);
   white-space: nowrap;
   --title-width: 7.26;
+  /* its letters spaced a little wider */
+  letter-spacing: 0.06em;
+}
+
+/* (no space after the last letter) */
+.contact__title > :last-child .contact__letter:last-child {
+  letter-spacing: 0;
 }
 
 /* Email, phone and buttons on one line, centred on each other; stacked on phones */
@@ -27,7 +36,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px clamp(24px, 4vw, 64px);
-  margin-top: clamp(32px, 4.5vw, 64px);
+  margin-top: clamp(14px, 1.6vw, 24px);
   padding-top: 24px;
   border-top: 1px solid var(--rule);
 }

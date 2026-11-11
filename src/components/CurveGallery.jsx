@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { shapeOf } from './photoShape'
 import './CurveGallery.css'
 
-const HEIGHT = 0.72 // each photo's height, as a share of the screen's height...
+const HEIGHT = 0.58 // each photo's height, as a share of the screen's height...
 const HEIGHT_MAX = 0.55 // ...but at most this share of its width (wide screens)
 const GAP = 0.03 // the space between photos, as a share of the screen's width
 const RADIUS = 0.7 // the drum's radius (share of the width): smaller bends it more

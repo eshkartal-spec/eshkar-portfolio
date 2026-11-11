@@ -1,43 +1,47 @@
-/* Photos slid along to the side by scrolling (see PhotoSlide.jsx): a tall scroll track,
-   and in it a screen-sized view that stays put, holding the frame the photos pass
-   through. --pos is how far along the row the view is, in photos */
+/* Photos one at a time in a frame, sliding on by themselves (see PhotoSlide.jsx) */
 .slide {
-  position: relative;
-}
-
-.slide__view {
-  position: sticky;
-  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
-  height: 100svh;
-  padding: var(--header-h) var(--gutter) 24px;
+  gap: clamp(18px, 2.4svh, 28px);
+  padding: clamp(48px, 8svh, 96px) var(--frame);
 }
 
-/* As large as fits, in the photos' shape (--shape: width / height) */
+/* The frame with an arrow either side */
+.slide__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2vw, 32px);
+  width: 100%;
+}
+
+/* As large as fits, in the photos' shape (--shape: width / height), no taller than the
+   page's other photos (and room for the arrows) */
 .slide__frame {
   position: relative;
-  width: min(100%, 1100px, calc((100svh - var(--header-h) - 100px) * var(--shape)));
+  width: min(100% - 2 * (48px + clamp(12px, 2vw, 32px)), 1400px, calc(var(--media-h) * var(--shape)));
   aspect-ratio: var(--shape);
   overflow: hidden;
+  outline: none;
   box-shadow: 0 30px 60px -36px rgba(17, 17, 17, 0.45);
 }
 
-/* Each photo its own frame's width along the row, with a narrow gap between */
-.slide__strip {
-  --gap: 16px;
-  position: absolute;
-  inset: 0;
+.slide__frame:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: 4px;
 }
 
+/* Only the current photo shows (and, while sliding, the one leaving: PhotoSlide.jsx) */
 .slide__photo {
   position: absolute;
   inset: 0;
   margin: 0;
-  transform: translateX(calc((var(--i) - var(--pos, 0)) * (100% + var(--gap))));
+  visibility: hidden;
+}
+
+.slide__photo.is-on {
+  visibility: visible;
 }
 
 .slide__photo img {
@@ -48,6 +52,90 @@
   background: var(--surface);
 }
 
-.slide__count {
+.slide__arrow {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: none;
+  color: var(--ink);
+  font-size: 18px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.slide__arrow:hover,
+.slide__arrow:focus-visible {
+  border-color: var(--ink);
+  background: rgba(17, 17, 17, 0.04);
+}
+
+/* Which photo it is: short bars, the current one longer, filling with pink as its time
+   runs (held while it waits) */
+.slide__bars {
+  display: flex;
+  gap: 8px;
   margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slide__bars li {
+  position: relative;
+  width: 22px;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--rule);
+  transition: width 0.4s var(--ease);
+}
+
+.slide__bars li.is-on {
+  width: 44px;
+}
+
+.slide__bars span {
+  position: absolute;
+  inset: 0;
+  background: var(--pink);
+  transform-origin: 0 50%;
+  animation: slide-fill var(--every) linear both paused;
+}
+
+.slide.is-running .slide__bars span {
+  animation-play-state: running;
+}
+
+@keyframes slide-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide__bars span {
+    animation: none;
+  }
+}
+
+/* Phones: the frame across the screen, the arrows under it, either side */
+@media (max-width: 759px) {
+  .slide__row {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .slide__frame {
+    order: -1;
+    width: 100%;
+  }
+
+  .slide__arrow {
+    width: 40px;
+    height: 40px;
+  }
 }

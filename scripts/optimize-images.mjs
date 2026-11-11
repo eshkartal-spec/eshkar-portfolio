@@ -44,10 +44,21 @@ const VIDEO_CROPS = {
 const VIDEO_PATCHES = {
   'playstation/video.mp4': '236:940:156:110',
 }
+// ...and trimmed to a stretch of it (seconds from the start: [from, to])
+const VIDEO_TRIMS = {
+  // (the fabric still before 2s and after 10.5s)
+  'my-chair/pipe video.mp4': [2, 10.5],
+}
 // ...and sped up (2: twice as fast, and half as long)
 const VIDEO_SPEEDS = {
   'playstation/video.mp4': 2,
   'shrafraf/shrafraf.mp4': 2.5,
+}
+// ...and slowed down smoothly over its last `tail` seconds, to `end` times its speed at
+// the very end, easing to a stop instead of halting (the slow part given new in-between
+// frames, at 60 a second, so it stays smooth)
+const VIDEO_EASE_OUT = {
+  'shrafraf/shrafrafBOUNCE.mp4': { tail: 1.1, end: 0.3 },
 }
 // ...and wider, for a full-screen banner
 const VIDEO_WIDTHS = {
@@ -155,8 +166,27 @@ for (const folder of fs.readdirSync(SRC)) {
       const speed = VIDEO_SPEEDS[key] ? `setpts=PTS/${VIDEO_SPEEDS[key]},fps=30,` : ''
       // H.264 (plays everywhere), no sound, a keyframe every 6 frames, no B-frames
       const keyframes = PLAYED_THROUGH.has(key) ? ['-crf', '27'] : ['-crf', '24', '-g', '6', '-bf', '0']
-      execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', src, '-an',
-        '-vf', `${crop}${speed}scale=${VIDEO_WIDTHS[key] ?? VIDEO_WIDTH}:-2,setsar=1`, '-c:v', 'libx264', '-preset', 'slow',
+      const trim = VIDEO_TRIMS[key] ? ['-ss', String(VIDEO_TRIMS[key][0]), '-to', String(VIDEO_TRIMS[key][1])] : []
+      const look = `${crop}${speed}scale=${VIDEO_WIDTHS[key] ?? VIDEO_WIDTH}:-2,setsar=1`
+      let filter = ['-vf', look]
+      const ease = VIDEO_EASE_OUT[key]
+      if (ease) {
+        // the clip as it is up to the tail; the tail's speed falling evenly from 1 to
+        // `end` (each moment pushed later by the time it has lost), then filled in
+        const [, hh, mm, ss] = spawnSync(ffmpeg, ['-i', src]).stderr.toString().match(/Duration: (\d+):(\d+):([\d.]+)/)
+        const length = Number(hh) * 3600 + Number(mm) * 60 + Number(ss)
+        const from = length - ease.tail
+        const k = 1 - ease.end
+        filter = ['-filter_complex', [
+          `[0:v]split[a][b]`,
+          `[a]trim=0:${from},setpts=PTS-STARTPTS,fps=60[head]`,
+          `[b]trim=${from},setpts=PTS-STARTPTS,setpts='-(${ease.tail}/${k})*log(1-${k}*T/${ease.tail})/TB',minterpolate=fps=60:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1[tail]`,
+          `[head][tail]concat=n=2:v=1[c]`,
+          `[c]${look}[out]`,
+        ].join(';'), '-map', '[out]']
+      }
+      execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', src, ...trim, '-an',
+        ...filter, '-c:v', 'libx264', '-preset', 'slow',
         ...keyframes, '-pix_fmt', 'yuv420p', '-movflags', '+faststart', name + '.mp4'])
       execFileSync(ffmpeg, ['-y', '-loglevel', 'error', ...(POSTER_AT_END.has(key) ? ['-sseof', '-0.1'] : []),
         '-i', name + '.mp4', '-frames:v', '1', '-update', '1', name + '.png'])

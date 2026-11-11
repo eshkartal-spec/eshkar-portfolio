@@ -14,6 +14,14 @@
   --gutter: clamp(16px, 3vw, 40px);
   --header-h: 64px;
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  /* The frame: every photo, video and panel sits inside thin white margins at the sides
+     (none above or below) */
+  --frame: clamp(10px, 1.4vw, 20px);
+  /* The screen's height under the top bar... */
+  --fit-h: calc(100svh - var(--header-h));
+  /* ...and how tall photos and videos further down a page can be, so each is seen whole
+     when it's in the middle of the screen, with a little room above and below */
+  --media-h: calc(var(--fit-h) * 0.94);
 }
 
 *,

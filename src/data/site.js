@@ -12,7 +12,7 @@ export const site = {
   // position: which part stays in view when the photo is cropped (0–1, left→right, top→bottom)
   hero: { src: '/images/hero/hero.webp', alt: 'Eshkar Karish', position: [0.5, 0.2] },
   about: {
-    // "Hi! I'm Eshkar." The name is its own piece: hovering it shows her photo.
+    // "Hi! I'm Eshkar."
     // The space before the name doesn't break, so "I'm Eshkar." stays on one line.
     titleBefore: 'Hi! I’m ',
     titleName: 'Eshkar',
@@ -21,7 +21,8 @@ export const site = {
       'I’m a fourth-year Industrial Design student in Israel, focused on creating thoughtful, user-centered physical products.',
       'Combining research, ergonomics and hands-on prototyping, I design intuitive solutions that balance functionality, aesthetics and real-world usability.',
     ],
-    photo: { src: '/images/about/portrait.webp', alt: 'Eshkar Karish' },
+    // (her portrait beside the words: shown 3:4, cut from the middle of the photo)
+    photo: { src: '/images/about/hrt-290-png-best.webp', alt: 'Eshkar Karish' },
   },
   // "Skills & tools" in the About section, grouped
   skills: [

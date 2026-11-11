@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import NamePeek from './NamePeek'
 import './AboutIntro.css'
 
 const SETTLED = 350 // how long after the title's last letter has changed the portrait flies in (ms)
@@ -9,11 +8,9 @@ const TO = 0.42 // ...and has changed its last letter by the time its top is thi
 
 // The About section's words. As it scrolls up into view, its title changes letter by
 // letter, from a thin, wide, black subtitle style into the heavy pink title font (going
-// back as it scrolls away); once the last letter has changed, a line draws in under the
-// name, the paragraphs and then the skills panel rise in (those once), and her portrait
+// back as it scrolls away); once the last letter has changed, the paragraphs and then the skills panel rise in (those once), and her portrait
 // flies into the empty space on the right like a tossed sheet of paper, and stays (wide
-// screens only). The name inside the title still
-// shows her photo on hover.
+// screens; on phones, between the title and the words).
 export default function AboutIntro({ about, skills }) {
   const titleRef = useRef(null)
   const photoRef = useRef(null)
@@ -102,7 +99,7 @@ export default function AboutIntro({ about, skills }) {
           <span className="intro__word">
             {letters(last)}
             {'\u00a0'}
-            <NamePeek word={letters(about.titleName)} image={about.photo} />
+            {letters(about.titleName)}
             {letters(about.titleAfter)}
           </span>
         </span>

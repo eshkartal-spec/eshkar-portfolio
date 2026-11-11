@@ -1,25 +1,57 @@
-/* ---------- Opening: a full-screen photo with the title on it (instead of the title
-   block), from the very top; a tall photo on portrait screens (ProjectPage.jsx) ---------- */
+/* ---------- Opening: a screen-tall photo with the title on it (instead of the title
+   block), from the very top, inside the page's side margins; a tall photo on portrait
+   screens (ProjectPage.jsx). Everything over the photo sits in its frame ---------- */
 .proj--opening {
   padding-top: 0;
 }
 
 .proj__opening {
+  --r: var(--wide-ratio);
   position: relative;
+  margin-inline: var(--frame);
 }
 
-.proj__opening img,
-.proj__opening video {
+.proj__frame {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* On tall screens, a photo meant to show whole (no tall version, or blurTop) sits under
+   the top bar in a frame shaped like it (--r: its shape) */
+@media (orientation: portrait) {
+  .proj__opening {
+    --r: var(--tall-ratio);
+  }
+
+  .proj--opening:has(.proj__opening--whole) {
+    padding-top: var(--header-h);
+  }
+
+  .proj__opening--whole .proj__frame,
+  .proj__opening:has(.proj__blur) .proj__frame {
+    height: auto;
+    aspect-ratio: var(--r);
+  }
+}
+
+.proj__frame > :is(picture, .warp, .texture-reveal, .ripple-warp, .bounce) {
+  display: block;
+  height: 100%;
+}
+
+.proj__frame img,
+.proj__frame video {
   display: block;
   width: 100%;
-  height: 100svh;
+  height: 100%;
   object-fit: cover;
 }
 
 /* Where a wide photo is cut, on screens shaped differently from it (opening.focus: the
    part to keep, e.g. its left side, where a title starts) */
 @media (orientation: landscape) {
-  .proj__opening img {
+  .proj__frame img {
     object-position: var(--focus, 50% 50%);
   }
 }
@@ -71,9 +103,7 @@
 
 @media (orientation: portrait) {
   .proj__opening-name {
-    top: calc(100vw / (var(--tall-ratio)) - 14px);
-    bottom: auto;
-    translate: 0 -100%;
+    bottom: 14px;
     font-size: 14vw;
   }
 }
@@ -181,10 +211,6 @@
     pointer-events: none;
   }
 
-  .proj__opening:has(.proj__blur) img {
-    height: auto;
-  }
-
   .proj__opening:has(.proj__blur) .proj__opening-specs {
     inset: 0 0 auto;
     padding-top: calc(var(--header-h) + 12px);
@@ -194,24 +220,12 @@
 
 /* ---------- Over the photo (from the project's data): the painted title, cut out
    (opening.paint: a mask per letter, wide and tall), its colors changing; and a fine
-   grain (opening.grit), like raw concrete. Both lie exactly over the photo: a screen
-   tall, or on tall screens showing it whole, as tall as the photo (--tall-ratio) ---------- */
+   grain (opening.grit), like raw concrete. Both lie exactly over the photo's frame ---------- */
 .proj__paint,
 .proj__grit {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100svh;
+  inset: 0;
   pointer-events: none;
-}
-
-@media (orientation: portrait) {
-  .proj__opening--whole .proj__paint,
-  .proj__opening--whole .proj__grit {
-    height: auto;
-    aspect-ratio: var(--tall-ratio);
-  }
 }
 
 /* Each letter of the paint (--i: 0 to 5) steps from the painted pink down to the bike's
@@ -287,20 +301,11 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  /* With no tall photo, or one meant to show whole, it sits across the screen under the
-     top bar, and the details sit under it */
-  .proj--opening:has(.proj__opening--whole) {
-    padding-top: var(--header-h);
-  }
-
-  .proj__opening--whole img,
-  .proj__opening--whole video {
-    height: auto;
-  }
-
+  /* With no tall photo, or one meant to show whole, the details sit under it, lined up
+     with its edges */
   .proj__opening--whole .proj__opening-specs {
     position: static;
-    padding-top: 24px;
+    padding: 24px 0 0;
   }
 }
 
@@ -417,6 +422,12 @@
   text-align: center;
 }
 
+/* (the same space under it as above, before a video, as before the other projects'
+   photos) */
+.proj__intro--before-video {
+  margin-bottom: clamp(64px, 8vw, 128px);
+}
+
 .proj__intro .proj__intro-label {
   padding-top: 0;
 }
@@ -427,36 +438,44 @@
   text-wrap: balance;
 }
 
+/* (a photo under the concept: shown whole, as big as the page's other photos, the same
+   space above it as between the page's sections) */
 .proj__intro .proj__intro-photo {
-  width: min(880px, 100%);
+  width: min(100%, var(--media-h) * 4 / 3);
   aspect-ratio: 4 / 3;
-  margin-top: clamp(32px, 4vw, 56px);
-  /* Its top and bottom fade softly into the page */
-  --edge: 12%;
-  mask-image: linear-gradient(transparent, #000 var(--edge), #000 calc(100% - var(--edge)), transparent);
+  margin-top: clamp(64px, 8vw, 128px);
 }
 
-/* The concept written over a full-screen photo (introOnPhoto in the project's data),
-   centred in the photo's empty left side, near its top; on phones it stays above it */
+/* The concept written over a big photo (introOnPhoto in the project's data), centred in
+   the photo's empty left side, near its top; on phones it stays above it. The photo is
+   framed inside the page's margins, in its own 4:3 shape and no taller than fits the
+   screen, so it's seen whole; the words sized and placed by the photo's width (cqi), so
+   on shorter screens, where the photo is smaller, they shrink with it and stay in its
+   empty corner */
 @media (min-width: 761px) {
   .proj--centered .proj__intro--on-photo {
     display: grid;
     grid-template-columns: 44% 1fr;
     grid-template-rows: auto auto 1fr;
     justify-items: center;
-    height: min(100svh, 75vw);
+    width: min(100% - 2 * var(--frame), var(--media-h) * 4 / 3);
+    aspect-ratio: 4 / 3;
+    margin-inline: auto;
     padding: 0;
+    container-type: inline-size;
   }
 
   .proj__intro--on-photo .proj__intro-label {
     grid-area: 1 / 1;
     z-index: 1;
-    margin-top: clamp(56px, 9vw, 140px);
+    margin-top: 12.5cqi;
   }
 
   .proj__intro--on-photo .proj__intro-text {
     grid-area: 2 / 1;
     z-index: 1;
+    margin-top: 2.2cqi;
+    font-size: 3cqi;
   }
 
   .proj--centered .proj__intro--on-photo .proj__intro-photo {

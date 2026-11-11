@@ -164,6 +164,26 @@
   transform: translate(-50%, -50%);
   white-space: nowrap;
   transition: opacity 0.5s var(--ease);
+  /* (flashing pink and back, to catch the eye) */
+  animation: pair-flash 1.6s ease-in-out infinite;
+}
+
+@keyframes pair-flash {
+  0%,
+  100% {
+    color: var(--muted);
+  }
+  45%,
+  55% {
+    color: var(--pink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pair__hint {
+    animation: none;
+    color: var(--pink);
+  }
 }
 
 /* ...out of the way while a half is held, and once they've met */

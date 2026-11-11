@@ -1,9 +1,11 @@
 /* A 3D model on a full-screen stage, split by a line into render and CAD (see
    ModelStage.jsx) */
-/* A screen tall, or less on a phone, where the model is only as tall as it is wide */
+/* Framed inside the page's margins, as tall as the page's other photos, or less on a
+   phone, where the model is only as tall as it is wide */
 .model {
   position: relative;
-  height: min(100svh, max(520px, 140vw));
+  height: min(var(--media-h), max(480px, 130vw));
+  margin-inline: var(--frame);
   overflow: hidden;
 }
 

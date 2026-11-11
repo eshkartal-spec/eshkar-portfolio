@@ -74,8 +74,18 @@ export default function Library() {
             }
           }}
         >
+          {/* A photo shown whole: a tall one at the card's full height (cover.whole), or any
+              photo fitted inside the card (cover.contain); the space around it filled with a
+              soft, blurred copy of it behind */}
+          {(p.cover.whole || p.cover.contain) && (
+            <img
+              className={`spine__photo spine__photo--blur${p.cover.contain ? ' spine__photo--fill' : ''}`}
+              src={p.cover.src}
+              alt=""
+            />
+          )}
           <img
-            className="spine__photo"
+            className={`spine__photo${p.cover.whole ? ' spine__photo--whole' : ''}${p.cover.contain ? ' spine__photo--contain' : ''}`}
             src={p.cover.src}
             alt=""
             style={p.cover.position && { objectPosition: p.cover.position }}

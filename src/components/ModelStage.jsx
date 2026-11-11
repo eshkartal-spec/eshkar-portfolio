@@ -19,10 +19,11 @@ const SWAY_TIME = 10 // one sway there and back
 const EDGE_ANGLE = 35 // faces meeting at more than this angle get a line on the CAD side...
 const EDGE_MIN = 0.006 // ...as do the outlines where parts meet, unless the run is shorter than this (meters)
 // The finished side's colors and finishes, by the model's material names (roughness: 0
-// is glossy, 1 matte)
+// is glossy, 1 matte; gloss: a polished, lacquer-like top coat over it, as on moulded
+// gloss plastic, with crisp reflections of the room)
 const FINISHES = {
-  pink: { color: '#c95fc1', roughness: 0.55 },
-  red: { color: '#a948bb', roughness: 0.45 },
+  pink: { color: '#c95fc1', roughness: 0.34, gloss: true },
+  red: { color: '#a948bb', roughness: 0.3, gloss: true },
   whitesolid: { color: '#efedee', roughness: 0.55 },
   defaultplastic: { color: '#d6d4d7', roughness: 0.45 },
   glossyrubber: { color: '#1b191c', roughness: 0.3 },
@@ -155,6 +156,10 @@ export default function ModelStage({ model }) {
     const key = new THREE.DirectionalLight(0xffffff, 1.4)
     key.position.set(-1, 1.4, 1.2)
     camera.add(key)
+    // ...and a fainter one from behind right, catching the edges of the glossy parts
+    const rim = new THREE.DirectionalLight(0xffffff, 0.7)
+    rim.position.set(1.4, 0.6, -1)
+    camera.add(rim)
     scene.add(camera)
     const pivot = new THREE.Group()
     scene.add(pivot)
@@ -211,7 +216,18 @@ export default function ModelStage({ model }) {
             if (!o.isMesh) return
             disposables.push(o.material)
             const f = FINISHES[o.material.name] ?? { color: '#cccccc', roughness: 0.5 }
-            o.material = new THREE.MeshStandardMaterial({ color: f.color, roughness: f.roughness, metalness: 0 })
+            o.material = f.gloss
+              ? new THREE.MeshPhysicalMaterial({
+                  color: f.color,
+                  roughness: f.roughness,
+                  metalness: 0,
+                  clearcoat: 1,
+                  clearcoatRoughness: 0.07,
+                  ior: 1.5,
+                  specularIntensity: 0.7,
+                  envMapIntensity: 1.25,
+                })
+              : new THREE.MeshStandardMaterial({ color: f.color, roughness: f.roughness, metalness: 0 })
             disposables.push(o.material, o.geometry)
           })
           cadBody.updateMatrixWorld(true)

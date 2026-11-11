@@ -47,7 +47,7 @@ export const projects = [
       // A grain over the photo, for an urban, raw-concrete feel
       grit: true,
     },
-    cover: img('step-up', 'homepage', 'STEP UP in a dark studio'),
+    cover: img('step-up', 'intro', 'Lifting the STEP UP bike by its carrying strap'),
     // Full screen after the concept: carrying the bike up a flight of stairs, the line
     // along its bottom (PhotoLine.jsx; carry2-clean is carry2 with the corner mark painted
     // over)
@@ -55,12 +55,9 @@ export const projects = [
       ...img('step-up', 'carry2-clean', 'Carrying STEP UP up a flight of stone stairs by its handle'),
       line: 'In the city, you often carry a bike up stairs, not only ride it.',
     },
-    // The studio photos on a slowly turning drum (CurveGallery.jsx), each once (wide: a
-    // landscape photo), the bike's features first with their words under them. Left out
-    // as near repeats: v (of side), hrt-322 (of strap-close) and hrt-319 (of the other
-    // pedal shots); the hrt-306 to -310 and hrt-318 copies are the same photos as
-    // three-quarter, fork, logo-frame, handle, wheel and pedal-close
-    curve: [
+    // The bike's features, one at a time, the photo on one side and its words on the
+    // other, turning over to the next as the page scrolls (FeatureFlip.jsx)
+    flip: [
       {
         ...img('step-up', 'handle-close', 'The carrying handle set into the frame'),
         wide: true,
@@ -92,13 +89,18 @@ export const projects = [
           text: 'Reduces the bicycle’s width and enables smooth movement through narrow staircases.',
         },
       },
+    ],
+    // The other studio photos round the rim of a turning bicycle wheel (WheelSpin.jsx),
+    // each once (wide: a landscape photo). Left out as near repeats: v (of side), hrt-322
+    // (of strap-close) and hrt-319 (of the other pedal shots); the hrt-306 to -310 and
+    // hrt-318 copies are the same photos as three-quarter, fork, logo-frame, handle,
+    // wheel and pedal-close
+    wheel: [
       img('step-up', 'three-quarter', 'STEP UP, three-quarter view'),
-      { ...img('step-up', 'hrt-311', 'The saddle'), wide: true },
       img('step-up', 'fork', 'The fork and front wheel'),
       { ...img('step-up', 'hrt-313', 'The grip and the STEP UP logo'), wide: true },
       img('step-up', 'side', 'STEP UP, side view'),
       img('step-up', 'hrt-317', 'The folding handlebar, from the front'),
-      img('step-up', 'logo-frame', 'STEP UP logo on the frame'),
       { ...img('step-up', 'hrt-312', 'The handlebar folded along the frame'), wide: true },
       img('step-up', 'wheel', 'Wheel detail'),
       { ...img('step-up', 'background-png', 'Carrying STEP UP by its handle in the studio'), ratio: 5288 / 6512 },
@@ -126,9 +128,6 @@ export const projects = [
       // The pleats bend aside where the cursor passes, as if running your fingers
       // through them (PleatWarp.jsx)
       warp: true,
-      // The fabric's pink: the photo fades into it at the bottom, and the video under it
-      // comes out of it
-      fade: '#e3b6a1',
     },
     // A video played by scrolling, with the summary over it
     scrub: { src: '/images/my-chair/pipe-video.mp4', poster: '/images/my-chair/pipe-video.webp' },
@@ -148,23 +147,28 @@ export const projects = [
     skills: 'Skill, skill, skill',
     cover: img('my-chair', 'seat', 'Pipe Dream'),
     hero: img('my-chair', 'seat', 'Pipe Dream'),
-    // The materials: three photos in a row, each with its words in a tooltip that
-    // follows the cursor over it (on touch screens, under it)
-    details: [
+    // The materials, one at a time, the photo on one side and its words on the other,
+    // swiping on to the next as the page scrolls (FeatureFlip.jsx, as Step Up's features);
+    // the photos a little bigger than Step Up's (most of the screen's height)
+    flipPhotoHeight: 0.88,
+    flip: [
       {
-        image: img('my-chair', 'hero', 'Pipe Dream, the whole chair'),
-        title: 'Rigid meets flexible',
-        text: 'Rigid and flexible meet when someone sits in the chair.',
+        ...img('my-chair', 'hero', 'Pipe Dream, the whole chair'),
+        note: { title: 'Rigid meets flexible', text: 'Rigid and flexible meet when someone sits in the chair.' },
       },
       {
-        image: img('my-chair', 'detail2', 'The pleated textile over the frame'),
-        title: 'Pink textile',
-        text: 'A pleated pink textile wraps over the pipes, bringing flexibility and organic flow to the frame.',
+        ...img('my-chair', 'detail2', 'The pleated textile over the frame'),
+        note: {
+          title: 'Pink textile',
+          text: 'A pleated pink textile wraps over the pipes, bringing flexibility and organic flow to the frame.',
+        },
       },
       {
-        image: img('my-chair', 'detail', 'A threaded elbow and tee joining the pipes'),
-        title: 'Galvanized pipes',
-        text: 'Galvanized steel pipes joined with threaded elbows and tees give the chair its geometric order and rigidity.',
+        ...img('my-chair', 'detail', 'A threaded elbow and tee joining the pipes'),
+        note: {
+          title: 'Galvanized pipes',
+          text: 'Galvanized steel pipes joined with threaded elbows and tees give the chair its geometric order and rigidity.',
+        },
       },
     ],
   },
@@ -180,9 +184,11 @@ export const projects = [
     year: 2026,
     context: 'Academic project',
     skills: 'Skill, skill, skill',
-    // Full-screen banner: the piece nudged and rocking until it settles, played once on
-    // arrival and again at each click (BounceVideo.jsx; the still is its last frame, at
-    // rest), with the title written large in white in the bottom left (name), it and the
+    // The concept, before the video (placeholder until the real text comes in)
+    concept: 'A short paragraph about the idea behind Shrafraf will go here, once the text is ready.',
+    // Full-screen banner: the piece nudged and rocking until it settles, played at each
+    // click, under a grey veil with a pulsing dot until the first (BounceVideo.jsx; the
+    // still is its last frame, at rest), with the title written large in white in the bottom left (name), it and the
     // details over a soft dark shade (light); on tall screens the clip is shown whole (its
     // shape: tallRatio), the details under it
     opening: {
@@ -190,13 +196,16 @@ export const projects = [
         src: '/images/shrafraf/shrafrafbounce.mp4',
         poster: '/images/shrafraf/shrafrafbounce.webp',
         alt: 'Shrafraf rocking from side to side and settling',
+        // (its bottom softly blurred, about up to the details' line, hiding specks of lint
+        // on the piece there)
+        blurBottom: 0.17,
       },
       name: true,
       light: true,
       whole: true,
       tallRatio: '16 / 9',
     },
-    cover: { ...img('shrafraf', 'homepage', 'Shrafraf in a sunlit living room'), position: '62% 50%' },
+    cover: { ...img('shrafraf', 'hero', 'The Shrafraf stool'), contain: true },
     // The assembly, sped up (scripts/optimize-images.mjs), playing on a loop while it's on
     // screen, with the idea over it: its lead as the title, the rest under it, smaller
     scrub: { src: '/images/shrafraf/shrafraf.mp4', poster: '/images/shrafraf/shrafraf.webp', loop: true },
@@ -229,6 +238,7 @@ export const projects = [
       // (TextureReveal.jsx; with a mouse only). Instead, ripples: true makes the photo
       // ripple softly like water (RippleWarp.jsx)
       texture: img('odds-or-evens', 'oddstex2', ''),
+      tallRatio: '16 / 9', // (its tall photo is 16:9 too)
     },
     summary: 'Personal design project exploring relationships through objects.',
     intro: 'A personal design project exploring relationships through objects.',
@@ -241,11 +251,9 @@ export const projects = [
     context: 'Academic project',
     skills: 'Skill, skill, skill',
     // A tall photo: the Home page's library shows it with the ring and the hands in view
-    cover: { ...img('odds-or-evens', 'main', 'Fitting the halves of Odds or Evens together'), position: '50% 35%' },
-    // A full-screen photo with the concept written over it, in its empty top-left
-    // corner (introOnPhoto); on phones the concept sits above the photo instead
+    cover: img('odds-or-evens', 'intro', 'The white and brown halves of Odds or Evens: two triangles, a ring and two pyramids'),
+    // The concept as on the other projects, centred; this photo under it, shown whole
     hero: img('odds-or-evens', 'concept', 'Bringing the white and brown halves of the triangle together'),
-    introOnPhoto: true,
     // The three pairs, one section each: a name, a short explainer, and the two halves
     // to bring together (PairPlay.jsx; the photos trimmed to the object by
     // scripts/optimize-images.mjs). join: where the right half sits against the left when
@@ -356,6 +364,7 @@ export const projects = [
       tall: img('bazelet', 'bazeletbannermobile', 'Bazelet sandals on a sunny terrace over the sea, BAZELET FOOTWEAR on the paving'),
       specsSide: true,
       focus: '0% 100%',
+      tallRatio: '2161 / 3840',
       blurTop: true,
       // with a mouse, sandal footprints are pressed into it along the cursor's way (steps);
       // or, instead, raised stone hexagon tiles follow the cursor (hexes: true)

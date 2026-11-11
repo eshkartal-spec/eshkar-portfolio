@@ -1,0 +1,260 @@
+/* A whole bicycle wheel with slivers of photos in the gaps between its spokes (see WheelSpokes.jsx) */
+/* The wheel a little bigger than the screen is tall (--d), its left part out of sight past
+   the section's left edge; the section as tall as the wheel */
+.spokes {
+  --d: calc(var(--fit-h) * 1.45);
+  position: relative;
+  margin: clamp(48px, 8svh, 96px) var(--frame) 0;
+  overflow: hidden;
+}
+
+/* The photo over a slice, filling the section behind the wheel */
+.spokes__bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+
+.spokes__bg img.is-on {
+  opacity: 1;
+}
+
+.spokes__wheel {
+  position: relative;
+  display: block;
+  width: var(--d);
+  height: auto;
+  margin-left: calc(var(--d) * -0.3);
+  aspect-ratio: 1;
+  overflow: visible;
+  will-change: transform;
+}
+
+/* Each gap's sliver of photo; while one is showing, the others go empty */
+.spokes__gap {
+  cursor: zoom-in;
+  outline: none;
+}
+
+.spokes__gap image {
+  transition: opacity 0.4s var(--ease);
+}
+
+.spokes.is-showing .spokes__gap:not(.is-on) image {
+  opacity: 0;
+}
+
+.spokes__hit {
+  fill: transparent;
+}
+
+/* On the other side, quietly: what it is */
+.spokes__title {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  /* (just right of the wheel, whose right edge is 0.7 of its width in) */
+  left: calc(var(--d) * 0.7 + clamp(28px, 3.5vw, 64px));
+  margin: 0;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.3vw, 20px);
+  font-weight: 500;
+  font-stretch: 125%;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  translate: 0 -50%;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease);
+}
+
+.spokes.is-showing .spokes__title {
+  opacity: 0;
+}
+
+/* Phones: the wheel a third wider than the screen; the words at the top right */
+@media (max-width: 759px) {
+  .spokes {
+    --d: calc((100vw - 2 * var(--frame)) * 1.35);
+  }
+
+  .spokes__title {
+    top: 0;
+    left: auto;
+    right: 0;
+    font-size: 12px;
+    translate: none;
+  }
+}
+
+/* The spokes, rim and hub: fine and faint, as on the half wheel (WheelSpin.css; a
+   little thicker here, the wheel being drawn smaller than its own size) */
+.spokes__lines line {
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-opacity: 0.16;
+  pointer-events: none;
+}
+
+.spokes__rim {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.7;
+  stroke-opacity: 0.14;
+  pointer-events: none;
+}
+
+.spokes__rim--inner {
+  stroke-width: 1.3;
+  stroke-opacity: 0.1;
+}
+
+.spokes__hub {
+  fill: var(--bg);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-opacity: 0.22;
+  pointer-events: none;
+}
+
+.spokes__hub--axle {
+  fill: var(--ink);
+  fill-opacity: 0.08;
+}
+
+/* (while working locally: each photo's number, to point it out) */
+.spokes__no {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  fill: #fff;
+  stroke: var(--ink);
+  stroke-width: 4;
+  paint-order: stroke;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.spokes__bg-no {
+  position: absolute;
+  z-index: 1;
+  top: 16px;
+  left: 16px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* A photo open full screen, whole, over the darkened page (see WheelSpokes.jsx) */
+.viewer {
+  --pad-y: clamp(56px, 7vw, 96px);
+  --pad-x: clamp(16px, 7vw, 120px);
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--pad-y) var(--pad-x);
+  background: rgba(17, 17, 17, 0.92);
+  cursor: zoom-out;
+  animation: viewer-in 0.3s ease-out;
+}
+
+@keyframes viewer-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* (shown whole: no wider or taller than the screen less the room round it) */
+.viewer__img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: calc(100vw - 2 * var(--pad-x));
+  max-height: calc(100svh - 2 * var(--pad-y));
+  object-fit: contain;
+  cursor: default;
+  animation: viewer-img-in 0.4s var(--ease);
+}
+
+@keyframes viewer-img-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+.viewer__btn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.viewer__btn:hover,
+.viewer__btn:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
+}
+
+.viewer__close {
+  top: 16px;
+  right: 16px;
+}
+
+.viewer__prev,
+.viewer__next {
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.viewer__prev {
+  left: 16px;
+}
+
+.viewer__next {
+  right: 16px;
+}
+
+.viewer__count {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-stretch: 125%;
+  letter-spacing: 0.12em;
+  translate: -50% 0;
+}
+
+/* Phones: the arrows along the bottom, beside the count */
+@media (max-width: 759px) {
+  .viewer__prev,
+  .viewer__next {
+    top: auto;
+    bottom: 8px;
+    translate: none;
+  }
+}

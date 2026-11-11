@@ -1,0 +1,134 @@
+/* The features, one at a time, held on screen while the page scrolls (see FeatureFlip.jsx) */
+.features {
+  position: relative;
+}
+
+.features__view {
+  position: sticky;
+  top: 0;
+  display: grid;
+  place-items: center;
+  height: 100svh;
+  padding-top: var(--header-h);
+  /* (a feature swiped off to the side goes out of sight past the screen's edges) */
+  overflow: clip;
+}
+
+/* Two equal sides: the photo on one, the words on the other (traded on every other
+   feature) */
+.features__stage {
+  --gap: clamp(24px, 5vw, 96px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--gap);
+  width: min(100% - 2 * var(--frame), 1500px);
+  /* (the feature leaving and the one coming in, in the same place) */
+  grid-area: 1 / 1;
+}
+
+.features__stage.is-swapped .features__photo {
+  order: 2;
+}
+
+/* The feature coming in, waiting off to the side (--from) until its swipe starts */
+.features__stage.is-entering > * {
+  transform: translateX(var(--from));
+}
+
+.features__photo,
+.features__text {
+  will-change: transform;
+}
+
+/* The photo shown whole, as big as fits its side and the screen */
+.features__photo {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+.features__photo img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(var(--fit-h) * var(--photo-h, 0.78));
+  background: var(--surface);
+}
+
+.features__text {
+  justify-self: center;
+  width: min(100%, 30em);
+}
+
+.features__title {
+  margin: 0;
+  font-size: clamp(28px, 3.4vw, 58px);
+  line-height: 1;
+  color: var(--ink);
+}
+
+.features__body {
+  margin: clamp(16px, 2vw, 28px) 0 0;
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* Which feature it is: a row of short bars along the bottom, the one shown longer and
+   pink */
+.features__dots {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(20px, 4svh, 40px);
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  translate: -50% 0;
+}
+
+.features__dots li {
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--rule);
+  transition: background 0.4s ease, width 0.4s var(--ease);
+}
+
+.features__dots li.is-on {
+  width: 44px;
+  background: var(--pink);
+}
+
+/* Phones: the photo above the words, both turning over in place */
+@media (max-width: 759px) {
+  .features__stage {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .features__stage.is-swapped .features__photo {
+    order: 0;
+  }
+
+  .features__photo img {
+    max-height: 42svh;
+  }
+
+  .features__text {
+    text-align: center;
+  }
+}
+
+/* (the feature's name, read out by screen readers as it changes; not seen) */
+.features__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

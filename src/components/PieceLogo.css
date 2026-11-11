@@ -7,10 +7,12 @@
   align-items: center;
   justify-content: center;
   gap: clamp(20px, 4svh, 40px);
-  height: 100svh;
-  min-height: 560px;
-  margin-top: clamp(64px, 8vw, 128px);
-  padding: clamp(64px, 10svh, 112px) 0;
+  /* (framed inside the page's margins, no taller than fits the screen: the background
+     photos the plain pieces bring up fill this frame) */
+  height: var(--fit-h);
+  min-height: 480px;
+  margin: clamp(64px, 8vw, 128px) var(--frame) 0;
+  padding: clamp(40px, 7svh, 88px) 0;
 }
 
 /* The section's background, from a background piece: its photo filling the section
@@ -32,7 +34,7 @@
   position: relative;
   display: block;
   flex: 0 1 auto;
-  width: min(78vw, 1100px);
+  width: min(76%, 1060px);
   min-height: 0;
   max-height: 100%;
   overflow: visible;

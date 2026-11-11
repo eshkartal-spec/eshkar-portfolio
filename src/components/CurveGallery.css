@@ -1,5 +1,7 @@
 /* Photos on the inside of a turning drum (see CurveGallery.jsx) */
 .curve {
+  /* (inside the page's margins: the drum turns out of sight at their edges) */
+  margin-inline: var(--frame);
   padding: clamp(48px, 10svh, 120px) 0;
   overflow: hidden;
 }

@@ -79,6 +79,11 @@ export default function ScrubVideo({ video, children }) {
           playsInline
           loop={video.loop}
           preload="auto"
+          // (its frame takes the video's own shape, so it's shown whole)
+          onLoadedMetadata={(e) => {
+            const { videoWidth: w, videoHeight: h } = e.currentTarget
+            if (w && h) trackRef.current.style.setProperty('--r', `${w} / ${h}`)
+          }}
         />
         <div className="scrub__text wrap">{children}</div>
       </div>

@@ -32,29 +32,6 @@
   }
 }
 
-/* Once every letter has changed, a pink line draws in under the name, left to right */
-.about__title .name-peek {
-  position: relative;
-}
-
-.about__title .name-peek::after {
-  content: '';
-  position: absolute;
-  left: 0.02em;
-  right: 0.02em;
-  bottom: -0.05em;
-  height: 0.07em;
-  background: var(--pink);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  transition: transform 0.35s var(--ease);
-}
-
-.about__title.is-done .name-peek::after {
-  transform: scaleX(1);
-  transition: transform 0.7s var(--ease) 0.25s;
-}
-
 /* The paragraphs, then the skills panel, rise in once the title has changed: from a
    little way down, faint and soft, into place one after another */
 .intro__rise {
@@ -101,11 +78,19 @@
   visibility: hidden;
 }
 
+.intro__photo {
+  overflow: hidden;
+}
+
+/* (the wide photo cut to 3:4 from its middle, a little enlarged from its top, so the
+   board in its bottom corner stays out of the frame) */
 .intro__photo img {
   display: block;
   width: 100%;
   aspect-ratio: 3 / 4;
   object-fit: cover;
+  scale: 1.08;
+  transform-origin: 50% 0;
 }
 
 .intro__photo.is-in {
@@ -130,10 +115,15 @@
   }
 }
 
-/* Phones: no room beside the words, so no portrait here (the name still shows it) */
+/* Phones: no room beside the words, so it sits between the title and them */
 @media (max-width: 760px) {
   .intro__photo {
-    display: none;
+    position: relative;
+    top: 0;
+    right: auto;
+    grid-column: 1 / -1;
+    width: min(62%, 280px);
+    margin: 0 0 16px;
   }
 }
 

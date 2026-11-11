@@ -1,21 +1,34 @@
-/* A video played by scrolling (see ScrubVideo.jsx): three screens of scrolling for the
-   whole video, with the video held on screen throughout (or one screen, on a loop) */
+/* A video played by scrolling (see ScrubVideo.jsx): a little over a screen of scrolling
+   (the section 2.2 screens tall) for the whole video, with the video held on screen throughout (or just its own height, on a
+   loop). It's framed: inside the page's margins, the frame shaped like the video (--r,
+   set once it loads) and as big as fits the screen, so it's always seen whole */
 .scrub {
+  --r: 16 / 9;
   position: relative;
-  height: 300svh;
+  height: 220svh;
+  margin-top: 0;
 }
 
-/* Played on a loop instead: one screen */
+/* Played on a loop instead: just the framed video */
 .scrub--loop {
-  height: 100svh;
+  height: auto;
+  padding-block: calc((var(--fit-h) - var(--media-h)) / 2);
 }
 
 .scrub__view {
   position: sticky;
-  top: 0;
-  height: 100svh;
+  /* (held centred in the space under the top bar while its video plays) */
+  top: calc(var(--header-h) + (100svh - var(--header-h) - var(--media-h)) / 2);
+  width: min(100% - 2 * var(--frame), var(--media-h) * var(--r));
+  aspect-ratio: var(--r);
+  margin-inline: auto;
   overflow: hidden;
   background: #e9e8e6;
+}
+
+.scrub--loop .scrub__view {
+  position: relative;
+  top: 0;
 }
 
 .scrub__video {
@@ -25,27 +38,7 @@
   object-fit: cover;
 }
 
-/* Coming out of the color the photo above fades into, if any (--fade, ProjectPage.css) */
-.scrub__view::before {
-  content: '';
-  position: absolute;
-  z-index: 1;
-  inset: 0 0 auto;
-  height: 30%;
-  background: linear-gradient(var(--fade, transparent), transparent);
-  pointer-events: none;
-}
-
-/* A white fade up from the bottom, so the words read over whatever moves under them,
-   meeting the page's own background at the very bottom */
-.scrub__view::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  height: 45%;
-  background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75) 55%, rgba(255, 255, 255, 0.9) 85%, var(--bg));
-  pointer-events: none;
-}
+/* (no fades over the photo or video: it's shown clean, the words straight on it) */
 
 /* The words along the bottom, across the whole width */
 .scrub__text {
@@ -72,24 +65,17 @@
   font-size: 0.8em;
 }
 
-/* Tall screens: a video on a loop is shown whole, across the screen, its words under it
-   (filling the screen would cut most of a wide video away) */
+/* Tall screens: a video on a loop is shown across the screen's width, its words under it
+   (over a wide video they'd cover most of it) */
 @media (orientation: portrait) {
-  .scrub--loop {
-    height: auto;
-  }
-
   .scrub--loop .scrub__view {
-    position: static;
-    height: auto;
+    aspect-ratio: auto;
+    overflow: visible;
+    background: none;
   }
 
   .scrub--loop .scrub__video {
     height: auto;
-  }
-
-  .scrub--loop .scrub__view::after {
-    display: none;
   }
 
   .scrub--loop .scrub__text {

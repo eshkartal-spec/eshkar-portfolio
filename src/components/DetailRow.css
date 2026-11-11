@@ -4,9 +4,14 @@
 }
 
 .details__row {
+  --gap: clamp(12px, 1.5vw, 24px);
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(12px, 1.5vw, 24px);
+  gap: var(--gap);
+  /* No wider than keeps the tall (2:3) photos about four fifths of the screen high, so the
+     whole row is seen at once with room around it */
+  width: min(100%, var(--media-h) * 0.82 * 2 + 2 * var(--gap));
+  margin-inline: auto;
 }
 
 .details__item {

@@ -14,6 +14,86 @@
   outline-offset: -6px;
 }
 
+/* The clip's bottom softly blurred (--blur-h of its height), fading in from its top edge */
+.bounce__blur {
+  position: absolute;
+  inset: auto 0 0;
+  height: calc(var(--blur-h) * 100%);
+  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px);
+  mask-image: linear-gradient(transparent, #000 28%);
+  pointer-events: none;
+}
+
+/* On entering the page: a soft grey veil over the clip, a grey dot pulsing in its middle,
+   lifted for good at the first click */
+.bounce__veil {
+  /* (over the clip, under the title and details) */
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(110, 110, 110, 0.28);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.6s var(--ease),
+    visibility 0s linear 0.6s;
+  pointer-events: none;
+}
+
+.bounce.is-veiled .bounce__veil {
+  opacity: 1;
+  visibility: visible;
+  transition: none;
+}
+
+.bounce__dot {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #d6d5d3;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.bounce__dot::before,
+.bounce__dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid #e4e3e1;
+  animation: bounce-pulse 2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+.bounce__dot::after {
+  animation-delay: 1s;
+}
+
+@keyframes bounce-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(4.2);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bounce__dot::before,
+  .bounce__dot::after {
+    animation: none;
+  }
+}
+
+/* (on touch screens, while veiled, the dot is the only prompt) */
+.bounce.is-veiled .bounce__prompt {
+  opacity: 0;
+}
+
 /* With a mouse, the prompt follows the cursor, in a small dark tooltip, while the cursor
    is over the piece and it's still */
 .bounce__tip {
