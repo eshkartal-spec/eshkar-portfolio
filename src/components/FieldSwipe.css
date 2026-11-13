@@ -1,0 +1,190 @@
+/* The fields in a sliding strip (see FieldSwipe.jsx): a screen tall, inside the page's
+   side margins. --a: how much of the width the one shown takes (the next one peeking in
+   the rest: a sliver, about the first two letters of its name), a little less while the
+   peek is pointed at */
+.fields {
+  --a: 87%;
+  --ease: cubic-bezier(0.7, 0, 0.2, 1);
+  position: relative;
+  height: var(--fit-h);
+  min-height: 460px;
+  margin: clamp(64px, 8vw, 128px) var(--frame) 0;
+  overflow: hidden;
+  container-type: inline-size;
+  touch-action: pan-y;
+  background: var(--ink);
+}
+
+.fields.is-peeking {
+  --a: 80%;
+}
+
+.fields__panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  transition:
+    left 1s var(--ease),
+    width 1s var(--ease);
+}
+
+.fields__panel.is-shown {
+  left: 0;
+  width: var(--a);
+}
+
+.fields__panel.is-next {
+  left: var(--a);
+  width: calc(100% - var(--a));
+  cursor: pointer;
+}
+
+.fields__panel.is-gone {
+  left: calc(var(--a) * -1);
+  width: var(--a);
+}
+
+.fields__panel.is-waiting {
+  left: 100%;
+  width: calc(100% - var(--a));
+}
+
+/* (moving unseen, behind the scenes) */
+.fields__panel.is-jumping {
+  transition: none;
+}
+
+/* Each one's photo and words, laid out at the size it has when shown, so they slide
+   along with it rather than squeezing as it narrows (only its left part shows while it
+   peeks) */
+.fields__inner {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 87cqi;
+}
+
+.fields__inner img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  transition: transform 0.9s var(--ease);
+}
+
+/* While the peek is pointed at, the one shown edges aside to make room: its photo a
+   little, its words further, so they slide over it (and back when the cursor leaves) */
+.fields__words {
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.fields.is-peeking .is-shown img {
+  transform: translateX(-3cqi);
+}
+
+.fields.is-peeking .is-shown .fields__words {
+  transform: translateX(-8cqi);
+}
+
+/* With the cursor over the one shown, its words drift a touch to the right */
+@media (hover: hover) {
+  .fields:not(.is-peeking) .fields__panel.is-shown:hover .fields__words {
+    transform: translateX(14px);
+  }
+}
+
+/* A soft dark shade along the bottom, under the words */
+.fields__inner::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 50%;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.22) 45%, rgba(0, 0, 0, 0.55));
+  pointer-events: none;
+}
+
+/* The name, large, and the words under it, in white along the bottom left */
+.fields__words {
+  position: absolute;
+  z-index: 1;
+  left: clamp(20px, 3vw, 48px);
+  right: clamp(20px, 3vw, 48px);
+  bottom: clamp(24px, 4svh, 48px);
+  color: #fff;
+}
+
+.fields__title {
+  margin: 0;
+  font-size: clamp(40px, 6.4cqi, 104px);
+  line-height: 0.92;
+  /* the same soft dark halo as the home page's names, so the pink holds up over light
+     photos */
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.fields__text {
+  max-width: 34em;
+  margin: clamp(10px, 1.4vw, 18px) 0 0;
+  font-size: clamp(15px, 1.25vw, 19px);
+  line-height: 1.5;
+  text-wrap: pretty;
+  transition: opacity 0.5s ease;
+}
+
+/* The peek shows the name only */
+.fields__panel:not(.is-shown) .fields__text {
+  opacity: 0;
+}
+
+/* A thin dark seam between the one shown and the peek */
+.fields__panel.is-next::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: 0 auto 0 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* The whole peek is the button to the next */
+.fields__next {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.fields__next:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: -4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fields__panel {
+    transition: none;
+  }
+}
+
+/* Phones: the one shown takes more of the width; its words smaller */
+@media (max-width: 759px) {
+  .fields {
+    --a: 82%;
+    height: min(var(--fit-h), 640px);
+  }
+
+  .fields__inner {
+    width: 82cqi;
+  }
+
+  .fields__title {
+    font-size: clamp(32px, 9cqi, 52px);
+  }
+
+  .fields__text {
+    font-size: 14px;
+  }
+}

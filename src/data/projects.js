@@ -1,4 +1,7 @@
 import { bazeletLogo } from './bazeletLogo'
+// The Bazelet banner's drawing: a trail of tiles with the logo's pieces among them
+// (originals/bazelet/Asset 1.svg)
+import bazeletTrail from '../assets/bazelet-trail.svg?raw'
 
 // All projects, in the order they appear. Text and photos carried over from v1.
 //
@@ -346,36 +349,64 @@ export const projects = [
     title: 'Bazelet footwear',
     field: 'Brand · Packaging',
     summary: 'Rebranding of the Israeli footwear brand Bazelet.',
-    intro: 'Rebranding of the Israeli footwear brand Bazelet.',
+    intro: 'Rebranding Bazelet, a handmade footwear brand, to reflect comfort, stability, and adventure.',
     type: 'Brand · Packaging',
     year: 2025,
     context: 'Academic project',
     skills: 'Skill, skill, skill',
     cover: img('bazelet', 'product-log', 'A pair of Bazelet sandals on a log by the water'),
     hero: null,
-    // Full-screen banner, the title painted on the paving: wide for landscape screens, tall
-    // for portrait (exported on its side, turned upright by the image script). The details
-    // stand down its right side, over the sea (specsSide); on screens shaped differently
-    // from the photo, its bottom left is kept, where the title is (focus): it's cut from
-    // the top and the right. On tall screens it's
-    // shown whole, its sky blurred, fading down (blurTop), and the details sit on it
+    // Full-screen banner: her drawing of a trail of tiles with the logo's pieces among
+    // them, in fine outline (TrailBanner.jsx), the logo in the middle, above the title. The
+    // logo's pieces rise and sink slowly as 3D buttons; a tile under the cursor fills with
+    // the brand's blue; over the logo, all seven turn blue and settle, raised. The title
+    // written over it, the details along the bottom.
+    // (Earlier: a generated honeycomb with the logo hidden in it, pattern: { logo:
+    // bazeletLogo, color } (HexPattern.jsx); and the photo banner, bazeletbanner /
+    // bazeletbannermobile, with specsSide, focus '0% 100%', tallRatio '2161 / 3840',
+    // blurTop and footprints, steps: true)
     opening: {
-      wide: img('bazelet', 'bazeletbanner', 'Bazelet sandals on a sunny terrace over the sea, BAZELET FOOTWEAR on the paving'),
-      tall: img('bazelet', 'bazeletbannermobile', 'Bazelet sandals on a sunny terrace over the sea, BAZELET FOOTWEAR on the paving'),
-      specsSide: true,
-      focus: '0% 100%',
-      tallRatio: '2161 / 3840',
-      blurTop: true,
-      // with a mouse, sandal footprints are pressed into it along the cursor's way (steps);
-      // or, instead, raised stone hexagon tiles follow the cursor (hexes: true)
-      steps: true,
+      trail: {
+        art: bazeletTrail,
+        color: '#5f8797',
+        // (tried and taken out: the trail photo under it, mirrored and turned so its dirt
+        // path ran under the tiles: photo: { src: '/images/bazelet/trail.webp', size:
+        // [2400, 1800], at: [1300, 1150], to: [780, 720], scale: 1, angle: -31, mirror: true })
+      },
+      name: true,
+      // with a mouse, a few soft grey sandal prints follow the cursor, fading quickly
+      steps: { life: 1.1, dark: 0.16, stride: 150, ink: '70,72,76', edge: '40,42,46' },
     },
-    // After the overview, full screen: the new logo, its seven pieces (PieceLogo.jsx; the
-    // outline from originals/bazelet/logo.svg). The four biggest each stand for a topic
-    // (piece: its place in the logo's list): with the cursor over one, its photo shows
-    // through it, and clicking it opens it big in the middle of the screen, with its words.
-    // (her words and her final photos)
-    logo: {
+    // After the concept: the four fields side by side in a sliding strip, the one shown
+    // filling most of the section and the next peeking in at the right (FieldSwipe.jsx)
+    fields: [
+      {
+        title: 'Logo',
+        text: "The mark joins a turtle's shell, a home carried everywhere, with the landscape this handmade brand comes from, evoking stability, movement and comfort.",
+        image: img('bazelet', 'bazeletmarble-clean', 'The Bazelet logo cut into a marble sign'),
+      },
+      {
+        title: 'Branding',
+        text: 'Together, the logo and color palette ground the brand, giving its message and story one clear, steady voice.',
+        image: img('bazelet', 'branding2', 'Bazelet cards on a stone block'),
+      },
+      {
+        title: 'Packaging',
+        text: 'Shaped by the rolling hills of the north, the packaging hints at the adventures the shoes will take you on.',
+        image: img('bazelet', 'basalt-inspired-hebrew-packaging-mockup', 'The Bazelet shoebox on a stone pedestal'),
+      },
+      {
+        title: 'Product',
+        text: 'Made for walking in comfort: as steady as the rock formations, as free as the northern landscape.',
+        image: img('bazelet', 'product-log', 'A pair of Bazelet sandals on a log by the water'),
+      },
+    ],
+    // NOT SHOWN for now (kept to be used somewhere else): the interactive logo, its seven
+    // pieces full screen (PieceLogo.jsx; the outline from originals/bazelet/logo.svg). The
+    // four biggest each stand for a topic (piece: its place in the logo's list): with the
+    // cursor over one, its photo shows through it, and clicking it opens it big in the
+    // middle of the screen, with its words. To show it again, rename this back to logo.
+    logoPieces: {
       shape: bazeletLogo,
       topics: [
         {

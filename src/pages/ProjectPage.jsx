@@ -7,6 +7,9 @@ import PhotoLine from '../components/PhotoLine'
 import FeatureFlip from '../components/FeatureFlip'
 import WheelSpokes from '../components/WheelSpokes'
 import PieceLogo from '../components/PieceLogo'
+import HexPattern from '../components/HexPattern'
+import TrailBanner from '../components/TrailBanner'
+import FieldSwipe from '../components/FieldSwipe'
 import HexMosaic from '../components/HexMosaic'
 import Footsteps from '../components/Footsteps'
 import ScrubVideo from '../components/ScrubVideo'
@@ -98,7 +101,7 @@ export default function ProjectPage() {
         // A full-screen photo with the title already on it (also here, hidden, for screen
         // readers and search engines), and the details along its bottom
         <header
-          className={`proj__opening${p.opening.tall && !p.opening.whole ? '' : ' proj__opening--whole'}${p.opening.specsTop ? ' proj__opening--specs-top' : ''}${p.opening.specsSide ? ' proj__opening--specs-side' : ''}${p.opening.grit ? ' proj__opening--grit' : ''}${p.opening.light ? ' proj__opening--light' : ''}`}
+          className={`proj__opening${(p.opening.tall || p.opening.pattern || p.opening.trail) && !p.opening.whole ? '' : ' proj__opening--whole'}${p.opening.pattern || p.opening.trail ? ' proj__opening--pattern' : ''}${p.opening.specsTop ? ' proj__opening--specs-top' : ''}${p.opening.specsSide ? ' proj__opening--specs-side' : ''}${p.opening.grit ? ' proj__opening--grit' : ''}${p.opening.light ? ' proj__opening--light' : ''}`}
           // (the photos' shapes: wide ones are all 16:9; tall ones a phone screen, unless
           // the project says otherwise)
           style={{
@@ -110,7 +113,11 @@ export default function ProjectPage() {
           {/* The photo and everything drawn over it, in one frame inside the page's side
               margins */}
           <div className="proj__frame">
-          {p.opening.video ? (
+          {p.opening.trail ? (
+            <TrailBanner art={p.opening.trail.art} color={p.opening.trail.color} photo={p.opening.trail.photo} />
+          ) : p.opening.pattern ? (
+            <HexPattern logo={p.opening.pattern.logo} color={p.opening.pattern.color} />
+          ) : p.opening.video ? (
             <BounceVideo video={p.opening.video} />
           ) : p.opening.warp ? (
             <PleatWarp wide={p.opening.wide} tall={p.opening.tall} />
@@ -132,7 +139,7 @@ export default function ProjectPage() {
           {/* With a mouse, the photo breaks into raised hexagon tiles around the cursor */}
           {p.opening.hexes && <HexMosaic image={p.opening.wide} focus={p.opening.focus} />}
           {/* ...or footprints are pressed into it along the cursor's way */}
-          {p.opening.steps && <Footsteps />}
+          {p.opening.steps && <Footsteps {...(p.opening.steps === true ? {} : p.opening.steps)} />}
           {/* The title painted on the photo, cut out, its colors slowly changing */}
           {p.opening.paint &&
             Array.from({ length: p.opening.paint.letters }, (_, i) => (
@@ -233,6 +240,8 @@ export default function ProjectPage() {
 
       {/* The project's logo full screen, its pieces opening onto its topics */}
       {p.logo && <PieceLogo logo={p.logo} title={title} />}
+      {/* The project's fields, swiped through one after another */}
+      {p.fields && <FieldSwipe fields={p.fields} />}
       {p.still && <PhotoLine photo={p.still} />}
       {p.flip && <FeatureFlip features={p.flip} photoHeight={p.flipPhotoHeight} />}
       {p.wheel && <WheelSpokes photos={p.wheel} />}

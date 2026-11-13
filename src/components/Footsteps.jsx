@@ -33,7 +33,10 @@ const SOLE = [
 // shadow along each one's pressed-in edge), left and right of its path and turned the
 // way it goes, fading away a few seconds later. Drawn on a canvas exactly over the
 // photo. Mouse only, on wide screens.
-export default function Footsteps() {
+// (life, dark: how long a print lasts and how deep it is; stride: how far apart they
+// are; ink, edge: its colour and its edge's, as r,g,b, for photos other than the default
+// warm stone)
+export default function Footsteps({ life = LIFE, dark = DARK, stride = STRIDE, ink = '120,78,56', edge = '70,40,26' }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -77,18 +80,18 @@ export default function Footsteps() {
     const frame = (now) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       ctx.clearRect(0, 0, W, H)
-      while (steps.length && now - steps[0].born > LIFE * 1000) steps.shift()
+      while (steps.length && now - steps[0].born > life * 1000) steps.shift()
       for (const s of steps) {
         const age = (now - s.born) / 1000
         // pressed in quickly, then fading slowly
-        const a = Math.min(age / 0.12, 1) * (1 - Math.max(0, (age - 0.4) / (LIFE - 0.4)))
+        const a = Math.min(age / 0.12, 1) * (1 - Math.max(0, (age - 0.4) / (life - 0.4)))
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
         ctx.translate(s.x, s.y)
         ctx.rotate(s.turn)
         ctx.filter = 'blur(0.6px)'
         // the print, deepening the stone's own colour (the canvas multiplies with the photo)...
         solePath(s.side)
-        ctx.fillStyle = `rgba(120,78,56,${DARK * a})`
+        ctx.fillStyle = `rgba(${ink},${dark * a})`
         ctx.fill()
         // ...and its pressed-in edge in shadow along its upper left, inside it
         ctx.save()
@@ -97,7 +100,7 @@ export default function Footsteps() {
         ctx.translate(EDGE * k, EDGE * k)
         solePath(s.side)
         ctx.lineWidth = EDGE * 2 * k
-        ctx.strokeStyle = `rgba(70,40,26,${SHADE * a})`
+        ctx.strokeStyle = `rgba(${edge},${SHADE * (dark / DARK) * a})`
         ctx.stroke()
         ctx.restore()
       }
@@ -128,7 +131,7 @@ export default function Footsteps() {
       heading += turn * Math.min(1, d / 30)
       walked += d
       last = at
-      if (walked < STRIDE * k) return
+      if (walked < stride * k) return
       walked = 0
       side = -side
       // to its side of the path: right foot to the right of the way it's going
