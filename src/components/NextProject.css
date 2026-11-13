@@ -20,7 +20,9 @@
 }
 
 .next-project__title {
-  font-size: clamp(52px, 9vw, 168px);
+  /* (a share of the screen's width, a little smaller than the home page's "Get in touch") */
+  font-size: calc(100vw / 7.26 * 0.5);
+  white-space: nowrap;
   transition: text-shadow 0.6s var(--cine);
 }
 
